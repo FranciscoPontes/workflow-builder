@@ -3,10 +3,11 @@ import './Phase.css';
 
 interface PhaseProps {
     code?: string,
-    // order: number
+    // order: number,
+    ref?: (element: HTMLElement | null) => any
 }
 
-const Phase = ({code} : PhaseProps) => {
+const Phase = ({code, ref} : PhaseProps) => {
 
 
     return (<div className="phase">
