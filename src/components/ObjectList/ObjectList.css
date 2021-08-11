@@ -1,0 +1,7 @@
+#objectList {
+    width: 20%;
+    align-items: center;
+    /* justify-content: center; */
+    display: flex;
+    flex-flow: column;
+}

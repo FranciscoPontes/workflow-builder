@@ -1,0 +1,9 @@
+.state {
+    border-radius: 100%;
+    background-color: blue;
+    color: white;
+    text-align: center;
+    width: 30%;
+    padding: 10px 0;
+    margin: 10px;    
+}
