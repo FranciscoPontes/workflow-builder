@@ -5,8 +5,15 @@
     height: 400px;
     text-align: center;
     background-color: wheat;
+    margin-top: 20px;
 }
 
 #layout {
     display: flex;
+}
+
+#object-list {
+    display: flex;
+    flex-flow: column;
+    margin-top: 20px;
 }
