@@ -2,18 +2,31 @@ import React, { useState } from 'react';
 import './Layout.css';
 import { WorkflowBox, workflowData } from './WorkflowBox/WorkflowBox';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import Phase from './Phase/Phase';
-import { State } from './State/State';
+import Phase, { phaseDefinition } from './Phase/Phase';
+import { State, stateDefinition } from './State/State';
 
-const defaultNamePhase: string = "PHASE";
-const defaultNameState: string = "STATE";
+const stateTemplate: stateDefinition = {
+    code: "STATE"
+};
 
+const phaseTemplate: phaseDefinition = {
+    code: "PHASE",
+    states: [stateTemplate]
+};
 
-const testData = [
-    {
-        
-    }
-]
+export const addNewState = (phase : phaseDefinition, state: stateDefinition) : phaseDefinition => {
+    return {
+        ...phase,
+        states: [...phase.states, state]
+    };
+}
+
+export const removeState = (phase : phaseDefinition, state: stateDefinition) : phaseDefinition => {
+    return {
+        ...phase,
+        states: phase.states.filter( el => el.code !== state.code )
+    };
+}
 
 // objet panel in the left + workflow box
 const Layout: React.FC  = () => {
@@ -35,14 +48,14 @@ const Layout: React.FC  = () => {
                     <Draggable draggableId={"phase"} index={1}>
                         {(provided) => 
                             <div style={{width: '100%'}} {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-                                <Phase code={defaultNamePhase}/>
+                                <Phase code={phaseTemplate.code} states={phaseTemplate.states}/>
                             </div>
                         }
                     </Draggable>
                     <Draggable draggableId={"state"} index={1}>
                         {(provided) => 
                             <div style={{width: '100%'}} {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-                                <State code={defaultNameState}/>
+                                <State code={stateTemplate.code}/>
                             </div>
                         }
                     </Draggable>
