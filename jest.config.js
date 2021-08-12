@@ -1,16 +1,7 @@
 module.exports = {
-    "roots": [
-      "<rootDir>/src"
-    ],
-    "testMatch": [
-      "**/__tests__/**/*.+(ts|tsx|js)",
-      "**/?(*.)+(spec|test).+(ts|tsx|js)"
-    ],
-    "transform": {
-      "^.+\\.(ts|tsx)$": "ts-jest",
-      "^.+\\.(js|jsx)$": "babel-jest"
-    },
-    "moduleNameMapper": {
-      "\\.(css)$" : "<rootDir>/empty-module.js"
-    }
-  }
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
+  moduleNameMapper: {
+    '\\.(scss|sass|css)$': 'identity-obj-proxy',
+  },
+};
