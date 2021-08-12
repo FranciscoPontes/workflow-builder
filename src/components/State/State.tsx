@@ -1,5 +1,5 @@
 import React from 'react';
-import './State.css';
+import styles from './State.module.css';
 
 export interface stateDefinition {
     code: string,
@@ -8,7 +8,7 @@ export interface stateDefinition {
 
 export const State = ({code, order} : stateDefinition) => {
     return (
-        <div className="state">
+        <div className={styles.state}>
             {code}
         </div>
     );
