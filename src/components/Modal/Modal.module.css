@@ -1,0 +1,13 @@
+.paper {
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    width: 50vw;
+    margin: auto;
+    border: 2px solid #000;
+    background-color: rgb(122, 223, 248);
+    border-radius: 2%;
+    padding: 10px;
+    text-align: center;
+    transform: translate(-50%,-50%);
+}
