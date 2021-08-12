@@ -2,33 +2,35 @@ import React from 'react';
 import Modal from '@material-ui/core/Modal';
 import styles from './Modal.module.css';
 
-export interface ModalProps {
-    props: {
-        isOpen: boolean,
-        handleClose: () => void,
-        title: string,
-        description: string, 
-        callback: () => void
-    }
+export type IModal = {
+  isOpen: boolean,
+  handleClose: () => void,
+  title: string,
+  description: string, 
+  callback: () => void
 }
 
-export const SimpleModal = ({isOpen, handleClose, title, description, callback} : ModalProps) => {
+interface ModalProps {
+  props: IModal
+}
+
+export const SimpleModal = (props : ModalProps) => {
 
   const body = (
     <div className={styles.paper}>
-      <h2>{title}</h2>
+      <h2>{props.title}</h2>
       <p>
-        {description}
+        {props.description}
       </p>
-      <button onClick={callback}>Apply</button>
+      <button onClick={props.callback}>Apply</button>
     </div>
   );
 
   return (
     <div>
       <Modal
-        open={isOpen}
-        onClose={handleClose}
+        open={props.isOpen}
+        onClose={props.handleClose}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >

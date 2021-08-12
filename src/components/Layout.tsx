@@ -3,8 +3,7 @@ import styles from './Layout.module.css';
 import { WorkflowBox, workflowData } from './WorkflowBox/WorkflowBox';
 import Phase, { phaseDefinition } from './Phase/Phase';
 import { State, stateDefinition } from './State/State';
-import { SimpleModal } from './Modal/Modal';
-import { ModalProps } from './Modal/Modal';
+import { IModal, SimpleModal } from './Modal/Modal';
 
 const stateTemplate: stateDefinition = {
     code: "STATE"
@@ -35,7 +34,7 @@ const Layout: React.FC  = () => {
 
     const [ workflowData, setWorkflowData ] = useState<workflowData>([{}]);
 
-    const [ modalData, setModalData ] = useState<ModalProps>({
+    const [ modalData, setModalData ] = useState<IModal>({
         isOpen: false,
         handleClose: () => setModalData({
             ...modalData,
@@ -51,9 +50,9 @@ const Layout: React.FC  = () => {
                 <div id={styles.objectList}>
                     <Phase code={phaseTemplate.code} 
                            states={phaseTemplate.states} 
-                           onClick={() => setShowModal(true)}/>
+                           onClick={modalData.handleClose}/>
                     <State code={stateTemplate.code} 
-                           onClick={() => setShowModal(true)}/>
+                           onClick={modalData.handleClose}/>
                 </div>
                 <SimpleModal props={modalData} />
             </div>);
