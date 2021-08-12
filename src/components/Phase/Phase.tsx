@@ -1,16 +1,17 @@
 import React from 'react';
-import './Phase.css';
+import { stateDefinition } from '../State/State';
+import styles from './Phase.module.css';
 
-interface PhaseProps {
-    code?: string,
-    // order: number,
-    ref?: (element: HTMLElement | null) => any
+export interface phaseDefinition {
+    code: string,
+    order?: number,
+    states: Array<stateDefinition>
 }
 
-const Phase = ({code, ref} : PhaseProps) => {
+const Phase = ({code, order, states} : phaseDefinition) => {
 
 
-    return (<div className="phase">
+    return (<div className={styles.phase}>
         <span>
             {code}
         </span>

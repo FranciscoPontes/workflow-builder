@@ -1,13 +1,14 @@
 import React from 'react';
-import './State.css';
+import styles from './State.module.css';
 
-interface stateProps {
-    code?: string
+export interface stateDefinition {
+    code: string,
+    order?: number
 }
 
-export const State = ({code} : stateProps) => {
+export const State = ({code, order} : stateDefinition) => {
     return (
-        <div className="state">
+        <div className={styles.state}>
             {code}
         </div>
     );

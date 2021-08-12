@@ -5,8 +5,5 @@
     height: 400px;
     text-align: center;
     background-color: wheat;
-}
-
-#layout {
-    display: flex;
+    margin-top: 20px;
 }

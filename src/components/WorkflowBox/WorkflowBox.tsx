@@ -1,15 +1,17 @@
 import React from "react";
 import Phase from "../Phase/Phase";
+import styles from './Workflow.module.css';
 
-interface workflowBoxProps {
-    ref: React.Ref<HTMLInputElement>
+export type workflowData = Array<Object>;
+
+interface workflowProps {
+    data: workflowData
 }
 
-export const WorkflowBox = () => {
+export const WorkflowBox = ({data} : workflowProps) => {
     return (
-        <div id="box" >
+        <div id={styles.box} >
             <h3>Workflow</h3>
-            <Phase />
         </div>
     );
 }
