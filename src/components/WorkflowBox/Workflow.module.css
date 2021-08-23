@@ -7,3 +7,9 @@
     background-color: wheat;
     margin-top: 20px;
 }
+
+.workflowPhases {
+    /* width: 50%; */
+    margin: auto;
+    width: 20vh;
+}
