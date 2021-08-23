@@ -1,4 +1,4 @@
-import { addNewState, removeState } from "./Layout";
+import { addNewPhase, addNewState, removeState } from "./Layout";
 
 const stateTemplate = {
     code: "STATE"
@@ -46,3 +46,32 @@ test('Remove state from an existing phase', () => {
     expect(removeState(actual, state)).toMatchObject(expected);
 }
 );
+
+test('Add new phase to empty data array', () => {
+    const expected = [{"code": "INITIAL",
+                    "states": []}]
+
+    const phase = {"code": "INITIAL",
+                    "states": []}
+
+    const workflowData = []
+
+    expect(addNewPhase(phase, workflowData)).toEqual(expected)
+})
+
+test('Add new phase to existing data', () => {
+    const expected = [{"code": "INITIAL",
+        "states": [],
+        },
+        {"code": "REVIEW",
+        "states": []}
+    ]
+
+    const phase = {"code": "REVIEW",
+            "states": []}
+
+    const workflowData = [{"code": "INITIAL",
+                    "states": []}]
+
+    expect(addNewPhase(phase, workflowData)).toEqual(expected)    
+})

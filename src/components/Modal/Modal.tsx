@@ -1,20 +1,31 @@
 import React from 'react';
 import Modal from '@material-ui/core/Modal';
 import styles from './Modal.module.css';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import { useState } from 'react';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& > *': {
+      margin: theme.spacing(1),
+      width: '25ch',
+    },
+  },
+}));
 
 export type IModal = {
   isOpen: boolean,
-  handleClose: () => void,
   title: string,
   description: string, 
-  callback: () => void
+  callback: () => void,
+  closeHandler: () => void
 }
 
-interface ModalProps {
-  props: IModal
-}
+export const SimpleModal = (props : IModal) => {
+  const classes = useStyles();
 
-export const SimpleModal = (props : ModalProps) => {
+  const [ code, setCode ] = useState<string>('');
 
   const body = (
     <div className={styles.paper}>
@@ -22,7 +33,14 @@ export const SimpleModal = (props : ModalProps) => {
       <p>
         {props.description}
       </p>
-      <button onClick={props.callback}>Apply</button>
+      <form className={classes.root} noValidate autoComplete="off">
+        <TextField id="outlined-basic" 
+                   label="Code" 
+                   variant="outlined"
+                   value={code}
+                   onChange={(e) => setCode(e.target.value)} />
+      </form>
+      <button onClick={() => props.callback(code)}>Apply</button>
     </div>
   );
 
@@ -30,7 +48,7 @@ export const SimpleModal = (props : ModalProps) => {
     <div>
       <Modal
         open={props.isOpen}
-        onClose={props.handleClose}
+        onClose={() => props.closeHandler()}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
