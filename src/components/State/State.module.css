@@ -8,3 +8,7 @@
     margin: 10px;    
     cursor: pointer;
 }
+
+.notUIState {
+    background-color: grey;
+}

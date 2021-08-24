@@ -9,7 +9,26 @@
 }
 
 .workflowPhases {
-    /* width: 50%; */
-    margin: auto;
+    display: flex;
+    /* flex-flow: column; */
+    align-items: center;
+}
+
+.phase {
+    /* display: flex;
+    flex-flow: row; */
+    position: relative;
+    left: 0%;
+    height: 100%;
     width: 20vh;
+    /* writing-mode: vertical-rl;
+    text-orientation: mixed; */
+}
+
+.states {
+    writing-mode: horizontal-tb;
+    /* text-orientation: upright;    */
+    margin: auto;
+    display: flex;
+    flex-flow: column;
 }

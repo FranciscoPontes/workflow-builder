@@ -6,7 +6,8 @@ import { State, stateDefinition } from './State/State';
 import { SimpleModal } from './Modal/Modal';
 
 const stateTemplate: stateDefinition = {
-    code: "STATE"
+    code: "STATE",
+    isUIstate: true
 };
 
 const phaseTemplate: phaseDefinition = {
@@ -59,6 +60,7 @@ const Layout: React.FC  = () => {
                         onClick={() => setShowModal(true)}/>
                     <State code={stateTemplate.code} 
                         onClick={() => setShowModal(true)}
+                        isUIstate={true}
                 />
                 </div>
                 <SimpleModal isOpen={showModal}
