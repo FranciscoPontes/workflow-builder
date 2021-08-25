@@ -1,6 +1,7 @@
 #box {
     width: 80%;
     border: 2px solid black;
+    border-bottom: none;
     margin: auto;
     min-height: 400px;
     text-align: center;
@@ -10,20 +11,14 @@
 
 .workflowPhases {
     display: flex;
-    /* flex-flow: column; */
+    flex-flow: column;
     align-items: center;
-    border: 2px solid black;
+    /* border-top: 2px solid black; */
+    border-bottom: 2px solid black;
 }
 
 .phase {
-    /* display: flex;
-    flex-flow: row; */
-    position: relative;
-    left: 0%;
-    height: 100%;
-    width: 20vh;
-    /* writing-mode: vertical-rl;
-    text-orientation: mixed; */
+    width: 50%;
 }
 
 .states {
@@ -32,4 +27,5 @@
     margin: auto;
     display: flex;
     flex-flow: column;
+    margin-bottom: 10px;
 }

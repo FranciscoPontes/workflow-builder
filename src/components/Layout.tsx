@@ -279,7 +279,7 @@ const Layout: React.FC  = () => {
 
     return (<div className={styles.layout}>
                 <WorkflowBox data={workflowData}/>
-                <div id={styles.objectList}>
+                {/* <div id={styles.objectList}>
                     <Phase code={phaseTemplate.code} 
                         onClick={() => setShowModal(true)}/>
                     <State code={stateTemplate.code} 
@@ -292,7 +292,7 @@ const Layout: React.FC  = () => {
                              description='something'
                              callback={newPhaseHandler}
                              closeHandler={() => setShowModal(false)}
-                />
+                /> */}
             </div>);
 }
 
