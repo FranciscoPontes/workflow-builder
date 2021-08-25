@@ -40,7 +40,7 @@ export const SimpleModal = (props : IModal) => {
                    value={code}
                    onChange={(e) => setCode(e.target.value)} />
       </form>
-      <button onClick={() => props.callback(code)}>Apply</button>
+      <button onClick={() => props.callback()}>Apply</button>
     </div>
   );
 

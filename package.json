@@ -14,7 +14,8 @@
     "build": "next build",
     "test": "jest",
     "test:w": "jest --watch",
-    "start": "next start"
+    "start": "next start",
+    "build-export": "next build && next export"
   },
   "eslintConfig": {
     "extends": [
@@ -44,6 +45,8 @@
     "@types/react": "^17.0.17",
     "@types/react-dom": "^17.0.9",
     "babel-jest": "^27.0.6",
+    "eslint": "^7.32.0",
+    "html-webpack-plugin": "^5.3.2",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.0.6",
     "react-test-renderer": "^17.0.2"

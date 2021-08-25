@@ -5,7 +5,7 @@ export interface stateDefinition {
     code: string,
     sort_order: number,
     onClick?: () => void,
-    isUIstate: boolean,
+    isUIstate?: boolean,
     pha_id: number 
 }
 

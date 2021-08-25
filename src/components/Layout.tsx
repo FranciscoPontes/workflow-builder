@@ -5,39 +5,64 @@ import Phase, { phaseDefinition } from './Phase/Phase';
 import { State, stateDefinition } from './State/State';
 import { SimpleModal } from './Modal/Modal';
 
-const stateTemplate: stateDefinition = {
-    code: "STATE",
-    isUIstate: true
-};
+// const stateTemplate: stateDefinition = {
+//     code: "STATE",
+//     isUIstate: true
+// };
 
-const phaseTemplate: phaseDefinition = {
-    code: "PHASE",
-    states: [stateTemplate]
-};
+// const phaseTemplate: phaseDefinition = {
+//     code: "PHASE",
+//     states: [stateTemplate]
+// };
 
 // export const
 
-export const addNewState = (phase : phaseDefinition, state: stateDefinition) : phaseDefinition => {
-    return {
-        ...phase,
-        states: [...phase.states, state]
-    };
+// export const addNewState = (phase : phaseDefinition, state: stateDefinition) : phaseDefinition => {
+//     return {
+//         ...phase,
+//         states: [...phase.states, state]
+//     };
+// }
+
+// export const removeState = (phase : phaseDefinition, state: stateDefinition) : phaseDefinition => {
+//     return {
+//         ...phase,
+//         states: phase.states.filter( el => el.code !== state.code )
+//     };
+// }
+
+// export const addNewPhase = (phase: phaseDefinition, workflowData: workflowData) : workflowData => {
+//     return [...workflowData, phase];
+// }
+
+interface phaseData {
+  id: number,
+  app_id?: number,
+  active_yn?: string,
+  code: string,
+  label?: string,
+  sort_order: number,
+  description?: string | null
+  image?: null
 }
 
-export const removeState = (phase : phaseDefinition, state: stateDefinition) : phaseDefinition => {
-    return {
-        ...phase,
-        states: phase.states.filter( el => el.code !== state.code )
-    };
-}
-
-export const addNewPhase = (phase: phaseDefinition, workflowData: workflowData) : workflowData => {
-    return [...workflowData, phase];
+interface stateData {
+  id?: number,
+  app_id?: number,
+  active_yn?: string,
+  transitional_ny?: string,
+  pha_id: number,
+  code: string,
+  label?: string,
+  sort_order: number,
+  description?: string | null
+  image?: null,
+  setting_generator?: string | null
 }
 
 const templateData : {
-    "phases": Array<Object>,
-    "states": Array<Object>
+    "phases": Array<phaseData>,
+    "states": Array<stateData>
 } = {
     "phases": [
       {
@@ -240,27 +265,35 @@ const templateData : {
 // objet panel in the left + workflow box
 const Layout: React.FC  = () => {
 
-    const arrangedTemplateData = {
-        phases: templateData.phases.map(pha => {
-            // delete pha.id;
-            delete pha.app_id;
-            delete pha.active_yn;
-            delete pha.label;
-            delete pha.description;
-            delete pha.image;
-            return pha;
-            }),
-        states: templateData.states.map(sta => {
-            delete sta.id;
-            delete sta.app_id;
-            delete sta.active_yn;
-            delete sta.transactional_ny;
-            delete sta.label;
-            delete sta.description;
-            delete sta.image;
-            delete sta.setting_generator;
-            return sta;
+    const getPhases = () : Array<phaseDefinition> =>  {
+      return templateData.phases.map(pha => {
+        // delete pha.id;
+        delete pha.app_id;
+        delete pha.active_yn;
+        delete pha.label;
+        delete pha.description;
+        delete pha.image;
+        return pha;
         })
+    } 
+
+    const getStates = () : Array<stateDefinition> =>  {
+      return templateData.states.map(sta => {
+        delete sta.id;
+        delete sta.app_id;
+        delete sta.active_yn;
+        delete sta.transitional_ny;
+        delete sta.label;
+        delete sta.description;
+        delete sta.image;
+        delete sta.setting_generator;
+        return sta;
+        })
+    } 
+
+    const arrangedTemplateData : workflowData = {
+        phases: getPhases(),
+        states: getStates()
     }
 
     const [ workflowData, setWorkflowData ] = useState<workflowData>(arrangedTemplateData);
