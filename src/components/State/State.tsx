@@ -3,12 +3,13 @@ import styles from './State.module.css';
 
 export interface stateDefinition {
     code: string,
-    order?: number,
+    sort_order: number,
     onClick?: () => void,
-    isUIstate: boolean 
+    isUIstate: boolean,
+    pha_id: number 
 }
 
-export const State = ({code, order, onClick, isUIstate} : stateDefinition) => {
+export const State = ({code, sort_order, onClick, isUIstate} : stateDefinition) => {
     const classes : Array<string> = [styles.state]
     if (!isUIstate) classes.push(styles.notUIState)
     

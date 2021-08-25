@@ -1,27 +1,32 @@
 import React, { Fragment } from "react";
 import Phase, { phaseDefinition } from "../Phase/Phase";
-import { State } from "../State/State";
+import { State, stateDefinition } from "../State/State";
 import styles from './Workflow.module.css';
 
-export type workflowData = Array<phaseDefinition>;
+export type workflowData = {
+    phases: Array<phaseDefinition>,
+    states: Array<stateDefinition>
+};
 
 interface workflowProps {
     data: workflowData
 }
 
 export const WorkflowBox = ({data} : workflowProps) => {
+
+    // TODO: order phases array by sort order
+    
     return (
         <div id={styles.box} >
             <h3>Workflow</h3>
-                { data.map( phase => 
-                    <div className={styles.workflowPhases}>
+                { data.phases.map( phase => 
+                    <div className={styles.workflowPhases} key={phase.code}>
                         <div className={styles.phase}>
-                            <Phase code={phase.code} key={phase.code} states={phase.states}/>
+                            <Phase code={phase.code} sort_order={phase.sort_order} id={phase.id}/>
                         </div>
                         <div className={styles.states}>
-                            <State code="INITIAL" isUIstate={true}/>
-                            <State code="REVIEW_PENDING" isUIstate={true}/>
-                            <State code="REVIEW_SEND_MAIL" isUIstate={false}/>
+                            { data.states.filter(sta => sta.pha_id === phase.id )
+                                         .map( sta => <State code={sta.code} key={sta.code} sort_order={sta.sort_order} isUIstate={true} pha_id={sta.pha_id}/>)}
                         </div>
                     </div>
                 ) }

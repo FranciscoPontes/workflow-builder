@@ -3,13 +3,13 @@ import { stateDefinition } from '../State/State';
 import styles from './Phase.module.css';
 
 export interface phaseDefinition {
+    id: number,
     code: string,
-    order?: number,
-    states: Array<stateDefinition>,
+    sort_order: number,
     onClick?: () => void
 }
 
-const Phase = ({code, order, states, onClick} : phaseDefinition) => {
+const Phase = ({code, onClick} : phaseDefinition) => {
 
 
     return (<div className={styles.phase} onClick={onClick}>
