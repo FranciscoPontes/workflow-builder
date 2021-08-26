@@ -4,8 +4,7 @@ import {hot} from "react-hot-loader";
 function App() {
   return (
     <div>
-      {/* <Layout/> */}
-      <h2>Here</h2>
+      <Layout/>
     </div>
   );
 }
