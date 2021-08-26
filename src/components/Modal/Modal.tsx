@@ -33,14 +33,14 @@ export const SimpleModal = (props : IModal) => {
       <p>
         {props.description}
       </p>
-      <form className={classes.root} noValidate autoComplete="off">
+      {/* <form className={classes.root} noValidate autoComplete="off">
         <TextField id="outlined-basic" 
                    label="Code" 
                    variant="outlined"
                    value={code}
                    onChange={(e) => setCode(e.target.value)} />
       </form>
-      <button onClick={() => props.callback()}>Apply</button>
+      <button onClick={() => props.callback()}>Apply</button> */}
     </div>
   );
 

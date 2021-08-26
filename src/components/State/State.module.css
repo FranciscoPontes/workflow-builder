@@ -1,11 +1,14 @@
+.stateContainer {
+    display: flex;
+    margin: 10px 3px;    
+}
+
 .state {
     background-color: blue;
     color: white;
     text-align: center;
     width: 30vh;
     padding: 10px;
-    margin: 10px 3px;    
-    cursor: pointer;
     /* border-radius: 50%; */
     font-size: smaller;
     display: flex;
@@ -15,4 +18,22 @@
 
 .notUIState {
     background-color: grey;
+}
+
+/* arrows */
+.arrowContainer {
+    display: flex;
+    flex-flow: column;
+    font-size: smaller;
+    justify-content: center;
+}
+
+.arrow {
+    cursor: pointer;
+    margin: 3px 0;
+}
+
+/* gear icon */
+.gear {
+    cursor: pointer;
 }

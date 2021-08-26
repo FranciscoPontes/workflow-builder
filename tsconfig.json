@@ -22,11 +22,9 @@
     "listFiles": true
   },
   "include": [
-    "src/**/*.tsx",
-    "next-env.d.ts"
+    "src/**/*.tsx"
   ],
   "exclude": [
-    "node_modules",
-    ".next"
+    "node_modules"
   ]
 }
