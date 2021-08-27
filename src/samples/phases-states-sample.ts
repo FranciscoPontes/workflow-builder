@@ -23,10 +23,12 @@ interface stateData {
   setting_generator?: string | null
 }
 
-export const templateData : {
-    "phases": Array<phaseData>,
-    "states": Array<stateData>
-} = {
+export interface ITemplateData {
+  "phases": Array<phaseData>,
+  "states": Array<stateData>
+}
+
+export const templateData : ITemplateData = {
     "phases": [
       {
         "id": 6181,

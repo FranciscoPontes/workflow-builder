@@ -4,7 +4,7 @@ import { WorkflowBox, workflowData } from './WorkflowBox/WorkflowBox';
 import Phase, { phaseDefinition } from './Phase/Phase';
 import { State, stateDefinition } from './State/State';
 import { SimpleModal } from './Modal/Modal';
-import { templateData } from '../samples/phases-states-sample';
+import { ITemplateData, templateData } from '../samples/phases-states-sample';
 
 // const stateTemplate: stateDefinition = {
 //     code: "STATE",
@@ -36,11 +36,21 @@ import { templateData } from '../samples/phases-states-sample';
 //     return [...workflowData, phase];
 // }
 
+interface ILayout {
+    data: {
+        data: ITemplateData
+    }
+}
+
 // objet panel in the left + workflow box
-const Layout: React.FC  = () => {
-  
+const Layout = ({data}: ILayout) => {
+
+    const validData : ITemplateData = data.data || templateData;
+
+    console.log(validData);
+
     const getPhases = () : Array<phaseDefinition> =>  {
-      return templateData.phases.map(pha => {
+      return validData.phases.map(pha => {
         // delete pha.id;
         delete pha.app_id;
         delete pha.active_yn;
@@ -52,7 +62,7 @@ const Layout: React.FC  = () => {
     } 
 
     const getStates = () : Array<stateDefinition> =>  {
-      return templateData.states.map(sta => {
+      return validData.states.map(sta => {
         delete sta.id;
         delete sta.app_id;
         delete sta.active_yn;

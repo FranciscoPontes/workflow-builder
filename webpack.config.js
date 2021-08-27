@@ -1,40 +1,59 @@
+/* eslint-disable no-var, strict, prefer-arrow-callback */
+"use strict";
+
 const path = require("path");
-const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
 
 module.exports = {
-  entry: "./src/index.js",
   mode: "development",
+
+  entry: "./src/index.js",
+
+  devServer: {
+    port: 3000
+  },
+
+  output: {
+    path: path.resolve("dist"),
+    filename: "graphical_workflow.js",
+    libraryTarget: "var",
+    library: "GraphicalWorkflow",
+  },
+
   module: {
     rules: [
       {
-        test: /\.(js|jsx|ts|tsx)$/,
-        exclude: /(node_modules|bower_components)/,
+        test: /\.(jsx|js|ts|tsx)$/,
+        exclude: /node_modules/,
         loader: "babel-loader",
-        options: { presets: ["@babel/env", "@babel/preset-react", "@babel/preset-typescript"] }
       },
       {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader"]
-      }
-    ]
+        test: /\.css$/i,
+        use: ["style-loader", {
+          loader: "css-loader",
+          options: {
+            importLoaders: 1,
+            modules: true
+            }
+          }
+        ],
+      },
+    ],
   },
-  resolve: { extensions: ["*", ".js", ".jsx", ".ts", ".tsx"] },
-  output: {
-    path: path.resolve(__dirname, "dist"),
-    // publicPath: "/",
-    filename: "bundle.js"
-  },
-  // devServer: {
-  //   static: {
-  //       directory: path.join(__dirname, 'dist'),
-  //   },      
-  //   port: 3000,
-  // },
+
   plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        // new HtmlWebpackPlugin({
-        //     template: path.join(__dirname, "public", "index.html"),
-        // }),
-    ]
+    new HtmlWebpackPlugin({
+      title: "Graphical Workflow",
+      template: "public/index.html",
+    }),
+
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1,
+    }),
+  ],
+
+  resolve: {
+    extensions: [".jsx", ".js", ".tsx", ".ts"],
+  },
 };

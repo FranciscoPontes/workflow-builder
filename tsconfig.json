@@ -22,8 +22,9 @@
     "listFiles": true
   },
   "include": [
-    "src/**/*.tsx",
-    "declaration.d.ts"
+    "declaration.d.ts",
+    ".tsx",
+    ".ts"
   ],
   "exclude": [
     "node_modules"

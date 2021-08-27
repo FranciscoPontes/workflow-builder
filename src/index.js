@@ -2,4 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App.tsx";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+const start = (data, node) => {
+
+    console.log(data);
+    ReactDOM.render(<App data={data} />, node);
+}
+
+export { start };

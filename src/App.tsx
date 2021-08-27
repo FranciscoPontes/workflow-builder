@@ -1,13 +1,13 @@
+import React from 'react';
 import Layout from './components/Layout';
-import {hot} from "react-hot-loader";
+import { ITemplateData } from './samples/phases-states-sample';
 
-function App() {
+const App = (props : ITemplateData) => {
   return (
     <div>
-      <Layout/>
+      <Layout data={props}/>
     </div>
   );
 }
 
-// export default hot(module)(App);
 export default App;
