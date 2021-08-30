@@ -13,9 +13,15 @@
     You need to enable JavaScript to run this app.
   </noscript>
   <script>
+      const appData = {
+        appCode:"SB1",
+        DBTier:"DEV",
+        baseURL:"https://q-apex.ams.com/ords/appsq/req_owner/"
+      }
+
       document.addEventListener("readystatechange", (event) => {
         if (event.target.readyState === "complete") {
-          GraphicalWorkflow.start("SB1",
+          GraphicalWorkflow.start(appData,
             document.getElementById("root"));
         }
       });

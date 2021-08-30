@@ -1,14 +1,14 @@
 import React from 'react';
-import Layout from './components/Layout';
+import Layout, { ILayout } from './components/Layout';
 
-interface IApp {
-  appCode: string
-}
-
-const App = ({appCode} : IApp) => {
+const App = (data : ILayout) => {
   return (
     <div>
-      <Layout appCode={appCode}/>
+      <Layout 
+        appCode={data.appCode}
+        DBTier={data.DBTier}
+        baseURL={data.baseURL}
+      />
     </div>
   );
 }
