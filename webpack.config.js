@@ -4,8 +4,9 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
+const Dotenv = require('dotenv-webpack');
 
-module.exports = {
+module.exports =  {
   mode: "development",
 
   entry: ['babel-polyfill', "./src/index.js"],
@@ -51,6 +52,7 @@ module.exports = {
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1,
     }),
+    new Dotenv()
   ],
 
   resolve: {

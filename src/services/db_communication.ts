@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-// TODO: setting IN APEX
-axios.defaults.baseURL = 'https://q-apex.ams.com/ords/appsq/req_owner/';
+const { REACT_ORDS_BASE_ENDPOINT } = process.env;
+
+axios.defaults.baseURL = REACT_ORDS_BASE_ENDPOINT;
 
 interface IGetAppData {
     appCode: string,
