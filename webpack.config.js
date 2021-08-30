@@ -8,7 +8,7 @@ const webpack = require("webpack");
 module.exports = {
   mode: "development",
 
-  entry: "./src/index.js",
+  entry: ['babel-polyfill', "./src/index.js"],
 
   devServer: {
     port: 3000

@@ -92,17 +92,22 @@ const Layout = ({appCode} : ILayout) => {
         return;
     }
 
-    useEffect( () => { 
-        if (!workflowData) {
-            const appData = DBService.getApplicationData(appCode);
-            console.log(appData);
-            setWorkflowData( arrangedTemplateData( appData ) );
-        }
+    useEffect( () => {
+        ( async () => { 
+            if (!workflowData) {
+                const appData = await DBService.getApplicationData(appCode)
+                                            .then(res => res);
+                console.log(appData);
+                setWorkflowData( arrangedTemplateData( JSON.parse(appData) ) );
+            }
+        })()
+
+        return () => null;
     }
     , [])
 
     return (<div className={styles.layout}>
-                <WorkflowBox data={workflowData}/>
+                {/* <WorkflowBox data={workflowData}/> */}
                 {/* <div id={styles.objectList}>
                     <Phase code={phaseTemplate.code} 
                         onClick={() => setShowModal(true)}/>
