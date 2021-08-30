@@ -2,10 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App.tsx";
 
-const start = (data, node) => {
-
-    console.log(data);
-    ReactDOM.render(<App data={data} />, node);
+const start = (appCode, node) => {
+    ReactDOM.render(<App appCode={appCode}/>, node);
 }
 
 export { start };

@@ -5,6 +5,8 @@ import Phase, { phaseDefinition } from './Phase/Phase';
 import { State, stateDefinition } from './State/State';
 import { SimpleModal } from './Modal/Modal';
 import { ITemplateData, templateData } from '../samples/phases-states-sample';
+import { useEffect } from 'react';
+import { DBService } from '../services/db_communication';
 
 // const stateTemplate: stateDefinition = {
 //     code: "STATE",
@@ -37,20 +39,15 @@ import { ITemplateData, templateData } from '../samples/phases-states-sample';
 // }
 
 interface ILayout {
-    data: {
-        data: ITemplateData
-    }
+    appCode: string
 }
 
 // objet panel in the left + workflow box
-const Layout = ({data}: ILayout) => {
+const Layout = ({appCode} : ILayout) => {
 
-    const validData : ITemplateData = data.data || templateData;
 
-    console.log(validData);
-
-    const getPhases = () : Array<phaseDefinition> =>  {
-      return validData.phases.map(pha => {
+    const getPhases = ( data : Object ) =>  {
+      return data.phases.map(pha => {
         // delete pha.id;
         delete pha.app_id;
         delete pha.active_yn;
@@ -61,8 +58,8 @@ const Layout = ({data}: ILayout) => {
         })
     } 
 
-    const getStates = () : Array<stateDefinition> =>  {
-      return validData.states.map(sta => {
+    const getStates = ( data : Object ) =>  {
+      return data.states.map(sta => {
         delete sta.id;
         delete sta.app_id;
         delete sta.active_yn;
@@ -75,12 +72,13 @@ const Layout = ({data}: ILayout) => {
         })
     } 
 
-    const arrangedTemplateData : workflowData = {
-        phases: getPhases(),
-        states: getStates()
-    }
+    const arrangedTemplateData = (data : Object) : Object => ( {
+        phases: getPhases(data),
+        states: getStates(data)
+        }
+    )
 
-    const [ workflowData, setWorkflowData ] = useState<workflowData>(arrangedTemplateData);
+    const [ workflowData, setWorkflowData ] = useState<Object>(null);
 
     const [ showModal, setShowModal ] = useState<boolean>(false);
 
@@ -93,6 +91,15 @@ const Layout = ({data}: ILayout) => {
         setShowModal(false);*/
         return;
     }
+
+    useEffect( () => { 
+        if (!workflowData) {
+            const appData = DBService.getApplicationData(appCode);
+            console.log(appData);
+            setWorkflowData( arrangedTemplateData( appData ) );
+        }
+    }
+    , [])
 
     return (<div className={styles.layout}>
                 <WorkflowBox data={workflowData}/>

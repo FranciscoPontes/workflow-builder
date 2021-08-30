@@ -1,11 +1,14 @@
 import React from 'react';
 import Layout from './components/Layout';
-import { ITemplateData } from './samples/phases-states-sample';
 
-const App = (props : ITemplateData) => {
+interface IApp {
+  appCode: string
+}
+
+const App = ({appCode} : IApp) => {
   return (
     <div>
-      <Layout data={props}/>
+      <Layout appCode={appCode}/>
     </div>
   );
 }
