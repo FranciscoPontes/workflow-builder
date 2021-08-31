@@ -1,11 +1,13 @@
 .phase {
-    /* background-color: green; */
-    color: black;
-    font-weight: bold;
-    /* border-radius: 5%; */
-    text-align: center;
-    /* width: 65%; */
-    padding: 5px;
-    margin: 10px;
-    text-decoration: underline;
+  /* background-color: green; */
+  color: black;
+  font-weight: bold;
+  /* border-radius: 5%; */
+  text-align: center;
+  /* width: 65%; */
+  padding: 5px;
+  margin: 10px;
+  text-decoration: underline;
+  display: flex;
+  justify-content: center;
 }
