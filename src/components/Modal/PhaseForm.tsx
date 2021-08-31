@@ -5,6 +5,7 @@ import { useState } from 'react'
 import Button from '@material-ui/core/Button'
 import { Formik } from 'formik'
 import { DBService } from '../../services/db_communication'
+import { useDispatch } from 'react-redux'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +23,7 @@ interface IPhaseData {
 }
 
 const PhaseForm = () => {
+  const dispatch = useDispatch()
   const classes = useStyles()
   const [data, setData] = useState<IPhaseData>({
     code: '',
@@ -42,6 +44,7 @@ const PhaseForm = () => {
     await DBService.changeData(stateData)
     console.log('Finished saving')
     setSubmitting(false)
+    dispatch({ type: 'REFRESH' })
   }
 
   return (
