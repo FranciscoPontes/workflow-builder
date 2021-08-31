@@ -95,7 +95,7 @@ const Layout = (props: ILayout) => {
   useEffect(() => {
     ;(async () => {
       refreshData()
-      dispatch({ type: 'STOP_REFRESH' })
+      if (refresh) dispatch({ type: 'STOP_REFRESH' })
     })()
 
     return () => null
