@@ -28,10 +28,10 @@ export const State = ({code, sort_order, onClick, isUIstate} : stateDefinition) 
             <div className={classes.join(' ')} onClick={onClick}>
                 {code}
             </div>
-            <div className={styles.arrowContainer}>
+            {/* <div className={styles.arrowContainer}>
                 <ArrowUpwardIcon fontSize='inherit' className={styles.arrow}/>
                 <ArrowDownwardIcon fontSize='inherit'className={styles.arrow}/>
-            </div>
+            </div> */}
             <SimpleModal isOpen={showModal}
                          title='State settings'
                          description='Here the user will be able to configure the actions and the permissions for the state'

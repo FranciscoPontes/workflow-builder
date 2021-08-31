@@ -46,8 +46,7 @@ enum EDBTiers {
 
 export interface ILayout {
     appCode: string,
-    DBTier: EDBTiers,
-    baseURL: string
+    DBTier: EDBTiers
 }
 
 interface IAppData {

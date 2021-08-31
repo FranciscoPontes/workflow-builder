@@ -7,7 +7,6 @@ const App = (data : ILayout) => {
       <Layout 
         appCode={data.appCode}
         DBTier={data.DBTier}
-        baseURL={data.baseURL}
       />
     </div>
   );

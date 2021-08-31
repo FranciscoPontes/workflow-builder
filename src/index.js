@@ -6,7 +6,6 @@ const start = (data, node) => {
     ReactDOM.render(<App 
                         appCode={data.appCode}
                         DBTier={data.DBTier}
-                        baseURL={data.baseURL}
                     />, 
                     node);
 }
