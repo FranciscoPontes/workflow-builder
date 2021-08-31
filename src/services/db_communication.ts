@@ -17,12 +17,12 @@ const getApplicationData = async ({
     })
     .catch((error) => console.error(error))
 
-const addPhase = async (data): Promise<any> =>
+const changeData = async (data): Promise<any> =>
   await axios
-    .post(`${window.baseURL}req-app-config/phases`, data)
+    .post(`${window.baseURL}req-app-config/change_app_data`, data)
     .then((res) => {
       console.log(res)
     })
     .catch((error) => console.error(error))
 
-export const DBService = { getApplicationData, addPhase }
+export const DBService = { getApplicationData, changeData }

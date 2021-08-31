@@ -36,9 +36,10 @@ const PhaseForm = () => {
       code: data.code,
       label: data.label,
       sort_order: data.sortOrder,
+      change_type: 'ADD_PHASE',
     }
-
-    await DBService.addPhase(stateData)
+    console.log(stateData)
+    await DBService.changeData(stateData)
     console.log('Finished saving')
     setSubmitting(false)
   }
