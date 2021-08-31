@@ -59,7 +59,6 @@ const Layout = (props: ILayout) => {
 
   const getStates = (data: IAppData): Array<stateDefinition> => {
     return data.states.map((sta) => {
-      delete sta.id
       delete sta.app_id
       delete sta.active_yn
       delete sta.transitional_ny
