@@ -1,20 +1,39 @@
 import React, { Fragment, useEffect } from "react";
+import NewItemsSpeedDial from "../newItemsSpeedDial/newItemsSpeedDial";
 import Phase, { phaseDefinition } from "../Phase/Phase";
 import { State, stateDefinition } from "../State/State";
 import styles from './Workflow.module.css';
 
+type TStates = Array<stateDefinition>;
+type TPhases = Array<phaseDefinition>;
+
 export type workflowData = {
-    phases: Array<phaseDefinition>,
-    states: Array<stateDefinition>
+    phases: TPhases,
+    states: TStates
 };
 
 interface IWorkflow {
     data: workflowData
 }
 
-export const sortPhases = (phases : Array<phaseDefinition>) : Array<phaseDefinition> => phases.sort( (x,y) => x.sort_order - y.sort_order );
+export const addNewState = (states: TStates, newState: stateDefinition) : TStates => { 
+    states.push(newState);
+    return states;
+}
+export const removeState = (phase : phaseDefinition, state: stateDefinition) : phaseDefinition => {
+    return {
+        ...phase,
+        states: phase.states.filter( el => el.code !== state.code )
+    };
+}
 
-export const sortStates = (states : Array<stateDefinition>) : Array<stateDefinition> => states.sort( (x,y) => x.sort_order - y.sort_order );
+export const addNewPhase = (phase: phaseDefinition, workflowData: workflowData) : workflowData => {
+    return [...workflowData, phase];
+}
+
+export const sortPhases = (phases : TPhases) : TPhases => phases.sort( (x,y) => x.sort_order - y.sort_order );
+
+export const sortStates = (states : TStates) : TStates => states.sort( (x,y) => x.sort_order - y.sort_order );
 
 export const WorkflowBox = ({data} : IWorkflow) => {
 

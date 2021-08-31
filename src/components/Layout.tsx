@@ -3,10 +3,11 @@ import styles from './Layout.module.css';
 import { WorkflowBox, workflowData } from './WorkflowBox/WorkflowBox';
 import Phase, { phaseDefinition } from './Phase/Phase';
 import { State, stateDefinition } from './State/State';
-import { SimpleModal } from './Modal/Modal';
+import { EModalTypes, IModal, SimpleModal } from './Modal/Modal';
 import { ITemplateData, templateData } from '../samples/phases-states-sample';
 import { useEffect } from 'react';
 import { DBService } from '../services/db_communication';
+import NewItemsSpeedDial from './newItemsSpeedDial/newItemsSpeedDial';
 
 // const stateTemplate: stateDefinition = {
 //     code: "STATE",
@@ -19,24 +20,6 @@ import { DBService } from '../services/db_communication';
 // };
 
 // export const
-
-// export const addNewState = (phase : phaseDefinition, state: stateDefinition) : phaseDefinition => {
-//     return {
-//         ...phase,
-//         states: [...phase.states, state]
-//     };
-// }
-
-// export const removeState = (phase : phaseDefinition, state: stateDefinition) : phaseDefinition => {
-//     return {
-//         ...phase,
-//         states: phase.states.filter( el => el.code !== state.code )
-//     };
-// }
-
-// export const addNewPhase = (phase: phaseDefinition, workflowData: workflowData) : workflowData => {
-//     return [...workflowData, phase];
-// }
 
 enum EDBTiers {
     DEV = 'DEV',
@@ -92,17 +75,13 @@ const Layout = (props : ILayout) => {
 
     const [ workflowData, setWorkflowData ] = useState<workflowData>(null);
 
-    const [ showModal, setShowModal ] = useState<boolean>(false);
-
-    const newPhaseHandler = (code:string) : void => {
-        /*const newPhase : phaseDefinition = {
-            code: code
-        }
-
-        setWorkflowData( addNewPhase(newPhase, workflowData) );
-        setShowModal(false);*/
-        return;
-    }
+    const [ modalData, setModalData ] = useState<IModal>({
+        type: null,
+        isOpen: false,
+        title: 'Title',
+        description:'something',
+        closeHandler: null
+    });
 
     useEffect( () => {
         ( async () => { 
@@ -125,20 +104,14 @@ const Layout = (props : ILayout) => {
 
     return (<div className={styles.layout}>
                 <WorkflowBox data={workflowData}/>
-                {/* <div id={styles.objectList}>
-                    <Phase code={phaseTemplate.code} 
-                        onClick={() => setShowModal(true)}/>
-                    <State code={stateTemplate.code} 
-                        onClick={() => setShowModal(true)}
-                        isUIstate={true}
+                <NewItemsSpeedDial clickHandler={setModalData}/>
+
+                <SimpleModal isOpen={modalData.isOpen || false}
+                             title={modalData.title}
+                             description={modalData.description}
+                             type={modalData.type}
+                             closeHandler={() => setModalData({...modalData, isOpen: false})}
                 />
-                </div>
-                <SimpleModal isOpen={showModal}
-                             title='Title'
-                             description='something'
-                             callback={newPhaseHandler}
-                             closeHandler={() => setShowModal(false)}
-                /> */}
             </div>);
 }
 
