@@ -7,7 +7,9 @@ import { EModalTypes, IModal, SimpleModal } from './Modal/Modal'
 import { ITemplateData, templateData } from '../samples/phases-states-sample'
 import { useEffect } from 'react'
 import { DBService } from '../services/db_communication'
-import NewItemsSpeedDial from './newItemsSpeedDial/newItemsSpeedDial'
+import NewItemsSpeedDial, {
+  TPhaseList,
+} from './newItemsSpeedDial/newItemsSpeedDial'
 import { useDispatch, useSelector } from 'react-redux'
 
 // const stateTemplate: stateDefinition = {
@@ -82,6 +84,7 @@ const Layout = (props: ILayout) => {
     title: 'Title',
     description: 'something',
     closeHandler: null,
+    phasesArray: [],
   })
 
   const refreshData = async () => {
@@ -101,12 +104,18 @@ const Layout = (props: ILayout) => {
     return () => null
   }, [refresh])
 
+  const getPhaseSelectList = (): TPhaseList =>
+    workflowData?.phases.map((pha) => ({ pha_id: pha.id, code: pha.code }))
+
   useEffect(() => console.log(workflowData), [workflowData])
 
   return (
     <div className={styles.layout}>
       <WorkflowBox data={workflowData} />
-      <NewItemsSpeedDial clickHandler={setModalData} />
+      <NewItemsSpeedDial
+        clickHandler={setModalData}
+        phases={getPhaseSelectList()}
+      />
 
       <SimpleModal
         isOpen={modalData.isOpen || false}
@@ -114,6 +123,7 @@ const Layout = (props: ILayout) => {
         description={modalData.description}
         type={modalData.type}
         closeHandler={() => setModalData({ ...modalData, isOpen: false })}
+        phasesArray={modalData.phasesArray}
       />
     </div>
   )

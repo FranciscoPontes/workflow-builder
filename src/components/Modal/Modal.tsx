@@ -6,6 +6,8 @@ import TextField from '@material-ui/core/TextField'
 import { useState } from 'react'
 import PhaseForm from './PhaseForm'
 import { useEffect } from 'react'
+import StateForm from './StateForm'
+import { TPhaseList } from '../newItemsSpeedDial/newItemsSpeedDial'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,6 +29,7 @@ export type IModal = {
   description: string
   type: EModalTypes
   closeHandler: () => void
+  phasesArray?: TPhaseList
 }
 
 export const SimpleModal = (props: IModal) => {
@@ -36,7 +39,11 @@ export const SimpleModal = (props: IModal) => {
     <div className={styles.paper}>
       <h2>{props.title}</h2>
       <p>{props.description}</p>
-      {props.type === EModalTypes.phase ? <PhaseForm /> : null}
+      {props.type === EModalTypes.phase ? (
+        <PhaseForm />
+      ) : props.type === EModalTypes.state ? (
+        <StateForm phaseArray={props.phasesArray} />
+      ) : null}
     </div>
   )
 

@@ -31,11 +31,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-interface INewItemsSpeedDial {
-  clickHandler: () => void
+type TPhaseSelect = {
+  pha_id: number
+  code: string
 }
 
-const NewItemsSpeedDial = ({ clickHandler }: INewItemsSpeedDial) => {
+export type TPhaseList = Array<TPhaseSelect>
+
+interface INewItemsSpeedDial {
+  clickHandler: () => void
+  phases: TPhaseList
+}
+
+const NewItemsSpeedDial = ({ clickHandler, phases }: INewItemsSpeedDial) => {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
 
@@ -61,6 +69,7 @@ const NewItemsSpeedDial = ({ clickHandler }: INewItemsSpeedDial) => {
     title: 'State settings',
     description: '',
     closeHandler: null,
+    phasesArray: phases,
   }
 
   const actions = [
