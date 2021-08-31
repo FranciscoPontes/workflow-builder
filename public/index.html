@@ -15,9 +15,10 @@
   <script>
       const appData = {
         appCode:"SB1",
-        DBTier:"DEV",
-        baseURL:""
+        DBTier:"DEV"
       }
+
+      window.baseURL = 'https://q-apex.ams.com/ords/appsq/req_owner/';
 
       document.addEventListener("readystatechange", (event) => {
         if (event.target.readyState === "complete") {
