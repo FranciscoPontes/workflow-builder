@@ -16,32 +16,8 @@ interface IWorkflow {
   data: workflowData
 }
 
-export const addNewState = (
-  states: TStates,
-  newState: stateDefinition,
-): TStates => {
-  states.push(newState)
-  return states
-}
-export const removeState = (
-  phase: phaseDefinition,
-  state: stateDefinition,
-): phaseDefinition => {
-  return {
-    ...phase,
-    states: phase.states.filter((el) => el.code !== state.code),
-  }
-}
-
-export const addNewPhase = (
-  phase: phaseDefinition,
-  workflowData: workflowData,
-): workflowData => {
-  return [...workflowData, phase]
-}
-
 export const sortPhases = (phases: TPhases): TPhases =>
-  phases.sort((x, y) => x.sort_order - y.sort_order)
+  phases.sort((x, y) => x.sortOrder - y.sortOrder)
 
 export const sortStates = (states: TStates): TStates =>
   states.sort((x, y) => x.sort_order - y.sort_order)
@@ -55,8 +31,9 @@ export const WorkflowBox = ({ data }: IWorkflow) => {
               <div className={styles.phase}>
                 <Phase
                   code={phase.code}
-                  sort_order={phase.sort_order}
+                  sortOrder={phase.sortOrder}
                   id={phase.id}
+                  label={phase.label}
                 />
               </div>
               <div className={styles.states}>

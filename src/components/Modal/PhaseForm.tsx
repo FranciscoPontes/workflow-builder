@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button'
 import { Formik } from 'formik'
 import { DBService } from '../../services/db_communication'
 import { useDispatch } from 'react-redux'
+import { phaseDefinition } from '../Phase/Phase'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,19 +18,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-interface IPhaseData {
-  code: string
-  label: string
-  sortOrder: number
+interface IPhaseForm {
+  props: phaseDefinition
 }
 
-const PhaseForm = () => {
+const PhaseForm = ({ props }: IPhaseForm) => {
   const dispatch = useDispatch()
   const classes = useStyles()
-  const [data, setData] = useState<IPhaseData>({
-    code: '',
-    label: '',
-    sortOrder: 0,
+
+  const [data, setData] = useState<phaseDefinition>({
+    code: props?.code || '',
+    label: props?.label || '',
+    sortOrder: props?.sortOrder || 0,
+    id: props?.id,
   })
 
   const saveData = async (formikData, setSubmitting) => {
@@ -44,6 +46,14 @@ const PhaseForm = () => {
     await DBService.changeData(stateData)
     console.log('Finished saving')
     setSubmitting(false)
+    dispatch({ type: 'REFRESH' })
+  }
+
+  const deletePhase = async () => {
+    await DBService.changeData({
+      change_type: 'REMOVE_PHASE',
+      id: data.id,
+    })
     dispatch({ type: 'REFRESH' })
   }
 
@@ -79,7 +89,9 @@ const PhaseForm = () => {
             type="number"
             required
             value={data.sortOrder}
-            onChange={(e) => setData({ ...data, sortOrder: e.target.value })}
+            onChange={(e) =>
+              setData({ ...data, sortOrder: parseInt(e.target.value) })
+            }
           />
           <Button
             variant="contained"
@@ -88,6 +100,14 @@ const PhaseForm = () => {
             type="submit"
           >
             Save
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<DeleteIcon />}
+            onClick={deletePhase}
+          >
+            Delete
           </Button>
         </form>
       )}

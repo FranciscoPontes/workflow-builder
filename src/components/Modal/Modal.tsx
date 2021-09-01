@@ -8,6 +8,8 @@ import PhaseForm from './PhaseForm'
 import { useEffect } from 'react'
 import StateForm from './StateForm'
 import { TPhaseList } from '../newItemsSpeedDial/newItemsSpeedDial'
+import { phaseDefinition } from '../Phase/Phase'
+import { stateDefinition } from '../State/State'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,6 +25,11 @@ export enum EModalTypes {
   state = 'STATE',
 }
 
+export interface EModalMetadataTypes {
+  phaseMetadata?: phaseDefinition
+  stateMetadata?: stateDefinition
+}
+
 export type IModal = {
   isOpen: boolean
   title: string
@@ -30,6 +37,7 @@ export type IModal = {
   type: EModalTypes
   closeHandler: () => void
   phasesArray?: TPhaseList
+  metadata?: EModalMetadataTypes
 }
 
 export const SimpleModal = (props: IModal) => {
@@ -40,9 +48,9 @@ export const SimpleModal = (props: IModal) => {
       <h2>{props.title}</h2>
       <p>{props.description}</p>
       {props.type === EModalTypes.phase ? (
-        <PhaseForm />
+        <PhaseForm props={props?.metadata?.phaseMetadata} />
       ) : props.type === EModalTypes.state ? (
-        <StateForm phaseArray={props.phasesArray} />
+        <StateForm phaseArray={props?.phasesArray} />
       ) : null}
     </div>
   )

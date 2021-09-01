@@ -50,7 +50,6 @@ const Layout = (props: ILayout) => {
       // delete pha.id;
       delete pha.app_id
       delete pha.active_yn
-      delete pha.label
       delete pha.description
       delete pha.image
       return pha

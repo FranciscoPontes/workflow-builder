@@ -1,33 +1,34 @@
 import React from 'react'
-import { stateDefinition } from '../State/State'
 import styles from './Phase.module.css'
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
-import { DBService } from '../../services/db_communication'
-import { useDispatch } from 'react-redux'
+import SettingsIcon from '@material-ui/icons/Settings'
+import { EModalTypes, SimpleModal } from '../Modal/Modal'
+import { useState } from 'react'
 
 export interface phaseDefinition {
   id: number
   code: string
-  sort_order: number
-  onClick?: () => void
+  label: string
+  sortOrder: number
 }
 
-const Phase = ({ code, onClick, id }: phaseDefinition) => {
-  const dispatch = useDispatch()
-  const deletePhase = async () => {
-    await DBService.changeData({
-      change_type: 'REMOVE_PHASE',
-      id: id,
-    })
-    dispatch({ type: 'REFRESH' })
-  }
+const Phase = (props: phaseDefinition) => {
+  const [openModal, setOpenModal] = useState<boolean>(false)
 
   return (
-    <div className={styles.phase} onClick={onClick}>
-      <span>{code}</span>
-      <div onClick={deletePhase} style={{ cursor: 'pointer' }}>
-        <DeleteForeverIcon />
+    <div className={styles.phase}>
+      <div onClick={() => setOpenModal(true)} style={{ cursor: 'pointer' }}>
+        <SettingsIcon fontSize="small" />
       </div>
+      <span>{props.code}</span>
+
+      <SimpleModal
+        isOpen={openModal}
+        type={EModalTypes.phase}
+        closeHandler={() => setOpenModal(false)}
+        title="Phase settings"
+        description="Here the user will be able to configure the phase settings"
+        metadata={{ phaseMetadata: props }}
+      />
     </div>
   )
 }
