@@ -1,34 +1,33 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Request Framework Designer</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Request Framework Designer</title>
-</head>
-
-<body>
-  <div id="root"></div>
-  <noscript>
-    You need to enable JavaScript to run this app.
-  </noscript>
-  <script>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <script>
       const appData = {
-        appCode:"SB1",
-        DBTier:"DEV"
+        appCode: 'SB1',
+        DBTier: 'DEV',
       }
 
-      window.baseURL = 'https://q-apex.ams.com/ords/appsq/req_owner/';
-      window.appID = 21;
+      window.baseURL = 'https://q-apex.ams.com/ords/appsq/req_owner/'
+      window.appID = 21
 
-      document.addEventListener("readystatechange", (event) => {
-        if (event.target.readyState === "complete") {
-          GraphicalWorkflow.start(appData,
-            document.getElementById("root"));
+      document.addEventListener('readystatechange', (event) => {
+        if (event.target.readyState === 'complete') {
+          GraphicalWorkflow.start(appData, document.getElementById('root'))
         }
-      });
-  </script>
-</body>
-
-
+      })
+    </script>
+  </body>
 </html>
