@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { phaseDefinition } from '../../Phase/Phase'
 import DeleteIcon from '@material-ui/icons/Delete'
 import styles from './PhaseForm.module.css'
+import { actionTypes } from '../../../store/actionTypes'
+import { IConfirmationData } from '../../UIConfirmation/UIConfirmation'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,17 +46,21 @@ const PhaseForm = ({ props }: IPhaseForm) => {
   })
 
   const saveData = async (formikData, setSubmitting) => {
-    console.log('Initiated save')
-    const stateData = {
+    const phaseData = {
+      id: data.id,
       app_id: window.appID,
       code: data.code,
       label: data.label,
       sort_order: data.sortOrder,
+    }
+
+    const preparedDBData = {
+      phases: [phaseData],
       change_type: 'UPDATE_PHASES',
     }
-    console.log(stateData)
-    await DBService.changeData(stateData)
-    console.log('Finished saving')
+
+    await DBService.changeData(preparedDBData)
+
     setSubmitting(false)
     dispatch({ type: 'REFRESH' })
   }
@@ -66,6 +72,17 @@ const PhaseForm = ({ props }: IPhaseForm) => {
     })
     dispatch({ type: 'REFRESH' })
     dispatch({ type: 'MODAL_DATA', data: { ...modalData, isOpen: false } })
+  }
+
+  const confirmData: IConfirmationData = {
+    title: 'Delete Phase?',
+    description:
+      'This action will delete all associated states and dependencies (actions, permissions..)',
+    callback: deletePhase,
+  }
+
+  const tryDelete = () => {
+    dispatch({ type: actionTypes.showConfirmation, data: confirmData })
   }
 
   return (
@@ -107,24 +124,34 @@ const PhaseForm = ({ props }: IPhaseForm) => {
               setData({ ...data, sortOrder: parseInt(e.target.value) })
             }
           /> */}
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={isSubmitting}
-            type="submit"
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              margin: '20px',
+            }}
           >
-            Save
-          </Button>
-          {props?.id ? (
+            {props?.id ? (
+              <Button
+                variant="contained"
+                color="secondary"
+                startIcon={<DeleteIcon />}
+                onClick={tryDelete}
+                size="small"
+              >
+                delete
+              </Button>
+            ) : null}
             <Button
               variant="contained"
-              color="secondary"
-              startIcon={<DeleteIcon />}
-              onClick={deletePhase}
+              color="primary"
+              disabled={isSubmitting}
+              type="submit"
+              size="small"
             >
-              Delete
+              Save
             </Button>
-          ) : null}
+          </div>
         </form>
       )}
     </Formik>

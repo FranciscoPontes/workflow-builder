@@ -11,6 +11,9 @@ import NewItemsSpeedDial, {
   TPhaseList,
 } from './newItemsSpeedDial/newItemsSpeedDial'
 import { useDispatch, useSelector } from 'react-redux'
+import CustomSnackbar from './SnackBar/SnackBar'
+import { actionTypes } from '../store/actionTypes'
+import UIConfirmation from './UIConfirmation/UIConfirmation'
 
 // const stateTemplate: stateDefinition = {
 //     code: "STATE",
@@ -85,13 +88,16 @@ const Layout = (props: ILayout) => {
       appCode: props.appCode,
       DBTier: props.DBTier,
     }).then((res) => res)
-    dispatch({ type: 'UPDATE_DATA', data: arrangedTemplateData(appData) })
+    dispatch({
+      type: actionTypes.updateData,
+      data: arrangedTemplateData(appData),
+    })
   }
 
   useEffect(() => {
     ;(async () => {
       refreshData()
-      if (refresh) dispatch({ type: 'STOP_REFRESH' })
+      if (refresh) dispatch({ type: actionTypes.stopRefresh })
     })()
 
     return () => null
@@ -121,6 +127,8 @@ const Layout = (props: ILayout) => {
               metadata={modalData.metadata}
             />
           ) : null}
+          <CustomSnackbar />
+          <UIConfirmation />
         </Fragment>
       ) : null}
     </div>

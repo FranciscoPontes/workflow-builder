@@ -7,6 +7,8 @@ import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 import { useDispatch, useSelector } from 'react-redux'
 import { DBService } from '../../services/db_communication'
+import { actionTypes } from '../../store/actionTypes'
+import { EseverityTypes, ISnackbarData } from '../SnackBar/SnackBar'
 
 export interface phaseDefinition {
   id: number
@@ -26,13 +28,20 @@ const Phase = (props: phaseDefinition) => {
     phases.filter((pha) => pha.id === props.id)[0],
   )
 
+  const snackbarData: ISnackbarData = {
+    content: 'Phase updated!',
+    severity: EseverityTypes.success,
+    show: true,
+  }
+
   const triggerDataChange = async (data) => {
     await DBService.changeData({
       phases: data,
       change_type: 'UPDATE_PHASES',
     })
 
-    dispatch({ type: 'REFRESH' })
+    dispatch({ type: actionTypes.updateSnackbar, data: snackbarData })
+    dispatch({ type: actionTypes.refresh })
   }
 
   const changePhaseOrder = async (increment) => {
@@ -60,7 +69,7 @@ const Phase = (props: phaseDefinition) => {
 
   const phaseModalData = {
     title: 'Phase settings',
-    description: 'Here the user will be able to configure the phase settings',
+    description: null,
     isOpen: true,
     type: EModalTypes.phase,
     metadata: { phaseMetadata: props },
