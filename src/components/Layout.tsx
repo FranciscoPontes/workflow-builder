@@ -70,20 +70,15 @@ const Layout = (props: ILayout) => {
   }
 
   const arrangedTemplateData = (data: Object): workflowData => ({
-    phases: getPhases(data),
-    states: getStates(data),
+    phases: getPhases(data).sort((x, y) => x.sort_order - y.sort_order),
+    states: getStates(data)
+      .sort((x, y) => x.sort_order - y.sort_order)
+      .sort((x, y) => x.pha_id - y.pha_id),
   })
 
   const workflowData = useSelector((state) => state.workflowData)
 
-  const [modalData, setModalData] = useState<IModal>({
-    type: null,
-    isOpen: false,
-    title: 'Title',
-    description: 'something',
-    closeHandler: null,
-    phasesArray: [],
-  })
+  const modalData = useSelector((state) => state.modalData)
 
   const refreshData = async () => {
     const appData = await DBService.getApplicationData({
@@ -102,9 +97,6 @@ const Layout = (props: ILayout) => {
     return () => null
   }, [refresh])
 
-  const getPhaseSelectList = (): TPhaseList =>
-    workflowData.phases.map((pha) => ({ pha_id: pha.id, code: pha.code }))
-
   useEffect(() => console.log(workflowData), [workflowData])
 
   return (
@@ -112,19 +104,23 @@ const Layout = (props: ILayout) => {
       {workflowData ? (
         <Fragment>
           <WorkflowBox data={workflowData} />
-          <NewItemsSpeedDial
-            clickHandler={setModalData}
-            phases={getPhaseSelectList()}
-          />
+          <NewItemsSpeedDial clickHandler={null} />
 
-          <SimpleModal
-            isOpen={modalData.isOpen || false}
-            title={modalData.title}
-            description={modalData.description}
-            type={modalData.type}
-            closeHandler={() => setModalData({ ...modalData, isOpen: false })}
-            phasesArray={modalData.phasesArray}
-          />
+          {modalData ? (
+            <SimpleModal
+              isOpen={modalData.isOpen || false}
+              title={modalData.title}
+              description={modalData.description}
+              type={modalData.type}
+              closeHandler={() =>
+                dispatch({
+                  type: 'MODAL_DATA',
+                  data: { ...modalData, isOpen: false },
+                })
+              }
+              metadata={modalData.metadata}
+            />
+          ) : null}
         </Fragment>
       ) : null}
     </div>

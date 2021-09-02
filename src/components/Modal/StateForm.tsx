@@ -5,7 +5,7 @@ import { useState } from 'react'
 import Button from '@material-ui/core/Button'
 import { Formik } from 'formik'
 import { DBService } from '../../services/db_communication'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -35,12 +35,9 @@ interface IStateData {
   pha_id: number
 }
 
-interface IStateForm {
-  phaseArray: TPhaseList
-}
-
-const StateForm = ({ phaseArray }: IStateForm) => {
+const StateForm = () => {
   const dispatch = useDispatch()
+  const workflowData = useSelector((state) => state.workflowData)
   const classes = useStyles()
   const [data, setData] = useState<IStateData>({
     code: '',
@@ -48,6 +45,9 @@ const StateForm = ({ phaseArray }: IStateForm) => {
     sortOrder: 0,
     pha_id: 0,
   })
+
+  const phaseArray = () =>
+    workflowData?.phases.map((pha) => ({ pha_id: pha.id, code: pha.code }))
 
   const saveData = async (formikData, setSubmitting) => {
     console.log('Initiated save')
@@ -87,7 +87,7 @@ const StateForm = ({ phaseArray }: IStateForm) => {
               <MenuItem value={0}>
                 <em>None</em>
               </MenuItem>
-              {phaseArray.map((pha) => (
+              {phaseArray().map((pha) => (
                 <MenuItem key={pha.pha_id} value={pha.pha_id}>
                   {pha.code}
                 </MenuItem>

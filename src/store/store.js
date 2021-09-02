@@ -3,10 +3,13 @@ import { createStore } from 'redux'
 const initialState = {
   triggerRefresh: false,
   workflowData: null,
+  modalData: null,
 }
 
 const storeSettings = function (state = initialState, action) {
   switch (action.type) {
+    case 'MODAL_DATA':
+      return { ...state, modalData: action.data }
     case 'UPDATE_DATA':
       return { ...state, workflowData: action.data }
     case 'REFRESH':

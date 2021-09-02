@@ -10,6 +10,7 @@ import StateForm from './StateForm'
 import { TPhaseList } from '../newItemsSpeedDial/newItemsSpeedDial'
 import { phaseDefinition } from '../Phase/Phase'
 import { stateDefinition } from '../State/State'
+import { useDispatch, useSelector } from 'react-redux'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,13 +36,13 @@ export type IModal = {
   title: string
   description: string
   type: EModalTypes
-  closeHandler: () => void
-  phasesArray?: TPhaseList
   metadata?: EModalMetadataTypes
 }
 
 export const SimpleModal = (props: IModal) => {
   const classes = useStyles()
+  const dispatch = useDispatch()
+  const modalData = useSelector((state) => state.modalData)
 
   const body = (
     <div className={styles.paper}>
@@ -50,7 +51,7 @@ export const SimpleModal = (props: IModal) => {
       {props.type === EModalTypes.phase ? (
         <PhaseForm props={props?.metadata?.phaseMetadata} />
       ) : props.type === EModalTypes.state ? (
-        <StateForm phaseArray={props?.phasesArray} />
+        <StateForm />
       ) : null}
     </div>
   )
@@ -59,9 +60,12 @@ export const SimpleModal = (props: IModal) => {
     <div>
       <Modal
         open={props.isOpen}
-        onClose={() => props.closeHandler()}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+        onClose={() =>
+          dispatch({
+            type: 'MODAL_DATA',
+            data: { ...modalData, isOpen: false },
+          })
+        }
       >
         {body}
       </Modal>

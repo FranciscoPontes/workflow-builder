@@ -5,7 +5,7 @@ import { useState } from 'react'
 import Button from '@material-ui/core/Button'
 import { Formik } from 'formik'
 import { DBService } from '../../../services/db_communication'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { phaseDefinition } from '../../Phase/Phase'
 import DeleteIcon from '@material-ui/icons/Delete'
 import styles from './PhaseForm.module.css'
@@ -25,12 +25,20 @@ interface IPhaseForm {
 
 const PhaseForm = ({ props }: IPhaseForm) => {
   const dispatch = useDispatch()
+  const workflowData = useSelector((state) => state.workflowData)
   const classes = useStyles()
+
+  const getNewSortOrder = (): number => {
+    const sortOrderArray: Array<number> = workflowData.phases.map(
+      (pha) => pha.sort_order,
+    )
+    return Math.max(...sortOrderArray) + 1
+  }
 
   const [data, setData] = useState<phaseDefinition>({
     code: props?.code || '',
     label: props?.label || '',
-    sortOrder: props?.sortOrder || 0,
+    sortOrder: props?.sortOrder || getNewSortOrder(),
     id: props?.id,
   })
 
@@ -41,7 +49,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
       code: data.code,
       label: data.label,
       sort_order: data.sortOrder,
-      change_type: 'ADD_PHASE',
+      change_type: 'UPDATE_PHASES',
     }
     console.log(stateData)
     await DBService.changeData(stateData)
@@ -86,7 +94,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
             onChange={(e) => setData({ ...data, label: e.target.value })}
             required
           />
-          <TextField
+          {/* <TextField
             id="phase-label"
             label="Sort order"
             variant="outlined"
@@ -96,7 +104,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
             onChange={(e) =>
               setData({ ...data, sortOrder: parseInt(e.target.value) })
             }
-          />
+          /> */}
           <Button
             variant="contained"
             color="primary"

@@ -1,31 +1,31 @@
 #box {
-    width: 80%;
-    border: 2px solid black;
-    /* border-bottom: none; */
-    margin: auto;
-    min-height: 400px;
-    text-align: center;
-    background-color: wheat;
-    margin-top: 20px;
+  width: 80%;
+  border: 2px solid black;
+  /* border-bottom: none; */
+  margin: auto;
+  min-height: 400px;
+  text-align: center;
+  background-color: wheat;
+  margin-top: 20px;
 }
 
 .workflowPhases {
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    /* border-top: 2px solid black; */
-    border-bottom: 2px solid black;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  /* border-top: 2px solid black; */
+  border-bottom: 2px solid black;
 }
 
 .phase {
-    width: 50%;
+  width: 100%;
 }
 
 .states {
-    writing-mode: horizontal-tb;
-    /* text-orientation: upright;    */
-    margin: auto;
-    display: flex;
-    flex-flow: column;
-    margin-bottom: 10px;
+  writing-mode: horizontal-tb;
+  /* text-orientation: upright;    */
+  margin: auto;
+  display: flex;
+  flex-flow: column;
+  margin-bottom: 10px;
 }

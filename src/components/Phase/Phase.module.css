@@ -9,5 +9,5 @@
   margin: 10px;
   /* text-decoration: underline; */
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
 }

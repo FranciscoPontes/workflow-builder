@@ -26,7 +26,7 @@ export const WorkflowBox = ({ data }: IWorkflow) => {
   return (
     <div id={styles.box}>
       {data
-        ? sortPhases(data.phases).map((phase) => (
+        ? data.phases.map((phase) => (
             <div className={styles.workflowPhases} key={phase.code}>
               <div className={styles.phase}>
                 <Phase
@@ -37,18 +37,18 @@ export const WorkflowBox = ({ data }: IWorkflow) => {
                 />
               </div>
               <div className={styles.states}>
-                {sortStates(
-                  data.states.filter((sta) => sta.pha_id === phase.id),
-                ).map((sta) => (
-                  <State
-                    code={sta.code}
-                    key={sta.code}
-                    sort_order={sta.sort_order}
-                    isUIstate={true}
-                    pha_id={sta.pha_id}
-                    id={sta.id}
-                  />
-                ))}
+                {data.states
+                  .filter((sta) => sta.pha_id === phase.id)
+                  .map((sta) => (
+                    <State
+                      code={sta.code}
+                      key={sta.code}
+                      sort_order={sta.sort_order}
+                      isUIstate={true}
+                      pha_id={sta.pha_id}
+                      id={sta.id}
+                    />
+                  ))}
               </div>
             </div>
           ))
