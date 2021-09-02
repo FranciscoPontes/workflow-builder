@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import styles from './Layout.module.css'
 import { WorkflowBox, workflowData } from './WorkflowBox/WorkflowBox'
 import Phase, { phaseDefinition } from './Phase/Phase'
@@ -74,7 +74,7 @@ const Layout = (props: ILayout) => {
     states: getStates(data),
   })
 
-  const [workflowData, setWorkflowData] = useState<workflowData>(null)
+  const workflowData = useSelector((state) => state.workflowData)
 
   const [modalData, setModalData] = useState<IModal>({
     type: null,
@@ -90,7 +90,7 @@ const Layout = (props: ILayout) => {
       appCode: props.appCode,
       DBTier: props.DBTier,
     }).then((res) => res)
-    setWorkflowData(arrangedTemplateData(appData))
+    dispatch({ type: 'UPDATE_DATA', data: arrangedTemplateData(appData) })
   }
 
   useEffect(() => {
@@ -103,26 +103,30 @@ const Layout = (props: ILayout) => {
   }, [refresh])
 
   const getPhaseSelectList = (): TPhaseList =>
-    workflowData?.phases.map((pha) => ({ pha_id: pha.id, code: pha.code }))
+    workflowData.phases.map((pha) => ({ pha_id: pha.id, code: pha.code }))
 
   useEffect(() => console.log(workflowData), [workflowData])
 
   return (
     <div className={styles.layout}>
-      <WorkflowBox data={workflowData} />
-      <NewItemsSpeedDial
-        clickHandler={setModalData}
-        phases={getPhaseSelectList()}
-      />
+      {workflowData ? (
+        <Fragment>
+          <WorkflowBox data={workflowData} />
+          <NewItemsSpeedDial
+            clickHandler={setModalData}
+            phases={getPhaseSelectList()}
+          />
 
-      <SimpleModal
-        isOpen={modalData.isOpen || false}
-        title={modalData.title}
-        description={modalData.description}
-        type={modalData.type}
-        closeHandler={() => setModalData({ ...modalData, isOpen: false })}
-        phasesArray={modalData.phasesArray}
-      />
+          <SimpleModal
+            isOpen={modalData.isOpen || false}
+            title={modalData.title}
+            description={modalData.description}
+            type={modalData.type}
+            closeHandler={() => setModalData({ ...modalData, isOpen: false })}
+            phasesArray={modalData.phasesArray}
+          />
+        </Fragment>
+      ) : null}
     </div>
   )
 }

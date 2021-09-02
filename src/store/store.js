@@ -2,10 +2,13 @@ import { createStore } from 'redux'
 
 const initialState = {
   triggerRefresh: false,
+  workflowData: null,
 }
 
 const storeSettings = function (state = initialState, action) {
   switch (action.type) {
+    case 'UPDATE_DATA':
+      return { ...state, workflowData: action.data }
     case 'REFRESH':
       return { ...state, triggerRefresh: true }
     case 'STOP_REFRESH':

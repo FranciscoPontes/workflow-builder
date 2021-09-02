@@ -4,10 +4,11 @@ import TextField from '@material-ui/core/TextField'
 import { useState } from 'react'
 import Button from '@material-ui/core/Button'
 import { Formik } from 'formik'
-import { DBService } from '../../services/db_communication'
+import { DBService } from '../../../services/db_communication'
 import { useDispatch } from 'react-redux'
-import { phaseDefinition } from '../Phase/Phase'
+import { phaseDefinition } from '../../Phase/Phase'
 import DeleteIcon from '@material-ui/icons/Delete'
+import styles from './PhaseForm.module.css'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,7 +66,10 @@ const PhaseForm = ({ props }: IPhaseForm) => {
       }
     >
       {({ handleSubmit, isSubmitting }) => (
-        <form onSubmit={handleSubmit} className={classes.root}>
+        <form
+          onSubmit={handleSubmit}
+          className={[classes.root, styles.form].join(' ')}
+        >
           <TextField
             id="phase-code"
             label="Code"
@@ -101,14 +105,16 @@ const PhaseForm = ({ props }: IPhaseForm) => {
           >
             Save
           </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            startIcon={<DeleteIcon />}
-            onClick={deletePhase}
-          >
-            Delete
-          </Button>
+          {props?.id ? (
+            <Button
+              variant="contained"
+              color="secondary"
+              startIcon={<DeleteIcon />}
+              onClick={deletePhase}
+            >
+              Delete
+            </Button>
+          ) : null}
         </form>
       )}
     </Formik>

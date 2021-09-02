@@ -1,9 +1,9 @@
 .layout {
-    display: flex;
+  display: flex;
 }
 
 #objectList {
-    display: flex;
-    flex-flow: column;
-    margin-top: 20px;
+  display: flex;
+  flex-flow: column;
+  margin-top: 20px;
 }
