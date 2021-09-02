@@ -99,7 +99,13 @@ const StateForm = () => {
             label="Code"
             variant="outlined"
             value={data.code}
-            onChange={(e) => setData({ ...data, code: e.target.value })}
+            onChange={(e) =>
+              setData({
+                ...data,
+                code: e.target.value,
+                label: e.target.value.toLowerCase(),
+              })
+            }
             required
           />
           <TextField
