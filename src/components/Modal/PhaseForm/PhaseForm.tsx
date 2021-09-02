@@ -11,6 +11,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import styles from './PhaseForm.module.css'
 import { actionTypes } from '../../../store/actionTypes'
 import { IConfirmationData } from '../../UIConfirmation/UIConfirmation'
+import { useEffect } from 'react'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,7 +34,8 @@ const PhaseForm = ({ props }: IPhaseForm) => {
   const classes = useStyles()
 
   const getNewSortOrder = (): number => {
-    const sortOrderArray: Array<number> = workflowData.phases.map(
+    if (!workflowData.phases) return 1
+    const sortOrderArray: Array<number> = workflowData.phases?.map(
       (pha) => pha.sort_order,
     )
     return Math.max(...sortOrderArray) + 1
@@ -85,6 +87,16 @@ const PhaseForm = ({ props }: IPhaseForm) => {
   const tryDelete = () => {
     dispatch({ type: actionTypes.showConfirmation, data: confirmData })
   }
+
+  // when adding new phases, keep increasing new sort order for quick batch insert
+  useEffect(() => {
+    if (!data.id) {
+      setData({
+        ...data,
+        sort_order: getNewSortOrder(),
+      })
+    }
+  }, [workflowData])
 
   return (
     <Formik

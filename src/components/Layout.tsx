@@ -38,7 +38,7 @@ const Layout = ({ props }: ILayout) => {
   const modalData = useSelector((state) => state.modalData)
 
   const getPhases = (data: workflowData): Array<phaseDefinition> => {
-    return data.phases.map((pha) => {
+    return data.phases?.map((pha) => {
       const treatedPhase: phaseDefinition = {
         id: pha.id,
         code: pha.code,
@@ -50,7 +50,7 @@ const Layout = ({ props }: ILayout) => {
   }
 
   const getStates = (data: workflowData): Array<stateDefinition> => {
-    return data.states.map((sta) => {
+    return data.states?.map((sta) => {
       const treatedState: stateDefinition = {
         id: sta.id,
         pha_id: sta.pha_id,
@@ -63,9 +63,9 @@ const Layout = ({ props }: ILayout) => {
   }
 
   const arrangedTemplateData = (data: workflowData): workflowData => ({
-    phases: getPhases(data).sort((x, y) => x.sort_order - y.sort_order),
+    phases: getPhases(data)?.sort((x, y) => x.sort_order - y.sort_order),
     states: getStates(data)
-      .sort((x, y) => x.sort_order - y.sort_order)
+      ?.sort((x, y) => x.sort_order - y.sort_order)
       .sort((x, y) => x.pha_id - y.pha_id),
   })
 
@@ -92,8 +92,6 @@ const Layout = ({ props }: ILayout) => {
 
     return () => null
   }, [refresh])
-
-  useEffect(() => console.log(workflowData), [workflowData])
 
   return (
     <div className={styles.layout}>

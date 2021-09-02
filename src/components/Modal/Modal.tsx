@@ -51,7 +51,7 @@ export const SimpleModal = (props: IModal) => {
       {props.type === EModalTypes.phase ? (
         <PhaseForm props={props?.metadata?.phaseMetadata} />
       ) : props.type === EModalTypes.state ? (
-        <StateForm />
+        <StateForm props={props?.metadata?.stateMetadata} />
       ) : null}
     </div>
   )

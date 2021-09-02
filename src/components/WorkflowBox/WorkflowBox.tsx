@@ -19,7 +19,7 @@ export const WorkflowBox = () => {
   return (
     <div id={styles.box}>
       {data
-        ? data.phases.map((phase) => (
+        ? data.phases?.map((phase) => (
             <div className={styles.workflowPhases} key={phase.code}>
               <div className={styles.phase}>
                 <Phase
@@ -31,7 +31,7 @@ export const WorkflowBox = () => {
               </div>
               <div className={styles.states}>
                 {data.states
-                  .filter((sta) => sta.pha_id === phase.id)
+                  ?.filter((sta) => sta.pha_id === phase.id)
                   .map((sta) => (
                     <State key={sta.code} props={sta} />
                   ))}

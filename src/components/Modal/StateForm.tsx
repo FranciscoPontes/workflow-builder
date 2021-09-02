@@ -10,7 +10,11 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
-import { TPhaseList } from '../newItemsSpeedDial/newItemsSpeedDial'
+import { stateDefinition } from '../State/State'
+import { actionTypes } from '../../store/actionTypes'
+import DeleteIcon from '@material-ui/icons/Delete'
+import { IConfirmationData } from '../UIConfirmation/UIConfirmation'
+import { useEffect } from 'react'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,43 +32,80 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-interface IStateData {
-  code: string
-  label: string
-  sortOrder: number
-  pha_id: number
+interface IStateForm {
+  props: stateDefinition
 }
 
-const StateForm = () => {
+const StateForm = ({ props }: IStateForm) => {
   const dispatch = useDispatch()
   const workflowData = useSelector((state) => state.workflowData)
+  const appID = useSelector((state) => state.appData.appID)
   const classes = useStyles()
-  const [data, setData] = useState<IStateData>({
-    code: '',
-    label: '',
-    sortOrder: 0,
-    pha_id: 0,
+
+  const getNewSortOrder = (): number => {
+    if (!workflowData.states) return 1
+    const sortOrderArray: Array<number> = workflowData.states.map(
+      (sta) => sta.sort_order,
+    )
+    return Math.max(...sortOrderArray) + 1
+  }
+
+  const [data, setData] = useState<stateDefinition>({
+    code: props?.code || '',
+    label: props?.label || '',
+    sort_order: props?.sort_order || getNewSortOrder(),
+    pha_id: props?.pha_id || null,
+    id: props?.id || null,
   })
 
   const phaseArray = () =>
-    workflowData?.phases.map((pha) => ({ pha_id: pha.id, code: pha.code }))
+    workflowData.phases?.map((pha) => ({ pha_id: pha.id, code: pha.code }))
 
   const saveData = async (formikData, setSubmitting) => {
-    console.log('Initiated save')
     const stateData = {
       pha_id: data.pha_id,
-      app_id: window.appID,
+      app_id: appID,
       code: data.code,
       label: data.label,
-      sort_order: data.sortOrder,
-      change_type: 'ADD_STATE',
+      sort_order: data.sort_order,
+      id: data.id,
     }
-    console.log(stateData)
-    await DBService.changeData(stateData)
-    console.log('Finished saving')
+    await DBService.changeData({
+      states: [stateData],
+      change_type: 'UPDATE_STATES',
+    })
     setSubmitting(false)
-    dispatch({ type: 'REFRESH' })
+    dispatch({ type: actionTypes.refresh })
   }
+
+  const deleteState = async () => {
+    await DBService.changeData({
+      change_type: 'REMOVE_STATE',
+      id: props.id,
+    })
+    dispatch({ type: actionTypes.refresh })
+  }
+
+  const confirmData: IConfirmationData = {
+    title: 'Delete State?',
+    description:
+      'This action will delete all associated dependencies (actions, permissions..)',
+    callback: deleteState,
+  }
+
+  const tryDelete = () => {
+    dispatch({ type: actionTypes.showConfirmation, data: confirmData })
+  }
+
+  // when adding new states, keep increasing new sort order for quick batch insert
+  useEffect(() => {
+    if (!data.id) {
+      setData({
+        ...data,
+        sort_order: getNewSortOrder(),
+      })
+    }
+  }, [workflowData])
 
   return (
     <Formik
@@ -76,9 +117,7 @@ const StateForm = () => {
       {({ handleSubmit, isSubmitting }) => (
         <form onSubmit={handleSubmit} className={classes.root}>
           <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel id="demo-simple-select-outlined-label">
-              Phase
-            </InputLabel>
+            <InputLabel>Phase</InputLabel>
             <Select
               value={data.pha_id}
               onChange={(e) => setData({ ...data, pha_id: e.target.value })}
@@ -95,7 +134,6 @@ const StateForm = () => {
             </Select>
           </FormControl>
           <TextField
-            id="phase-code"
             label="Code"
             variant="outlined"
             value={data.code}
@@ -103,28 +141,38 @@ const StateForm = () => {
               setData({
                 ...data,
                 code: e.target.value,
-                label: e.target.value.toLowerCase(),
+                label: data.id ? data.label : e.target.value.toLowerCase(),
               })
             }
             required
           />
           <TextField
-            id="phase-label"
             label="Label"
             variant="outlined"
             value={data.label}
             onChange={(e) => setData({ ...data, label: e.target.value })}
             required
           />
-          <TextField
+          {/* <TextField
             id="phase-label"
             label="Sort order"
             variant="outlined"
             type="number"
             required
-            value={data.sortOrder}
+            value={data.sort_order}
             onChange={(e) => setData({ ...data, sortOrder: e.target.value })}
-          />
+          /> */}
+          {data?.id ? (
+            <Button
+              variant="contained"
+              color="secondary"
+              startIcon={<DeleteIcon />}
+              onClick={tryDelete}
+              size="small"
+            >
+              delete
+            </Button>
+          ) : null}
           <Button
             variant="contained"
             color="primary"
