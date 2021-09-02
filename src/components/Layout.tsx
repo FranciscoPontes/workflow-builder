@@ -110,7 +110,7 @@ const Layout = (props: ILayout) => {
       {workflowData ? (
         <Fragment>
           <WorkflowBox data={workflowData} />
-          <NewItemsSpeedDial clickHandler={null} />
+          <NewItemsSpeedDial />
 
           {modalData ? (
             <SimpleModal

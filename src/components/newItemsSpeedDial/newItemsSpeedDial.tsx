@@ -4,6 +4,8 @@ import SpeedDial from '@material-ui/lab/SpeedDial'
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon'
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction'
 import { EModalTypes, IModal } from '../Modal/Modal'
+import { useDispatch } from 'react-redux'
+import { actionTypes } from '../../store/actionTypes'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,14 +40,10 @@ type TPhaseSelect = {
 
 export type TPhaseList = Array<TPhaseSelect>
 
-interface INewItemsSpeedDial {
-  clickHandler: () => void
-  phases: TPhaseList
-}
-
-const NewItemsSpeedDial = ({ clickHandler, phases }: INewItemsSpeedDial) => {
+const NewItemsSpeedDial = () => {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
+  const dispatch = useDispatch()
 
   const handleClose = () => {
     setOpen(false)
@@ -60,7 +58,6 @@ const NewItemsSpeedDial = ({ clickHandler, phases }: INewItemsSpeedDial) => {
     isOpen: true,
     title: 'Phase settings',
     description: '',
-    closeHandler: null,
   }
 
   const StateModalData: IModal = {
@@ -68,8 +65,6 @@ const NewItemsSpeedDial = ({ clickHandler, phases }: INewItemsSpeedDial) => {
     isOpen: true,
     title: 'State settings',
     description: '',
-    closeHandler: null,
-    phasesArray: phases,
   }
 
   const actions = [
@@ -102,7 +97,12 @@ const NewItemsSpeedDial = ({ clickHandler, phases }: INewItemsSpeedDial) => {
               key={action.name}
               icon={action.icon}
               tooltipTitle={action.name}
-              onClick={() => clickHandler(action.modalData)}
+              onClick={() =>
+                dispatch({
+                  type: actionTypes.modalData,
+                  data: action.modalData,
+                })
+              }
             />
           ))}
         </SpeedDial>
