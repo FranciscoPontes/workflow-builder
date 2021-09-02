@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import NewItemsSpeedDial from '../newItemsSpeedDial/newItemsSpeedDial'
 import Phase, { phaseDefinition } from '../Phase/Phase'
 import { State, stateDefinition } from '../State/State'
@@ -12,17 +13,9 @@ export type workflowData = {
   states: TStates
 }
 
-interface IWorkflow {
-  data: workflowData
-}
+export const WorkflowBox = () => {
+  const data: workflowData = useSelector((state) => state.workflowData)
 
-export const sortPhases = (phases: TPhases): TPhases =>
-  phases.sort((x, y) => x.sortOrder - y.sortOrder)
-
-export const sortStates = (states: TStates): TStates =>
-  states.sort((x, y) => x.sort_order - y.sort_order)
-
-export const WorkflowBox = ({ data }: IWorkflow) => {
   return (
     <div id={styles.box}>
       {data
@@ -31,7 +24,7 @@ export const WorkflowBox = ({ data }: IWorkflow) => {
               <div className={styles.phase}>
                 <Phase
                   code={phase.code}
-                  sortOrder={phase.sortOrder}
+                  sort_order={phase.sort_order}
                   id={phase.id}
                   label={phase.label}
                 />
@@ -40,14 +33,7 @@ export const WorkflowBox = ({ data }: IWorkflow) => {
                 {data.states
                   .filter((sta) => sta.pha_id === phase.id)
                   .map((sta) => (
-                    <State
-                      code={sta.code}
-                      key={sta.code}
-                      sort_order={sta.sort_order}
-                      isUIstate={true}
-                      pha_id={sta.pha_id}
-                      id={sta.id}
-                    />
+                    <State key={sta.code} props={sta} />
                   ))}
               </div>
             </div>

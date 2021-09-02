@@ -14,7 +14,7 @@ export interface phaseDefinition {
   id: number
   code: string
   label: string
-  sortOrder: number
+  sort_order: number
 }
 
 const Phase = (props: phaseDefinition) => {

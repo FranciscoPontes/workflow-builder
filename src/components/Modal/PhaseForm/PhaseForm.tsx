@@ -28,6 +28,7 @@ interface IPhaseForm {
 const PhaseForm = ({ props }: IPhaseForm) => {
   const dispatch = useDispatch()
   const workflowData = useSelector((state) => state.workflowData)
+  const appID = useSelector((state) => state.appData.appID)
   const modalData = useSelector((state) => state.modalData)
   const classes = useStyles()
 
@@ -41,17 +42,17 @@ const PhaseForm = ({ props }: IPhaseForm) => {
   const [data, setData] = useState<phaseDefinition>({
     code: props?.code || '',
     label: props?.label || '',
-    sortOrder: props?.sortOrder || getNewSortOrder(),
+    sort_order: props?.sort_order || getNewSortOrder(),
     id: props?.id,
   })
 
   const saveData = async (formikData, setSubmitting) => {
     const phaseData = {
       id: data.id,
-      app_id: window.appID,
+      app_id: appID,
       code: data.code,
       label: data.label,
-      sort_order: data.sortOrder,
+      sort_order: data.sort_order,
     }
 
     const preparedDBData = {
@@ -62,7 +63,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
     await DBService.changeData(preparedDBData)
 
     setSubmitting(false)
-    dispatch({ type: 'REFRESH' })
+    dispatch({ type: actionTypes.refresh })
   }
 
   const deletePhase = async () => {
@@ -70,7 +71,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
       change_type: 'REMOVE_PHASE',
       id: data.id,
     })
-    dispatch({ type: 'REFRESH' })
+    dispatch({ type: actionTypes.refresh })
     dispatch({ type: 'MODAL_DATA', data: { ...modalData, isOpen: false } })
   }
 
