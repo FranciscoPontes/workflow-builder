@@ -107,7 +107,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
               setData({
                 ...data,
                 code: e.target.value,
-                label: e.target.value.toLowerCase(),
+                label: data.id ? data.label : e.target.value.toLowerCase(),
               })
             }
             required
