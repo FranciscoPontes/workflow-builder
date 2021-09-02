@@ -1,39 +1,39 @@
 .stateContainer {
-    display: flex;
-    margin: 10px 3px;    
+  display: flex;
+  margin: 10px 3px;
 }
 
 .state {
-    background-color: blue;
-    color: white;
-    text-align: center;
-    width: 30vh;
-    padding: 10px;
-    /* border-radius: 50%; */
-    font-size: smaller;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background-color: #7f7f9a;
+  color: white;
+  text-align: center;
+  width: 70vh;
+  padding: 10px;
+  /* border-radius: 50%; */
+  font-size: smaller;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .notUIState {
-    background-color: grey;
+  background-color: grey;
 }
 
 /* arrows */
 .arrowContainer {
-    display: flex;
-    flex-flow: column;
-    font-size: smaller;
-    justify-content: center;
+  display: flex;
+  flex-flow: column;
+  font-size: smaller;
+  justify-content: center;
 }
 
 .arrow {
-    cursor: pointer;
-    margin: 3px 0;
+  cursor: pointer;
+  margin: 3px 0;
 }
 
 /* gear icon */
 .gear {
-    cursor: pointer;
+  cursor: pointer;
 }

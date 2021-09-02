@@ -26,6 +26,7 @@ interface IPhaseForm {
 const PhaseForm = ({ props }: IPhaseForm) => {
   const dispatch = useDispatch()
   const workflowData = useSelector((state) => state.workflowData)
+  const modalData = useSelector((state) => state.modalData)
   const classes = useStyles()
 
   const getNewSortOrder = (): number => {
@@ -64,6 +65,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
       id: data.id,
     })
     dispatch({ type: 'REFRESH' })
+    dispatch({ type: 'MODAL_DATA', data: { ...modalData, isOpen: false } })
   }
 
   return (
