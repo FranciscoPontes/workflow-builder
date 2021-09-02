@@ -33,9 +33,14 @@ enum EDBTiers {
   PROD = 'PROD',
 }
 
-export interface ILayout {
+type TLayout = {
   appCode: string
   DBTier: EDBTiers
+  appID: number
+}
+
+export interface ILayout {
+  props: TLayout
 }
 
 interface IAppData {
@@ -44,9 +49,11 @@ interface IAppData {
 }
 
 // objet panel in the left + workflow box
-const Layout = (props: ILayout) => {
+const Layout = ({ props }: ILayout) => {
   const refresh = useSelector((state) => state.triggerRefresh)
   const dispatch = useDispatch()
+
+  console.log(props)
 
   const getPhases = (data: IAppData): Array<phaseDefinition> => {
     return data.phases.map((pha) => {
@@ -104,6 +111,9 @@ const Layout = (props: ILayout) => {
   }, [refresh])
 
   useEffect(() => console.log(workflowData), [workflowData])
+
+  // set app data
+  useEffect(() => dispatch({ type: actionTypes.setAppData, data: props }), [])
 
   return (
     <div className={styles.layout}>

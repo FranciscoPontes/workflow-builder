@@ -7,7 +7,7 @@ import store from './store/store'
 const start = (data, node) => {
   ReactDOM.render(
     <Provider store={store}>
-      <App appCode={data.appCode} DBTier={data.DBTier} />
+      <App props={data} />
     </Provider>,
     node,
   )

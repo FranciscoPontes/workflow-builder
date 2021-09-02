@@ -1,15 +1,12 @@
-import React from 'react';
-import Layout, { ILayout } from './components/Layout';
+import React from 'react'
+import Layout, { ILayout } from './components/Layout'
 
-const App = (data : ILayout) => {
+const App = ({ props }: ILayout) => {
   return (
     <div>
-      <Layout 
-        appCode={data.appCode}
-        DBTier={data.DBTier}
-      />
+      <Layout props={props} />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

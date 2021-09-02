@@ -16,10 +16,17 @@ const initialState = {
     description: null,
     callback: null,
   },
+  appData: {
+    appID: null,
+    appCode: null,
+    DBTier: null,
+  },
 }
 
 const storeSettings = function (state = initialState, action) {
   switch (action.type) {
+    case actionTypes.setAppData:
+      return { ...state, appData: action.data }
     case actionTypes.showConfirmation:
       return { ...state, confirmationData: { open: true, ...action.data } }
     case actionTypes.hideConfirmation:

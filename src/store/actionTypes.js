@@ -7,4 +7,5 @@ export const actionTypes = {
   stopRefresh: 'STOP_REFRESH',
   showConfirmation: 'SHOW_CONFIRMATION',
   hideConfirmation: 'HIDE_CONFIRMATION',
+  setAppData: 'SET_APP_DATA',
 }
