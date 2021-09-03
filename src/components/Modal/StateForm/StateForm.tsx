@@ -44,21 +44,24 @@ const StateForm = ({ props }: IStateForm) => {
   const appID = useSelector((state) => state.appData.appID)
   const classes = useStyles()
 
-  const getNewSortOrder = (): number => {
-    if (!workflowData.states) return 1
-    const sortOrderArray: Array<number> = workflowData.states.map(
-      (sta) => sta.sort_order,
-    )
-    return Math.max(...sortOrderArray) + 1
-  }
-
   const [data, setData] = useState<stateDefinition>({
     code: props?.code || '',
     label: props?.label || '',
-    sort_order: props?.sort_order || getNewSortOrder(),
+    sort_order: props?.sort_order,
     pha_id: props?.pha_id || null,
     id: props?.id || null,
   })
+
+  const getNewSortOrder = (): number => {
+    if (!workflowData.states) return 1
+
+    const sortOrderArray: Array<number> = workflowData.states
+      .filter((sta) => sta.pha_id === data.pha_id)
+      .map((sta) => sta.sort_order)
+
+    if (sortOrderArray.length === 0) return 1
+    return Math.max(...sortOrderArray) + 1
+  }
 
   const phaseArray = () =>
     workflowData.phases?.map((pha) => ({ pha_id: pha.id, code: pha.code }))
@@ -72,6 +75,12 @@ const StateForm = ({ props }: IStateForm) => {
       sort_order: data.sort_order,
       id: data.id,
     }
+    console.log(
+      JSON.stringify({
+        states: [stateData],
+        change_type: DBActionTypes.updateStates,
+      }),
+    )
     await DBService.changeData({
       states: [stateData],
       change_type: DBActionTypes.updateStates,
@@ -110,6 +119,16 @@ const StateForm = ({ props }: IStateForm) => {
       })
     }
   }, [workflowData])
+
+  // update new sort order when selected phase changes
+  useEffect(() => {
+    console.log('Changing sort order due to phase change..')
+    console.log(getNewSortOrder())
+    setData({
+      ...data,
+      sort_order: getNewSortOrder(),
+    })
+  }, [data.pha_id])
 
   return (
     <Formik
