@@ -41,4 +41,5 @@
 /* gear icon */
 .gear {
   cursor: pointer;
+  height: fit-content;
 }
