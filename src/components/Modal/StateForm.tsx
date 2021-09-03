@@ -15,6 +15,7 @@ import { actionTypes } from '../../store/actionTypes'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { IConfirmationData } from '../UIConfirmation/UIConfirmation'
 import { useEffect } from 'react'
+import { DBActionTypes } from '../../services/dbActionTypes'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,7 +73,7 @@ const StateForm = ({ props }: IStateForm) => {
     }
     await DBService.changeData({
       states: [stateData],
-      change_type: 'UPDATE_STATES',
+      change_type: DBActionTypes.updateStates,
     })
     setSubmitting(false)
     dispatch({ type: actionTypes.refresh })
@@ -80,7 +81,7 @@ const StateForm = ({ props }: IStateForm) => {
 
   const deleteState = async () => {
     await DBService.changeData({
-      change_type: 'REMOVE_STATE',
+      change_type: DBActionTypes.removeState,
       id: props.id,
     })
     dispatch({ type: actionTypes.refresh })

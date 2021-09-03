@@ -12,6 +12,7 @@ import styles from './PhaseForm.module.css'
 import { actionTypes } from '../../../store/actionTypes'
 import { IConfirmationData } from '../../UIConfirmation/UIConfirmation'
 import { useEffect } from 'react'
+import { DBActionTypes } from '../../../services/dbActionTypes'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,7 +60,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
 
     const preparedDBData = {
       phases: [phaseData],
-      change_type: 'UPDATE_PHASES',
+      change_type: DBActionTypes.updatePhases,
     }
 
     await DBService.changeData(preparedDBData)
@@ -70,7 +71,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
 
   const deletePhase = async () => {
     await DBService.changeData({
-      change_type: 'REMOVE_PHASE',
+      change_type: DBActionTypes.removePhase,
       id: data.id,
     })
     dispatch({ type: actionTypes.refresh })
