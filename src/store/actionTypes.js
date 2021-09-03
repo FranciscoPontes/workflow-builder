@@ -1,7 +1,8 @@
 export const actionTypes = {
   updateSnackbar: 'UPDATE_SNACKBAR_DATA',
   closeSnackbar: 'CLOSE_SNACKBAR',
-  modalData: 'MODAL_DATA',
+  showModal: 'SHOW_MODAL',
+  hideModal: 'HIDE_MODAL',
   updateData: 'UPDATE_DATA',
   refresh: 'REFRESH',
   stopRefresh: 'STOP_REFRESH',

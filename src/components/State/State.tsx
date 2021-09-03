@@ -24,7 +24,6 @@ export const State = ({ props }: IStateProps) => {
   const dispatch = useDispatch()
 
   const modalData: IModal = {
-    isOpen: true,
     title: 'State settings',
     description: '',
     type: EModalTypes.state,
@@ -38,7 +37,7 @@ export const State = ({ props }: IStateProps) => {
       <div
         className={styles.gear}
         onClick={() =>
-          dispatch({ type: actionTypes.modalData, data: modalData })
+          dispatch({ type: actionTypes.showModal, data: modalData })
         }
       >
         <SettingsIcon fontSize="small" />

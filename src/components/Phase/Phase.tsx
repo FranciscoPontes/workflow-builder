@@ -70,7 +70,6 @@ const Phase = (props: phaseDefinition) => {
   const phaseModalData = {
     title: 'Phase settings',
     description: null,
-    isOpen: true,
     type: EModalTypes.phase,
     metadata: { phaseMetadata: props },
   }
@@ -80,7 +79,7 @@ const Phase = (props: phaseDefinition) => {
       <div
         onClick={() =>
           dispatch({
-            type: 'MODAL_DATA',
+            type: actionTypes.showModal,
             data: phaseModalData,
           })
         }

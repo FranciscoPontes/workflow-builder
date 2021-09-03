@@ -55,14 +55,12 @@ const NewItemsSpeedDial = () => {
 
   const PhaseModalData: IModal = {
     type: EModalTypes.phase,
-    isOpen: true,
     title: 'Phase settings',
     description: '',
   }
 
   const StateModalData: IModal = {
     type: EModalTypes.state,
-    isOpen: true,
     title: 'State settings',
     description: '',
   }
@@ -99,7 +97,7 @@ const NewItemsSpeedDial = () => {
               tooltipTitle={action.name}
               onClick={() =>
                 dispatch({
-                  type: actionTypes.modalData,
+                  type: actionTypes.showModal,
                   data: action.modalData,
                 })
               }

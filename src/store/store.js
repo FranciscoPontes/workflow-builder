@@ -4,7 +4,13 @@ import { actionTypes } from './actionTypes'
 const initialState = {
   triggerRefresh: false,
   workflowData: null,
-  modalData: null,
+  modalData: {
+    isOpen: false,
+    title: null,
+    description: null,
+    type: null,
+    metadata: null,
+  },
   snackbarData: {
     show: false,
     content: '',
@@ -38,8 +44,10 @@ const storeSettings = function (state = initialState, action) {
       return { ...state, snackbarData: action.data }
     case actionTypes.closeSnackbar:
       return { ...state, snackbarData: { ...state.snackbarData, show: false } }
-    case actionTypes.modalData:
-      return { ...state, modalData: action.data }
+    case actionTypes.showModal:
+      return { ...state, modalData: { ...action.data, isOpen: true } }
+    case actionTypes.hideModal:
+      return { ...state, modalData: { ...state.modalData, isOpen: false } }
     case actionTypes.updateData:
       return { ...state, workflowData: action.data }
     case actionTypes.refresh:

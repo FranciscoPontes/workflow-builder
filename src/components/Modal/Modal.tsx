@@ -2,15 +2,14 @@ import React from 'react'
 import Modal from '@material-ui/core/Modal'
 import styles from './Modal.module.css'
 import { makeStyles } from '@material-ui/core/styles'
-import TextField from '@material-ui/core/TextField'
 import { useState } from 'react'
 import PhaseForm from './PhaseForm/PhaseForm'
 import { useEffect } from 'react'
 import StateForm from './StateForm'
-import { TPhaseList } from '../newItemsSpeedDial/newItemsSpeedDial'
 import { phaseDefinition } from '../Phase/Phase'
 import { stateDefinition } from '../State/State'
 import { useDispatch, useSelector } from 'react-redux'
+import { actionTypes } from '../../store/actionTypes'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,7 +31,7 @@ export interface EModalMetadataTypes {
 }
 
 export type IModal = {
-  isOpen: boolean
+  isOpen?: boolean
   title: string
   description: string
   type: EModalTypes
@@ -62,8 +61,7 @@ export const SimpleModal = (props: IModal) => {
         open={props.isOpen}
         onClose={() =>
           dispatch({
-            type: 'MODAL_DATA',
-            data: { ...modalData, isOpen: false },
+            type: actionTypes.hideModal,
           })
         }
       >
