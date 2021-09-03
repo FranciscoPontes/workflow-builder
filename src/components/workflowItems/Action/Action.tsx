@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import styles from './Action.module.css'
 import MailIcon from '@material-ui/icons/Mail'
 import TrendingFlatIcon from '@material-ui/icons/TrendingFlat'
 import NewReleasesIcon from '@material-ui/icons/NewReleases'
+import SettingsIcon from '@material-ui/icons/Settings'
 
 enum EUserAction {
   yes = 'Y',
@@ -31,15 +32,18 @@ interface IActionProps {
 
 const Action = ({ props }: IActionProps) => {
   return (
-    <div className={styles.action}>
-      <span>{props.label}</span>
-      {props.action_type === EActionTypes.mail ? (
-        <MailIcon />
-      ) : props.action_type === EActionTypes.stateChange ? (
-        <TrendingFlatIcon />
-      ) : (
-        <NewReleasesIcon />
-      )}
+    <div style={{ display: 'flex', width: '60%' }}>
+      <SettingsIcon fontSize="small" />
+      <div className={styles.action}>
+        <span>{props.label}</span>
+        {props.action_type === EActionTypes.mail ? (
+          <MailIcon />
+        ) : props.action_type === EActionTypes.stateChange ? (
+          <TrendingFlatIcon />
+        ) : (
+          <NewReleasesIcon />
+        )}
+      </div>
     </div>
   )
 }
