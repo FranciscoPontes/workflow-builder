@@ -75,7 +75,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
       id: data.id,
     })
     dispatch({ type: actionTypes.refresh })
-    dispatch({ type: 'MODAL_DATA', data: { ...modalData, isOpen: false } })
+    dispatch({ type: actionTypes.hideModal })
   }
 
   const confirmData: IConfirmationData = {

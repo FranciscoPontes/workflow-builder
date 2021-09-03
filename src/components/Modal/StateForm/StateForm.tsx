@@ -4,18 +4,19 @@ import TextField from '@material-ui/core/TextField'
 import { useState } from 'react'
 import Button from '@material-ui/core/Button'
 import { Formik } from 'formik'
-import { DBService } from '../../services/db_communication'
+import { DBService } from '../../../services/db_communication'
 import { useDispatch, useSelector } from 'react-redux'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
-import { stateDefinition } from '../State/State'
-import { actionTypes } from '../../store/actionTypes'
+import { stateDefinition } from '../../State/State'
+import { actionTypes } from '../../../store/actionTypes'
 import DeleteIcon from '@material-ui/icons/Delete'
-import { IConfirmationData } from '../UIConfirmation/UIConfirmation'
+import { IConfirmationData } from '../../UIConfirmation/UIConfirmation'
 import { useEffect } from 'react'
-import { DBActionTypes } from '../../services/dbActionTypes'
+import { DBActionTypes } from '../../../services/dbActionTypes'
+import styles from './StateForm.module.css'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -85,6 +86,7 @@ const StateForm = ({ props }: IStateForm) => {
       id: props.id,
     })
     dispatch({ type: actionTypes.refresh })
+    dispatch({ type: actionTypes.hideModal })
   }
 
   const confirmData: IConfirmationData = {
@@ -116,7 +118,10 @@ const StateForm = ({ props }: IStateForm) => {
       }
     >
       {({ handleSubmit, isSubmitting }) => (
-        <form onSubmit={handleSubmit} className={classes.root}>
+        <form
+          onSubmit={handleSubmit}
+          className={[classes.root, styles.stateForm].join(' ')}
+        >
           <FormControl variant="outlined" className={classes.formControl}>
             <InputLabel>Phase</InputLabel>
             <Select
@@ -163,25 +168,33 @@ const StateForm = ({ props }: IStateForm) => {
             value={data.sort_order}
             onChange={(e) => setData({ ...data, sortOrder: e.target.value })}
           /> */}
-          {data?.id ? (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              margin: '20px',
+            }}
+          >
+            {data?.id ? (
+              <Button
+                variant="contained"
+                color="secondary"
+                startIcon={<DeleteIcon />}
+                onClick={tryDelete}
+                size="small"
+              >
+                delete
+              </Button>
+            ) : null}
             <Button
               variant="contained"
-              color="secondary"
-              startIcon={<DeleteIcon />}
-              onClick={tryDelete}
-              size="small"
+              color="primary"
+              disabled={isSubmitting}
+              type="submit"
             >
-              delete
+              Save
             </Button>
-          ) : null}
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={isSubmitting}
-            type="submit"
-          >
-            Save
-          </Button>
+          </div>
         </form>
       )}
     </Formik>
