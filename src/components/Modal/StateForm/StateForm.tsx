@@ -168,7 +168,7 @@ const StateForm = ({ props }: IStateForm) => {
             onChange={(e) =>
               setData({
                 ...data,
-                code: e.target.value,
+                code: e.target.value.toUpperCase(),
                 label: data.id ? data.label : e.target.value.toLowerCase(),
               })
             }

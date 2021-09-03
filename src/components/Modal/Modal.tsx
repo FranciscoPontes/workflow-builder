@@ -10,6 +10,8 @@ import { phaseDefinition } from '../Phase/Phase'
 import { stateDefinition } from '../State/State'
 import { useDispatch, useSelector } from 'react-redux'
 import { actionTypes } from '../../store/actionTypes'
+import ActionForm from './ActionForm/ActionForm'
+import { IAction } from '../workflowItems/Action/Action'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,11 +25,13 @@ const useStyles = makeStyles((theme) => ({
 export enum EModalTypes {
   phase = 'PHASE',
   state = 'STATE',
+  action = 'ACTION',
 }
 
 export interface EModalMetadataTypes {
   phaseMetadata?: phaseDefinition
   stateMetadata?: stateDefinition
+  actionMetadata?: IAction
 }
 
 export type IModal = {
@@ -51,7 +55,9 @@ export const SimpleModal = (props: IModal) => {
         <PhaseForm props={props?.metadata?.phaseMetadata} />
       ) : props.type === EModalTypes.state ? (
         <StateForm props={props?.metadata?.stateMetadata} />
-      ) : null}
+      ) : (
+        <ActionForm props={props?.metadata?.actionMetadata} />
+      )}
     </div>
   )
 

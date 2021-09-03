@@ -15,6 +15,7 @@ import { actionTypes } from '../store/actionTypes'
 import UIConfirmation from './UIConfirmation/UIConfirmation'
 import { IPermission } from './workflowItems/Permission/Permission'
 import { IAction } from './workflowItems/Action/Action'
+import AddCircleIcon from '@material-ui/icons/AddCircle'
 
 enum EDBTiers {
   DEV = 'DEV',
@@ -38,6 +39,12 @@ const Layout = ({ props }: ILayout) => {
   const dispatch = useDispatch()
   const workflowData = useSelector((state) => state.workflowData)
   const modalData = useSelector((state) => state.modalData)
+
+  const PhaseModalData: IModal = {
+    type: EModalTypes.phase,
+    title: 'New Phase',
+    description: '',
+  }
 
   const preparePhases = (data: workflowData): Array<phaseDefinition> => {
     return data.phases?.map((pha) => {
@@ -131,8 +138,21 @@ const Layout = ({ props }: ILayout) => {
       {workflowData ? (
         <Fragment>
           <WorkflowBox />
-          <NewItemsSpeedDial />
-
+          <div
+            style={{
+              margin: '0 10px',
+              cursor: 'pointer',
+              height: 'fit-content',
+            }}
+            onClick={() =>
+              dispatch({
+                type: actionTypes.showModal,
+                data: PhaseModalData,
+              })
+            }
+          >
+            <AddCircleIcon fontSize="large" />
+          </div>
           {modalData ? (
             <SimpleModal
               isOpen={modalData.isOpen || false}

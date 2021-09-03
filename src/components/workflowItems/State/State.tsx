@@ -12,6 +12,7 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 import Badge from '@material-ui/core/Badge'
 import Typography from '@material-ui/core/Typography'
 import Action, { IAction } from '../Action/Action'
+import AddCircleIcon from '@material-ui/icons/AddCircle'
 
 export interface stateDefinition {
   id: number
@@ -46,6 +47,17 @@ export const State = ({ props, permissionCount, actions }: IStateProps) => {
     type: EModalTypes.state,
     metadata: {
       stateMetadata: props,
+    },
+  }
+
+  const ActionModalData: IModal = {
+    title: 'New action',
+    description: '',
+    type: EModalTypes.action,
+    metadata: {
+      actionMetadata: {
+        sta_id: props.id,
+      },
     },
   }
 
@@ -140,6 +152,17 @@ export const State = ({ props, permissionCount, actions }: IStateProps) => {
               indexOfThisState + 1 !== statesLenght ? 'inherit' : 'disabled'
             }
           />
+        </div>
+        <div
+          style={{ margin: '0 10px', cursor: 'pointer' }}
+          onClick={() =>
+            dispatch({
+              type: actionTypes.showModal,
+              data: ActionModalData,
+            })
+          }
+        >
+          <AddCircleIcon fontSize="large" />
         </div>
       </div>
     </div>

@@ -6,14 +6,18 @@ import Button from '@material-ui/core/Button'
 import { Formik } from 'formik'
 import { DBService } from '../../../services/db_communication'
 import { useDispatch, useSelector } from 'react-redux'
-import { phaseDefinition } from '../../Phase/Phase'
-import DeleteIcon from '@material-ui/icons/Delete'
-import styles from './PhaseForm.module.css'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
 import { actionTypes } from '../../../store/actionTypes'
+import DeleteIcon from '@material-ui/icons/Delete'
 import { IConfirmationData } from '../../UIConfirmation/UIConfirmation'
 import { useEffect } from 'react'
 import { DBActionTypes } from '../../../services/dbActionTypes'
-import { useRef } from 'react'
+import styles from './ActionForm.module.css'
+import { IAction } from '../../workflowItems/Action/Action'
+import { stateDefinition } from '../../workflowItems/State/State'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,76 +26,90 @@ const useStyles = makeStyles((theme) => ({
       width: '25ch',
     },
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
 }))
 
-interface IPhaseForm {
-  props: phaseDefinition
+interface IActionForm {
+  props: IAction
 }
 
-const PhaseForm = ({ props }: IPhaseForm) => {
+const ActionForm = ({ props }: IActionForm) => {
   const dispatch = useDispatch()
   const workflowData = useSelector((state) => state.workflowData)
   const appID = useSelector((state) => state.appData.appID)
-  const modalData = useSelector((state) => state.modalData)
   const classes = useStyles()
 
+  const [data, setData] = useState<IAction>({
+    action_type: props.action_type || null,
+    code: props.code,
+    id: props.id,
+    label: props.label,
+    sta_id: props.sta_id,
+    user_action_yn: props.user_action_yn,
+    sort_order: props.sort_order,
+  })
+
   const getNewSortOrder = (): number => {
-    if (!workflowData.phases) return 1
-    const sortOrderArray: Array<number> = workflowData.phases?.map(
-      (pha) => pha.sort_order,
-    )
+    if (!workflowData.actions) return 1
+
+    const sortOrderArray: Array<number> = workflowData.actions
+      .filter((act) => act.sta_id === data.sta_id)
+      .map((act) => act.sort_order)
+
+    if (sortOrderArray.length === 0) return 1
     return Math.max(...sortOrderArray) + 1
   }
 
-  const [data, setData] = useState<phaseDefinition>({
-    code: props?.code || '',
-    label: props?.label || '',
-    sort_order: props?.sort_order || getNewSortOrder(),
-    id: props?.id,
-  })
+  const stateArray = () =>
+    workflowData.states?.map((sta: stateDefinition) => ({
+      id: sta.id,
+      label: sta.code,
+    }))
 
   const saveData = async (formikData, setSubmitting) => {
-    const phaseData = {
-      id: data.id,
-      app_id: appID,
-      code: data.code,
-      label: data.label,
-      sort_order: data.sort_order,
-    }
-
-    const preparedDBData = {
-      phases: [phaseData],
-      change_type: DBActionTypes.updatePhases,
-    }
-
-    await DBService.changeData(preparedDBData)
-
+    const actionData = { ...data, app_id: appID }
+    console.log(
+      JSON.stringify({
+        states: [actionData],
+        change_type: DBActionTypes.updateStates,
+      }),
+    )
+    await DBService.changeData({
+      states: [actionData],
+      change_type: DBActionTypes.updateStates,
+    })
     setSubmitting(false)
     dispatch({ type: actionTypes.refresh })
     if (data.id) dispatch({ type: actionTypes.hideModal })
   }
 
-  const deletePhase = async () => {
+  const deleteState = async () => {
     await DBService.changeData({
-      change_type: DBActionTypes.removePhase,
-      id: data.id,
+      change_type: DBActionTypes.removeState,
+      id: props.id,
     })
     dispatch({ type: actionTypes.refresh })
     dispatch({ type: actionTypes.hideModal })
   }
 
   const confirmData: IConfirmationData = {
-    title: 'Delete Phase?',
+    title: 'Delete Action?',
     description:
-      'This action will delete all associated states and dependencies (actions, permissions..)',
-    callback: deletePhase,
+      'This action will delete all associated dependencies (action settings)',
+    callback: deleteState,
   }
 
   const tryDelete = () => {
     dispatch({ type: actionTypes.showConfirmation, data: confirmData })
   }
 
-  // when adding new phases, keep increasing new sort order for quick batch insert
+  // when adding new states, keep increasing new sort order for quick batch insert
   useEffect(() => {
     if (!data.id) {
       setData({
@@ -100,6 +118,16 @@ const PhaseForm = ({ props }: IPhaseForm) => {
       })
     }
   }, [workflowData])
+
+  // update new sort order when selected phase changes
+  useEffect(() => {
+    console.log('Changing sort order due to state change..')
+    console.log(getNewSortOrder())
+    setData({
+      ...data,
+      sort_order: getNewSortOrder(),
+    })
+  }, [data.sta_id])
 
   return (
     <Formik
@@ -111,11 +139,28 @@ const PhaseForm = ({ props }: IPhaseForm) => {
       {({ handleSubmit, isSubmitting }) => (
         <form
           onSubmit={handleSubmit}
-          className={[classes.root, styles.form].join(' ')}
+          className={[classes.root, styles.actionForm].join(' ')}
         >
+          <FormControl variant="outlined" className={classes.formControl}>
+            <InputLabel>State</InputLabel>
+            <Select
+              value={data.sta_id}
+              onChange={(e) => setData({ ...data, sta_id: e.target.value })}
+              label="State"
+              required
+            >
+              <MenuItem value={null}>
+                <em>None</em>
+              </MenuItem>
+              {stateArray().map((sta) => (
+                <MenuItem key={sta.id} value={sta.id}>
+                  {sta.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <TextField
             autoFocus
-            id="phase-code"
             label="Code"
             variant="outlined"
             value={data.code}
@@ -129,7 +174,6 @@ const PhaseForm = ({ props }: IPhaseForm) => {
             required
           />
           <TextField
-            id="phase-label"
             label="Label"
             variant="outlined"
             value={data.label}
@@ -142,10 +186,8 @@ const PhaseForm = ({ props }: IPhaseForm) => {
             variant="outlined"
             type="number"
             required
-            value={data.sortOrder}
-            onChange={(e) =>
-              setData({ ...data, sortOrder: parseInt(e.target.value) })
-            }
+            value={data.sort_order}
+            onChange={(e) => setData({ ...data, sortOrder: e.target.value })}
           /> */}
           <div
             style={{
@@ -154,7 +196,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
               margin: '20px',
             }}
           >
-            {props?.id ? (
+            {data?.id ? (
               <Button
                 variant="contained"
                 color="secondary"
@@ -170,7 +212,6 @@ const PhaseForm = ({ props }: IPhaseForm) => {
               color="primary"
               disabled={isSubmitting}
               type="submit"
-              size="small"
             >
               Save
             </Button>
@@ -181,4 +222,4 @@ const PhaseForm = ({ props }: IPhaseForm) => {
   )
 }
 
-export default PhaseForm
+export default ActionForm

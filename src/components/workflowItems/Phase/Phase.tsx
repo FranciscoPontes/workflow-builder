@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './Phase.module.css'
 import SettingsIcon from '@material-ui/icons/Settings'
-import { EModalTypes } from '../../Modal/Modal'
+import { EModalMetadataTypes, EModalTypes, IModal } from '../../Modal/Modal'
 import { useState } from 'react'
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
@@ -10,6 +10,7 @@ import { DBService } from '../../../services/db_communication'
 import { actionTypes } from '../../../store/actionTypes'
 import { EseverityTypes, ISnackbarData } from '../../SnackBar/SnackBar'
 import { DBActionTypes } from '../../../services/dbActionTypes'
+import AddCircleIcon from '@material-ui/icons/AddCircle'
 
 export interface phaseDefinition {
   id: number
@@ -75,6 +76,19 @@ const Phase = (props: phaseDefinition) => {
     metadata: { phaseMetadata: props },
   }
 
+  const metadata: EModalMetadataTypes = {
+    stateMetadata: {
+      pha_id: props.id,
+    },
+  }
+
+  const StateModalData: IModal = {
+    type: EModalTypes.state,
+    title: 'New State',
+    description: '',
+    metadata: metadata,
+  }
+
   return (
     <div className={styles.phase}>
       <div
@@ -110,6 +124,17 @@ const Phase = (props: phaseDefinition) => {
               indexOfThisPhase + 1 !== phasesLenght ? 'inherit' : 'disabled'
             }
           />
+        </div>
+        <div
+          style={{ margin: '0 10px', cursor: 'pointer' }}
+          onClick={() =>
+            dispatch({
+              type: actionTypes.showModal,
+              data: StateModalData,
+            })
+          }
+        >
+          <AddCircleIcon fontSize="large" />
         </div>
       </div>
     </div>
