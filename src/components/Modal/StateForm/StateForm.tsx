@@ -140,6 +140,7 @@ const StateForm = ({ props }: IStateForm) => {
             </Select>
           </FormControl>
           <TextField
+            autoFocus
             label="Code"
             variant="outlined"
             value={data.code}

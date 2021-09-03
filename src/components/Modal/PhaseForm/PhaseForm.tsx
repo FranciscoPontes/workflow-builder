@@ -13,6 +13,7 @@ import { actionTypes } from '../../../store/actionTypes'
 import { IConfirmationData } from '../../UIConfirmation/UIConfirmation'
 import { useEffect } from 'react'
 import { DBActionTypes } from '../../../services/dbActionTypes'
+import { useRef } from 'react'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -112,6 +113,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
           className={[classes.root, styles.form].join(' ')}
         >
           <TextField
+            autoFocus
             id="phase-code"
             label="Code"
             variant="outlined"
