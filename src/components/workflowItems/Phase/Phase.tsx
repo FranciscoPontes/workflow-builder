@@ -61,11 +61,11 @@ const Phase = (props: phaseDefinition) => {
   }
 
   const changePhaseOrderUp = async () => {
-    changePhaseOrder(1)
+    if (indexOfThisPhase + 1 !== phasesLenght) changePhaseOrder(1)
   }
 
   const changePhaseOrderDown = async () => {
-    changePhaseOrder(-1)
+    if (indexOfThisPhase !== 0) changePhaseOrder(-1)
   }
 
   const phaseModalData = {
@@ -90,16 +90,27 @@ const Phase = (props: phaseDefinition) => {
       </div>
       <span>{props.code}</span>
       <div style={{ display: 'flex' }}>
-        {indexOfThisPhase !== 0 ? (
-          <div onClick={changePhaseOrderDown} style={{ cursor: 'pointer' }}>
-            <ArrowUpwardIcon />
-          </div>
-        ) : null}
-        {indexOfThisPhase + 1 !== phasesLenght ? (
-          <div onClick={changePhaseOrderUp} style={{ cursor: 'pointer' }}>
-            <ArrowDownwardIcon />
-          </div>
-        ) : null}
+        <div
+          onClick={changePhaseOrderDown}
+          style={{ cursor: indexOfThisPhase !== 0 ? 'pointer' : 'default' }}
+        >
+          <ArrowUpwardIcon
+            color={indexOfThisPhase !== 0 ? 'inherit' : 'disabled'}
+          />
+        </div>
+        <div
+          onClick={changePhaseOrderUp}
+          style={{
+            cursor:
+              indexOfThisPhase + 1 !== phasesLenght ? 'pointer' : 'default',
+          }}
+        >
+          <ArrowDownwardIcon
+            color={
+              indexOfThisPhase + 1 !== phasesLenght ? 'inherit' : 'disabled'
+            }
+          />
+        </div>
       </div>
     </div>
   )

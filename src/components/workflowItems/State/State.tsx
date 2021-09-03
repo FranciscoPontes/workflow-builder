@@ -80,11 +80,11 @@ export const State = ({ props }: IStateProps) => {
   }
 
   const changeStateOrderUp = async () => {
-    changeStateOrder(1)
+    if (indexOfThisState + 1 !== statesLenght) changeStateOrder(1)
   }
 
   const changeStateOrderDown = async () => {
-    changeStateOrder(-1)
+    if (indexOfThisState !== 0) changeStateOrder(-1)
   }
 
   return (
@@ -99,16 +99,27 @@ export const State = ({ props }: IStateProps) => {
       </div>
       <div className={classes.join(' ')}>{props.code}</div>
       <div style={{ display: 'flex' }}>
-        {indexOfThisState !== 0 ? (
-          <div onClick={changeStateOrderDown} style={{ cursor: 'pointer' }}>
-            <ArrowUpwardIcon />
-          </div>
-        ) : null}
-        {indexOfThisState + 1 !== statesLenght ? (
-          <div onClick={changeStateOrderUp} style={{ cursor: 'pointer' }}>
-            <ArrowDownwardIcon />
-          </div>
-        ) : null}
+        <div
+          onClick={changeStateOrderDown}
+          style={{ cursor: indexOfThisState !== 0 ? 'pointer' : 'default' }}
+        >
+          <ArrowUpwardIcon
+            color={indexOfThisState !== 0 ? 'inherit' : 'disabled'}
+          />
+        </div>
+        <div
+          onClick={changeStateOrderUp}
+          style={{
+            cursor:
+              indexOfThisState + 1 !== statesLenght ? 'pointer' : 'default',
+          }}
+        >
+          <ArrowDownwardIcon
+            color={
+              indexOfThisState + 1 !== statesLenght ? 'inherit' : 'disabled'
+            }
+          />
+        </div>
       </div>
     </div>
   )
