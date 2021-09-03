@@ -14,6 +14,7 @@ import CustomSnackbar from './SnackBar/SnackBar'
 import { actionTypes } from '../store/actionTypes'
 import UIConfirmation from './UIConfirmation/UIConfirmation'
 import { IPermission } from './workflowItems/Permission/Permission'
+import { IAction } from './workflowItems/Action/Action'
 
 enum EDBTiers {
   DEV = 'DEV',
@@ -77,12 +78,28 @@ const Layout = ({ props }: ILayout) => {
     })
   }
 
+  const prepareActions = (data: workflowData): Array<IAction> => {
+    return data.actions?.map((act) => {
+      const treatedAct: IAction = {
+        id: act.id,
+        code: act.code,
+        label: act.label,
+        sta_id: act.sta_id,
+        user_action_yn: act.user_action_yn,
+        action_type: act.action_type,
+        sort_order: act.sort_order,
+      }
+      return treatedAct
+    })
+  }
+
   const arrangedTemplateData = (data: workflowData): workflowData => ({
     phases: preparePhases(data)?.sort((x, y) => x.sort_order - y.sort_order),
     states: prepareStates(data)
       ?.sort((x, y) => x.sort_order - y.sort_order)
       .sort((x, y) => x.pha_id - y.pha_id),
     permissions: preparePermissions(data),
+    actions: prepareActions(data),
   })
 
   const refreshData = async () => {

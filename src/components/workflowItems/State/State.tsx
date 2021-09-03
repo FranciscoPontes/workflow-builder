@@ -11,6 +11,7 @@ import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 import Badge from '@material-ui/core/Badge'
 import Typography from '@material-ui/core/Typography'
+import Action, { IAction } from '../Action/Action'
 
 export interface stateDefinition {
   id: number
@@ -23,9 +24,10 @@ export interface stateDefinition {
 interface IStateProps {
   props: stateDefinition
   permissionCount: number
+  actions: Array<IAction>
 }
 
-export const State = ({ props, permissionCount }: IStateProps) => {
+export const State = ({ props, permissionCount, actions }: IStateProps) => {
   const classes: Array<string> = [styles.state]
   const states = useSelector((state) =>
     state.workflowData.states.filter((sta) => sta.pha_id === props.pha_id),
@@ -90,7 +92,7 @@ export const State = ({ props, permissionCount }: IStateProps) => {
     if (indexOfThisState !== 0) changeStateOrder(-1)
   }
 
-  useEffect(() => console.log(permissionCount), [permissionCount])
+  useEffect(() => console.log(actions), [actions])
 
   return (
     <div className={styles.stateContainer}>
@@ -109,6 +111,12 @@ export const State = ({ props, permissionCount }: IStateProps) => {
           <Badge color="primary" badgeContent={permissionCount} max={99}>
             <Typography>Permissions</Typography>
           </Badge>
+          {/* Action sequence */}
+          <div>
+            {actions?.map((act) => (
+              <Action props={act} key={act.id} />
+            ))}
+          </div>
         </div>
       </div>
       <div style={{ display: 'flex' }}>

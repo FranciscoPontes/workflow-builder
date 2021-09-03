@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import NewItemsSpeedDial from '../newItemsSpeedDial/newItemsSpeedDial'
+import { IAction } from '../workflowItems/Action/Action'
 import { IPermission } from '../workflowItems/Permission/Permission'
 import Phase, { phaseDefinition } from '../workflowItems/Phase/Phase'
 import { State, stateDefinition } from '../workflowItems/State/State'
@@ -9,11 +10,13 @@ import styles from './Workflow.module.css'
 type TStates = Array<stateDefinition>
 type TPhases = Array<phaseDefinition>
 type TPermissions = Array<IPermission>
+type TActions = Array<IAction>
 
 export type workflowData = {
   phases: TPhases
   states: TStates
   permissions: TPermissions
+  actions: TActions
 }
 
 export const WorkflowBox = () => {
@@ -21,6 +24,12 @@ export const WorkflowBox = () => {
 
   const statePermissionCount = (sta: stateDefinition): number => {
     return data.permissions.filter((per) => per.sta_id === sta.id).length
+  }
+
+  const stateActions = (sta: stateDefinition): TActions => {
+    return data.actions
+      .filter((act) => act.sta_id === sta.id)
+      .sort((x, y) => x.sort_order - y.sort_order)
   }
 
   return (
@@ -44,6 +53,7 @@ export const WorkflowBox = () => {
                       key={sta.code}
                       props={sta}
                       permissionCount={statePermissionCount(sta)}
+                      actions={stateActions(sta)}
                     />
                   ))}
               </div>
