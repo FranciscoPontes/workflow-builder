@@ -1,3 +1,12 @@
-const Permission = () => null;
+export interface IPermission {
+  id: number
+  permission_type: string
+  reqt_id: number
+  sta_id: number
+  user_type: string
+  username: string
+}
 
-export default Permission;
+const Permission = (props: IPermission) => null
+
+export default Permission

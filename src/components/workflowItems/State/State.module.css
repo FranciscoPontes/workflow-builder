@@ -6,14 +6,23 @@
 .state {
   background-color: #7f7f9a;
   color: white;
-  text-align: center;
   width: 70vh;
+  min-height: 20vh;
   padding: 10px;
-  /* border-radius: 50%; */
-  font-size: smaller;
+  border-radius: 2%;
+  margin: 10px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-flow: column;
+}
+
+.stateDependencies {
+  text-align: left;
+  width: 100%;
+}
+
+.stateDependencies p,
+.stateDependencies span {
+  font-size: small !important;
 }
 
 /* arrows */

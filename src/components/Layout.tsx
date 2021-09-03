@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import CustomSnackbar from './SnackBar/SnackBar'
 import { actionTypes } from '../store/actionTypes'
 import UIConfirmation from './UIConfirmation/UIConfirmation'
+import { IPermission } from './workflowItems/Permission/Permission'
 
 enum EDBTiers {
   DEV = 'DEV',
@@ -37,7 +38,7 @@ const Layout = ({ props }: ILayout) => {
   const workflowData = useSelector((state) => state.workflowData)
   const modalData = useSelector((state) => state.modalData)
 
-  const getPhases = (data: workflowData): Array<phaseDefinition> => {
+  const preparePhases = (data: workflowData): Array<phaseDefinition> => {
     return data.phases?.map((pha) => {
       const treatedPhase: phaseDefinition = {
         id: pha.id,
@@ -49,7 +50,7 @@ const Layout = ({ props }: ILayout) => {
     })
   }
 
-  const getStates = (data: workflowData): Array<stateDefinition> => {
+  const prepareStates = (data: workflowData): Array<stateDefinition> => {
     return data.states?.map((sta) => {
       const treatedState: stateDefinition = {
         id: sta.id,
@@ -62,11 +63,26 @@ const Layout = ({ props }: ILayout) => {
     })
   }
 
+  const preparePermissions = (data: workflowData): Array<IPermission> => {
+    return data.permissions?.map((per) => {
+      const treatedPer: IPermission = {
+        id: per.id,
+        sta_id: per.sta_id,
+        reqt_id: per.reqt_id,
+        permission_type: per.permission_type,
+        user_type: per.user_type,
+        username: per.username,
+      }
+      return treatedPer
+    })
+  }
+
   const arrangedTemplateData = (data: workflowData): workflowData => ({
-    phases: getPhases(data)?.sort((x, y) => x.sort_order - y.sort_order),
-    states: getStates(data)
+    phases: preparePhases(data)?.sort((x, y) => x.sort_order - y.sort_order),
+    states: prepareStates(data)
       ?.sort((x, y) => x.sort_order - y.sort_order)
       .sort((x, y) => x.pha_id - y.pha_id),
+    permissions: preparePermissions(data),
   })
 
   const refreshData = async () => {

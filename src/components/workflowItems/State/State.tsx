@@ -9,6 +9,8 @@ import { DBService } from '../../../services/db_communication'
 import { EseverityTypes, ISnackbarData } from '../../SnackBar/SnackBar'
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
+import Badge from '@material-ui/core/Badge'
+import Typography from '@material-ui/core/Typography'
 
 export interface stateDefinition {
   id: number
@@ -20,9 +22,10 @@ export interface stateDefinition {
 
 interface IStateProps {
   props: stateDefinition
+  permissionCount: number
 }
 
-export const State = ({ props }: IStateProps) => {
+export const State = ({ props, permissionCount }: IStateProps) => {
   const classes: Array<string> = [styles.state]
   const states = useSelector((state) =>
     state.workflowData.states.filter((sta) => sta.pha_id === props.pha_id),
@@ -87,6 +90,8 @@ export const State = ({ props }: IStateProps) => {
     if (indexOfThisState !== 0) changeStateOrder(-1)
   }
 
+  useEffect(() => console.log(permissionCount), [permissionCount])
+
   return (
     <div className={styles.stateContainer}>
       <div
@@ -97,7 +102,15 @@ export const State = ({ props }: IStateProps) => {
       >
         <SettingsIcon fontSize="small" />
       </div>
-      <div className={classes.join(' ')}>{props.code}</div>
+      <div className={classes.join(' ')}>
+        <span>{props.code}</span>
+        {/* State dependencies - permissions and actions */}
+        <div className={styles.stateDependencies}>
+          <Badge color="primary" badgeContent={permissionCount} max={99}>
+            <Typography>Permissions</Typography>
+          </Badge>
+        </div>
+      </div>
       <div style={{ display: 'flex' }}>
         <div
           onClick={changeStateOrderDown}
