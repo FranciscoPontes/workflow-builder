@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import NewItemsSpeedDial from '../newItemsSpeedDial/newItemsSpeedDial'
-import Phase, { phaseDefinition } from '../Phase/Phase'
-import { State, stateDefinition } from '../State/State'
+import Phase, { phaseDefinition } from '../workflowItems/Phase/Phase'
+import { State, stateDefinition } from '../workflowItems/State/State'
 import styles from './Workflow.module.css'
 
 type TStates = Array<stateDefinition>

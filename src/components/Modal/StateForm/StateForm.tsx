@@ -78,6 +78,7 @@ const StateForm = ({ props }: IStateForm) => {
     })
     setSubmitting(false)
     dispatch({ type: actionTypes.refresh })
+    if (data.id) dispatch({ type: actionTypes.hideModal })
   }
 
   const deleteState = async () => {
@@ -128,8 +129,9 @@ const StateForm = ({ props }: IStateForm) => {
               value={data.pha_id}
               onChange={(e) => setData({ ...data, pha_id: e.target.value })}
               label="Phase"
+              required
             >
-              <MenuItem value={0}>
+              <MenuItem value={null}>
                 <em>None</em>
               </MenuItem>
               {phaseArray().map((pha) => (

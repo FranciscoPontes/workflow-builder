@@ -1,14 +1,15 @@
 import React from 'react'
 import styles from './Phase.module.css'
 import SettingsIcon from '@material-ui/icons/Settings'
-import { EModalTypes } from '../Modal/Modal'
+import { EModalTypes } from '../../Modal/Modal'
 import { useState } from 'react'
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 import { useDispatch, useSelector } from 'react-redux'
-import { DBService } from '../../services/db_communication'
-import { actionTypes } from '../../store/actionTypes'
-import { EseverityTypes, ISnackbarData } from '../SnackBar/SnackBar'
+import { DBService } from '../../../services/db_communication'
+import { actionTypes } from '../../../store/actionTypes'
+import { EseverityTypes, ISnackbarData } from '../../SnackBar/SnackBar'
+import { DBActionTypes } from '../../../services/dbActionTypes'
 
 export interface phaseDefinition {
   id: number
@@ -37,7 +38,7 @@ const Phase = (props: phaseDefinition) => {
   const triggerDataChange = async (data) => {
     await DBService.changeData({
       phases: data,
-      change_type: 'UPDATE_PHASES',
+      change_type: DBActionTypes.updatePhases,
     })
 
     dispatch({ type: actionTypes.updateSnackbar, data: snackbarData })

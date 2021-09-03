@@ -68,6 +68,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
 
     setSubmitting(false)
     dispatch({ type: actionTypes.refresh })
+    if (data.id) dispatch({ type: actionTypes.hideModal })
   }
 
   const deletePhase = async () => {

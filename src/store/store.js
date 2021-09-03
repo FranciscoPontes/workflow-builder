@@ -41,7 +41,7 @@ const storeSettings = function (state = initialState, action) {
         confirmationData: { ...state.confirmationData, open: false },
       }
     case actionTypes.updateSnackbar:
-      return { ...state, snackbarData: action.data }
+      return { ...state, snackbarData: { ...action.data, show: true } }
     case actionTypes.closeSnackbar:
       return { ...state, snackbarData: { ...state.snackbarData, show: false } }
     case actionTypes.showModal:
