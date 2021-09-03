@@ -112,7 +112,7 @@ export const State = ({ props, permissionCount, actions }: IStateProps) => {
             <Typography>Permissions</Typography>
           </Badge>
           {/* Action sequence */}
-          <div>
+          <div className={styles.actionSequence}>
             {actions?.map((act) => (
               <Action props={act} key={act.id} />
             ))}

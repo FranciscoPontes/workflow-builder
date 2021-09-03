@@ -43,3 +43,10 @@
   cursor: pointer;
   height: fit-content;
 }
+
+.actionSequence {
+  display: flex;
+  flex-flow: column;
+  margin: auto;
+  align-items: center;
+}

@@ -1,11 +1,22 @@
 import React from 'react'
+import styles from './Action.module.css'
+import MailIcon from '@material-ui/icons/Mail'
+import TrendingFlatIcon from '@material-ui/icons/TrendingFlat'
+import NewReleasesIcon from '@material-ui/icons/NewReleases'
 
 enum EUserAction {
   yes = 'Y',
   no = 'N',
 }
+
+enum EActionTypes {
+  mail = 'SEND_MAIL',
+  plsql = 'PLSQL',
+  stateChange = 'STATUS_CHANGE',
+}
+
 export interface IAction {
-  action_type: string
+  action_type: EActionTypes
   code: string
   id: number
   label: number
@@ -20,9 +31,15 @@ interface IActionProps {
 
 const Action = ({ props }: IActionProps) => {
   return (
-    <div>
+    <div className={styles.action}>
       <span>{props.label}</span>
-      <span>{props.action_type}</span>
+      {props.action_type === EActionTypes.mail ? (
+        <MailIcon />
+      ) : props.action_type === EActionTypes.stateChange ? (
+        <TrendingFlatIcon />
+      ) : (
+        <NewReleasesIcon />
+      )}
     </div>
   )
 }
