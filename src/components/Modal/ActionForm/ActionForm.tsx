@@ -16,7 +16,7 @@ import { IConfirmationData } from '../../UIConfirmation/UIConfirmation'
 import { useEffect } from 'react'
 import { DBActionTypes } from '../../../services/dbActionTypes'
 import styles from './ActionForm.module.css'
-import { IAction } from '../../workflowItems/Action/Action'
+import { EActionTypes, IAction } from '../../workflowItems/Action/Action'
 import { stateDefinition } from '../../workflowItems/State/State'
 
 const useStyles = makeStyles((theme) => ({
@@ -44,6 +44,12 @@ const ActionForm = ({ props }: IActionForm) => {
   const workflowData = useSelector((state) => state.workflowData)
   const appID = useSelector((state) => state.appData.appID)
   const classes = useStyles()
+
+  const validActionTypes: Array<EActionTypes> = [
+    EActionTypes.mail,
+    EActionTypes.plsql,
+    EActionTypes.stateChange,
+  ]
 
   const [data, setData] = useState<IAction>({
     action_type: props.action_type || null,
@@ -76,22 +82,22 @@ const ActionForm = ({ props }: IActionForm) => {
     const actionData = { ...data, app_id: appID }
     console.log(
       JSON.stringify({
-        states: [actionData],
-        change_type: DBActionTypes.updateStates,
+        actions: [actionData],
+        change_type: DBActionTypes.updateActions,
       }),
     )
     await DBService.changeData({
-      states: [actionData],
-      change_type: DBActionTypes.updateStates,
+      actions: [actionData],
+      change_type: DBActionTypes.updateActions,
     })
     setSubmitting(false)
     dispatch({ type: actionTypes.refresh })
     if (data.id) dispatch({ type: actionTypes.hideModal })
   }
 
-  const deleteState = async () => {
+  const deleteAction = async () => {
     await DBService.changeData({
-      change_type: DBActionTypes.removeState,
+      change_type: DBActionTypes.removeAction,
       id: props.id,
     })
     dispatch({ type: actionTypes.refresh })
@@ -102,7 +108,7 @@ const ActionForm = ({ props }: IActionForm) => {
     title: 'Delete Action?',
     description:
       'This action will delete all associated dependencies (action settings)',
-    callback: deleteState,
+    callback: deleteAction,
   }
 
   const tryDelete = () => {
@@ -155,6 +161,26 @@ const ActionForm = ({ props }: IActionForm) => {
               {stateArray().map((sta) => (
                 <MenuItem key={sta.id} value={sta.id}>
                   {sta.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl variant="outlined" className={classes.formControl}>
+            <InputLabel>Action Type</InputLabel>
+            <Select
+              value={data.action_type}
+              onChange={(e) =>
+                setData({ ...data, action_type: e.target.value })
+              }
+              label="Action Type"
+              required
+            >
+              <MenuItem value={null}>
+                <em>None</em>
+              </MenuItem>
+              {validActionTypes.map((actt, idx) => (
+                <MenuItem key={idx} value={actt}>
+                  {actt}
                 </MenuItem>
               ))}
             </Select>

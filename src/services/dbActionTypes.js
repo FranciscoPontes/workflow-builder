@@ -1,6 +1,11 @@
 export const DBActionTypes = {
-    updatePhases: 'UPDATE_PHASES',
-    removePhase: 'REMOVE_PHASE',
-    updateStates: 'UPDATE_STATES',
-    removeState: 'REMOVE_STATE'
+  // phases
+  updatePhases: 'UPDATE_PHASES',
+  removePhase: 'REMOVE_PHASE',
+  // states
+  updateStates: 'UPDATE_STATES',
+  removeState: 'REMOVE_STATE',
+  // actions
+  updateActions: 'UPDATE_ACTIONS',
+  removeAction: 'REMOVE_ACTION',
 }

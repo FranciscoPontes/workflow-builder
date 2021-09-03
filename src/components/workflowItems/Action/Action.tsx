@@ -13,7 +13,7 @@ enum EUserAction {
   no = 'N',
 }
 
-enum EActionTypes {
+export enum EActionTypes {
   mail = 'SEND_MAIL',
   plsql = 'PLSQL',
   stateChange = 'STATUS_CHANGE',
