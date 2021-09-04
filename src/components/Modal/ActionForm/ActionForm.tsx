@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import { useState } from 'react'
@@ -16,7 +16,11 @@ import { IConfirmationData } from '../../UIConfirmation/UIConfirmation'
 import { useEffect } from 'react'
 import { DBActionTypes } from '../../../services/dbActionTypes'
 import styles from './ActionForm.module.css'
-import { EActionTypes, IAction } from '../../workflowItems/Action/Action'
+import {
+  EActionTypes,
+  IAction,
+  IActionSetting,
+} from '../../workflowItems/Action/Action'
 import { stateDefinition } from '../../workflowItems/State/State'
 
 const useStyles = makeStyles((theme) => ({
@@ -51,6 +55,23 @@ const ActionForm = ({ props }: IActionForm) => {
     EActionTypes.stateChange,
   ]
 
+  const actionTypeActionSettingMapping = {
+    [EActionTypes.mail]: 'MAIL_TEMPLATE_CODE',
+    [EActionTypes.plsql]: 'PLSQL_FUNCTION_NAME',
+    [EActionTypes.stateChange]: 'NEXT_STATE_CODE_1',
+  }
+
+  const actionTypeActionSettingLabelMapping = {
+    [EActionTypes.mail]: 'Mail template code',
+    [EActionTypes.plsql]: 'PLSQL Function Name',
+    [EActionTypes.stateChange]: 'Next state code',
+  }
+
+  const getCorrectActionSetting = (): Array<IActionSetting> =>
+    props.action_settings?.filter(
+      (acts) => acts.name === actionTypeActionSettingMapping[props.action_type],
+    )
+
   const [data, setData] = useState<IAction>({
     action_type: props.action_type || null,
     code: props.code,
@@ -59,6 +80,7 @@ const ActionForm = ({ props }: IActionForm) => {
     sta_id: props.sta_id,
     user_action_yn: props.user_action_yn,
     sort_order: props.sort_order,
+    action_settings: props.id ? getCorrectActionSetting() : [],
   })
 
   const getNewSortOrder = (): number => {
@@ -79,13 +101,13 @@ const ActionForm = ({ props }: IActionForm) => {
     }))
 
   const saveData = async (formikData, setSubmitting) => {
-    const actionData = { ...data, app_id: appID }
-    console.log(
-      JSON.stringify({
-        actions: [actionData],
-        change_type: DBActionTypes.updateActions,
-      }),
-    )
+    const actionData = {
+      ...data,
+      action_settings: { ...data.action_settings[0] },
+      app_id: appID,
+    }
+    console.log(JSON.stringify(actionData))
+
     await DBService.changeData({
       actions: [actionData],
       change_type: DBActionTypes.updateActions,
@@ -127,6 +149,7 @@ const ActionForm = ({ props }: IActionForm) => {
 
   // update new sort order when selected phase changes
   useEffect(() => {
+    if (data.id) return
     console.log('Changing sort order due to state change..')
     console.log(getNewSortOrder())
     setData({
@@ -206,15 +229,57 @@ const ActionForm = ({ props }: IActionForm) => {
             onChange={(e) => setData({ ...data, label: e.target.value })}
             required
           />
-          {/* <TextField
-            id="phase-label"
-            label="Sort order"
-            variant="outlined"
-            type="number"
-            required
-            value={data.sort_order}
-            onChange={(e) => setData({ ...data, sortOrder: e.target.value })}
-          /> */}
+          {props.id ? (
+            props.action_type === EActionTypes.stateChange ? (
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel>Next state code</InputLabel>
+                <Select
+                  value={data.action_settings[0].string_value}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      action_settings: [
+                        {
+                          ...data.action_settings[0],
+                          string_value: e.target.value,
+                        },
+                      ],
+                    })
+                  }
+                  label="Next state code"
+                  required
+                >
+                  <MenuItem value={null}>
+                    <em>None</em>
+                  </MenuItem>
+                  {stateArray()
+                    .filter((sta) => sta.id !== data.sta_id)
+                    .map((sta) => (
+                      <MenuItem key={sta.id} value={sta.id}>
+                        {sta.label}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+            ) : (
+              <TextField
+                label={actionTypeActionSettingLabelMapping[data.action_type]}
+                variant="outlined"
+                value={data.action_settings[0].string_value}
+                onChange={(e) =>
+                  setData({
+                    ...data,
+                    action_settings: [
+                      {
+                        ...data.action_settings[0],
+                        string_value: e.target.value,
+                      },
+                    ],
+                  })
+                }
+              />
+            )
+          ) : null}
           <div
             style={{
               display: 'flex',

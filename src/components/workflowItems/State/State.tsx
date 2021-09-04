@@ -104,8 +104,6 @@ export const State = ({ props, permissionCount, actions }: IStateProps) => {
     if (indexOfThisState !== 0) changeStateOrder(-1)
   }
 
-  useEffect(() => console.log(actions), [actions])
-
   return (
     <div className={styles.stateContainer}>
       <div
@@ -154,7 +152,7 @@ export const State = ({ props, permissionCount, actions }: IStateProps) => {
           />
         </div>
         <div
-          style={{ margin: '0 10px', cursor: 'pointer' }}
+          style={{ margin: '0 10px', cursor: 'pointer', height: 'fit-content' }}
           onClick={() =>
             dispatch({
               type: actionTypes.showModal,

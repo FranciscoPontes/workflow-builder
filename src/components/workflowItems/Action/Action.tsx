@@ -7,6 +7,14 @@ import SettingsIcon from '@material-ui/icons/Settings'
 import { useDispatch } from 'react-redux'
 import { actionTypes } from '../../../store/actionTypes'
 import { EModalTypes, IModal } from '../../Modal/Modal'
+import { useEffect } from 'react'
+
+export interface IActionSetting {
+  id: number
+  act_id: number
+  name: string
+  string_value: string
+}
 
 enum EUserAction {
   yes = 'Y',
@@ -27,6 +35,7 @@ export interface IAction {
   sta_id: number
   user_action_yn: EUserAction
   sort_order: number
+  action_settings?: Array<IActionSetting>
 }
 
 interface IActionProps {
@@ -48,7 +57,7 @@ const Action = ({ props }: IActionProps) => {
   return (
     <div style={{ display: 'flex', width: '60%' }}>
       <div
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: 'pointer', height: 'fit-content' }}
         onClick={() =>
           dispatch({ type: actionTypes.showModal, data: modalData })
         }

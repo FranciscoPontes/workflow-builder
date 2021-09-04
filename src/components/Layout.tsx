@@ -14,7 +14,7 @@ import CustomSnackbar from './SnackBar/SnackBar'
 import { actionTypes } from '../store/actionTypes'
 import UIConfirmation from './UIConfirmation/UIConfirmation'
 import { IPermission } from './workflowItems/Permission/Permission'
-import { IAction } from './workflowItems/Action/Action'
+import { IAction, IActionSetting } from './workflowItems/Action/Action'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 
 enum EDBTiers {
@@ -85,6 +85,12 @@ const Layout = ({ props }: ILayout) => {
     })
   }
 
+  const getActionSettings = (
+    data: object,
+    actID: number,
+  ): Array<IActionSetting> =>
+    data.action_settings?.filter((acts) => acts.act_id === actID)
+
   const prepareActions = (data: workflowData): Array<IAction> => {
     return data.actions?.map((act) => {
       const treatedAct: IAction = {
@@ -95,6 +101,7 @@ const Layout = ({ props }: ILayout) => {
         user_action_yn: act.user_action_yn,
         action_type: act.action_type,
         sort_order: act.sort_order,
+        action_settings: getActionSettings(data, act.id),
       }
       return treatedAct
     })
