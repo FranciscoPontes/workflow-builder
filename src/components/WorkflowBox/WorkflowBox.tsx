@@ -14,13 +14,19 @@ type TActions = Array<IAction>
 export type TMailTemplates = Array<{
   code: string
 }>
+
+export type TRequestTypes = Array<{
+  id: number
+  code: string
+}>
+
 export type workflowData = {
   phases: TPhases
   states: TStates
   permissions: TPermissions
   actions: TActions
   mail_templates: TMailTemplates
-  request_types: TMailTemplates
+  request_types: TRequestTypes
 }
 
 export const WorkflowBox = () => {

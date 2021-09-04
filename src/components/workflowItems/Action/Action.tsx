@@ -41,6 +41,7 @@ export interface IAction {
   user_action_yn: EUserAction
   sort_order: number
   action_settings?: Array<IActionSetting>
+  reqt_id: number
 }
 
 interface IActionProps {

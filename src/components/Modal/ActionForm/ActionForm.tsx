@@ -22,6 +22,7 @@ import {
   IActionSetting,
 } from '../../workflowItems/Action/Action'
 import { stateDefinition } from '../../workflowItems/State/State'
+import FormHelperText from '@material-ui/core/FormHelperText'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,6 +82,7 @@ const ActionForm = ({ props }: IActionForm) => {
     user_action_yn: props.user_action_yn,
     sort_order: props.sort_order,
     action_settings: props.id ? getCorrectActionSetting() : [],
+    reqt_id: props.reqt_id,
   })
 
   const getNewSortOrder = (): number => {
@@ -102,7 +104,7 @@ const ActionForm = ({ props }: IActionForm) => {
 
   const mailTemplates = () => workflowData.mail_templates?.map((mt) => mt.code)
 
-  const requestTypes = () => workflowData.request_types?.map((mt) => mt.code)
+  const requestTypes = () => workflowData.request_types?.map((reqt) => reqt)
 
   const saveData = async (formikData, setSubmitting) => {
     const actionData = {
@@ -190,6 +192,27 @@ const ActionForm = ({ props }: IActionForm) => {
                 </MenuItem>
               ))}
             </Select>
+          </FormControl>
+          <FormControl variant="outlined" className={classes.formControl}>
+            <InputLabel>Request type</InputLabel>
+            <Select
+              value={data.reqt_id}
+              onChange={(e) => setData({ ...data, reqt_id: e.target.value })}
+              label="State"
+              required
+            >
+              <MenuItem value={null}>
+                <em>None</em>
+              </MenuItem>
+              {requestTypes().map((reqt) => (
+                <MenuItem key={reqt.id} value={reqt.id}>
+                  {reqt.code}
+                </MenuItem>
+              ))}
+            </Select>
+            <FormHelperText>
+              Leave null to apply to all request types
+            </FormHelperText>
           </FormControl>
           <FormControl variant="outlined" className={classes.formControl}>
             <InputLabel>Action Type</InputLabel>

@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react'
 import styles from './Layout.module.css'
 import {
   TMailTemplates,
+  TRequestTypes,
   WorkflowBox,
   workflowData,
 } from './WorkflowBox/WorkflowBox'
@@ -106,6 +107,7 @@ const Layout = ({ props }: ILayout) => {
         action_type: act.action_type,
         sort_order: act.sort_order,
         action_settings: getActionSettings(data, act.id),
+        reqt_id: act.reqt_id,
       }
       return treatedAct
     })
@@ -117,9 +119,9 @@ const Layout = ({ props }: ILayout) => {
     })
   }
 
-  const prepareRequestTypes = (data: workflowData): TMailTemplates => {
+  const prepareRequestTypes = (data: workflowData): TRequestTypes => {
     return data.request_types?.map((reqt) => {
-      return { code: reqt.code }
+      return { id: reqt.id, code: reqt.code }
     })
   }
 
