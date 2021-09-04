@@ -1,6 +1,10 @@
 import React, { Fragment, useState } from 'react'
 import styles from './Layout.module.css'
-import { WorkflowBox, workflowData } from './WorkflowBox/WorkflowBox'
+import {
+  TMailTemplates,
+  WorkflowBox,
+  workflowData,
+} from './WorkflowBox/WorkflowBox'
 import Phase, { phaseDefinition } from './Phase/Phase'
 import { State, stateDefinition } from './State/State'
 import { EModalTypes, IModal, SimpleModal } from './Modal/Modal'
@@ -107,6 +111,18 @@ const Layout = ({ props }: ILayout) => {
     })
   }
 
+  const prepareMailTemplates = (data: workflowData): TMailTemplates => {
+    return data.mail_templates?.map((mailt) => {
+      return { code: mailt.code }
+    })
+  }
+
+  const prepareRequestTypes = (data: workflowData): TMailTemplates => {
+    return data.request_types?.map((reqt) => {
+      return { code: reqt.code }
+    })
+  }
+
   const arrangedTemplateData = (data: workflowData): workflowData => ({
     phases: preparePhases(data)?.sort((x, y) => x.sort_order - y.sort_order),
     states: prepareStates(data)
@@ -116,6 +132,8 @@ const Layout = ({ props }: ILayout) => {
     actions: prepareActions(data)
       ?.sort((x, y) => x.sort_order - y.sort_order)
       .sort((x, y) => x.sta_id - y.sta_id),
+    mail_templates: prepareMailTemplates(data),
+    request_types: prepareRequestTypes(data),
   })
 
   const refreshData = async () => {

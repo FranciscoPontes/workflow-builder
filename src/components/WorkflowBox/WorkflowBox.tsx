@@ -11,12 +11,16 @@ type TStates = Array<stateDefinition>
 type TPhases = Array<phaseDefinition>
 type TPermissions = Array<IPermission>
 type TActions = Array<IAction>
-
+export type TMailTemplates = Array<{
+  code: string
+}>
 export type workflowData = {
   phases: TPhases
   states: TStates
   permissions: TPermissions
   actions: TActions
+  mail_templates: TMailTemplates
+  request_types: TMailTemplates
 }
 
 export const WorkflowBox = () => {

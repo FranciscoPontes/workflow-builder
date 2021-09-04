@@ -68,8 +68,7 @@ const Action = ({ props }: IActionProps) => {
   const indexOfThisAction = actions.indexOf(
     actions.filter((act) => act.id === props.id)[0],
   )
-  console.log(actions)
-  console.log(indexOfThisAction)
+
   const snackbarData: ISnackbarData = {
     content: 'Action updated!',
     severity: EseverityTypes.success,

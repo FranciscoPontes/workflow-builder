@@ -100,6 +100,10 @@ const ActionForm = ({ props }: IActionForm) => {
       label: sta.code,
     }))
 
+  const mailTemplates = () => workflowData.mail_templates?.map((mt) => mt.code)
+
+  const requestTypes = () => workflowData.request_types?.map((mt) => mt.code)
+
   const saveData = async (formikData, setSubmitting) => {
     const actionData = {
       ...data,
@@ -228,8 +232,8 @@ const ActionForm = ({ props }: IActionForm) => {
             onChange={(e) => setData({ ...data, label: e.target.value })}
             required
           />
-          {props.id ? (
-            props.action_type === EActionTypes.stateChange ? (
+          {data.id ? (
+            data.action_type === EActionTypes.stateChange ? (
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel>Next state code</InputLabel>
                 <Select
@@ -246,7 +250,6 @@ const ActionForm = ({ props }: IActionForm) => {
                     })
                   }
                   label="Next state code"
-                  required
                 >
                   <MenuItem value={null}>
                     <em>None</em>
@@ -258,6 +261,34 @@ const ActionForm = ({ props }: IActionForm) => {
                         {sta.label}
                       </MenuItem>
                     ))}
+                </Select>
+              </FormControl>
+            ) : data.action_type === EActionTypes.mail ? (
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel>Mail Template code</InputLabel>
+                <Select
+                  value={data.action_settings[0].string_value}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      action_settings: [
+                        {
+                          ...data.action_settings[0],
+                          string_value: e.target.value,
+                        },
+                      ],
+                    })
+                  }
+                  label="Mail Template code"
+                >
+                  <MenuItem value={null}>
+                    <em>None</em>
+                  </MenuItem>
+                  {mailTemplates().map((mt) => (
+                    <MenuItem key={mt} value={mt}>
+                      {mt}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             ) : (
