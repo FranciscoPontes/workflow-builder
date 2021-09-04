@@ -79,7 +79,7 @@ const ActionForm = ({ props }: IActionForm) => {
     id: props.id,
     label: props.label,
     sta_id: props.sta_id,
-    user_action_yn: props.user_action_yn,
+    user_action_yn: props.user_action_yn || 'Y',
     sort_order: props.sort_order,
     action_settings: props.id ? getCorrectActionSetting() : [],
     reqt_id: props.reqt_id,
@@ -89,7 +89,7 @@ const ActionForm = ({ props }: IActionForm) => {
     if (!workflowData.actions) return 1
 
     const sortOrderArray: Array<number> = workflowData.actions
-      .filter((act) => act.sta_id === data.sta_id)
+      ?.filter((act) => act.sta_id === data.sta_id)
       .map((act) => act.sort_order)
 
     if (sortOrderArray.length === 0) return 1
@@ -175,65 +175,86 @@ const ActionForm = ({ props }: IActionForm) => {
           onSubmit={handleSubmit}
           className={[classes.root, styles.actionForm].join(' ')}
         >
-          <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel>State</InputLabel>
-            <Select
-              value={data.sta_id}
-              onChange={(e) => setData({ ...data, sta_id: e.target.value })}
-              label="State"
-              required
-            >
-              <MenuItem value={null}>
-                <em>None</em>
-              </MenuItem>
-              {stateArray().map((sta) => (
-                <MenuItem key={sta.id} value={sta.id}>
-                  {sta.label}
+          <div className={styles.formRow}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel>User Action</InputLabel>
+              <Select
+                value={data.user_action_yn}
+                onChange={(e) =>
+                  setData({ ...data, user_action_yn: e.target.value })
+                }
+                label="User Action"
+                required
+              >
+                <MenuItem value="N">No</MenuItem>
+                <MenuItem value="Y">Yes</MenuItem>
+              </Select>
+              {/* <FormHelperText>
+                A User Action generates a button in the form with the below
+                defined label
+              </FormHelperText> */}
+            </FormControl>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel>State</InputLabel>
+              <Select
+                value={data.sta_id}
+                onChange={(e) => setData({ ...data, sta_id: e.target.value })}
+                label="State"
+                required
+              >
+                <MenuItem value={null}>
+                  <em>None</em>
                 </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel>Request type</InputLabel>
-            <Select
-              value={data.reqt_id}
-              onChange={(e) => setData({ ...data, reqt_id: e.target.value })}
-              label="State"
-              required
-            >
-              <MenuItem value={null}>
-                <em>None</em>
-              </MenuItem>
-              {requestTypes().map((reqt) => (
-                <MenuItem key={reqt.id} value={reqt.id}>
-                  {reqt.code}
+                {stateArray()?.map((sta) => (
+                  <MenuItem key={sta.id} value={sta.id}>
+                    {sta.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+          <div className={styles.formRow}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel>Request type</InputLabel>
+              <Select
+                value={data.reqt_id}
+                onChange={(e) => setData({ ...data, reqt_id: e.target.value })}
+                label="State"
+              >
+                <MenuItem value={null}>
+                  <em>None</em>
                 </MenuItem>
-              ))}
-            </Select>
-            <FormHelperText>
-              Leave null to apply to all request types
-            </FormHelperText>
-          </FormControl>
-          <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel>Action Type</InputLabel>
-            <Select
-              value={data.action_type}
-              onChange={(e) =>
-                setData({ ...data, action_type: e.target.value })
-              }
-              label="Action Type"
-              required
-            >
-              <MenuItem value={null}>
-                <em>None</em>
-              </MenuItem>
-              {validActionTypes.map((actt, idx) => (
-                <MenuItem key={idx} value={actt}>
-                  {actt}
+                {requestTypes()?.map((reqt) => (
+                  <MenuItem key={reqt.id} value={reqt.id}>
+                    {reqt.code}
+                  </MenuItem>
+                ))}
+              </Select>
+              {/* <FormHelperText>
+                Leave null to apply to all request types
+              </FormHelperText> */}
+            </FormControl>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel>Action Type</InputLabel>
+              <Select
+                value={data.action_type}
+                onChange={(e) =>
+                  setData({ ...data, action_type: e.target.value })
+                }
+                label="Action Type"
+                required
+              >
+                <MenuItem value={null}>
+                  <em>None</em>
                 </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+                {validActionTypes.map((actt, idx) => (
+                  <MenuItem key={idx} value={actt}>
+                    {actt}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
           <TextField
             autoFocus
             label="Code"
@@ -255,6 +276,7 @@ const ActionForm = ({ props }: IActionForm) => {
             onChange={(e) => setData({ ...data, label: e.target.value })}
             required
           />
+
           {data.id ? (
             data.action_type === EActionTypes.stateChange ? (
               <FormControl variant="outlined" className={classes.formControl}>
@@ -278,7 +300,7 @@ const ActionForm = ({ props }: IActionForm) => {
                     <em>None</em>
                   </MenuItem>
                   {stateArray()
-                    .filter((sta) => sta.id !== data.sta_id)
+                    ?.filter((sta) => sta.id !== data.sta_id)
                     .map((sta) => (
                       <MenuItem key={sta.id} value={sta.id}>
                         {sta.label}
@@ -307,7 +329,7 @@ const ActionForm = ({ props }: IActionForm) => {
                   <MenuItem value={null}>
                     <em>None</em>
                   </MenuItem>
-                  {mailTemplates().map((mt) => (
+                  {mailTemplates()?.map((mt) => (
                     <MenuItem key={mt} value={mt}>
                       {mt}
                     </MenuItem>

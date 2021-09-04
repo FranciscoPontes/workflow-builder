@@ -33,11 +33,11 @@ export const WorkflowBox = () => {
   const data: workflowData = useSelector((state) => state.workflowData)
 
   const statePermissionCount = (sta: stateDefinition): number => {
-    return data.permissions.filter((per) => per.sta_id === sta.id).length
+    return data.permissions?.filter((per) => per.sta_id === sta.id).length
   }
 
   const stateActions = (sta: stateDefinition): TActions => {
-    return data.actions.filter((act) => act.sta_id === sta.id)
+    return data.actions?.filter((act) => act.sta_id === sta.id)
   }
 
   return (

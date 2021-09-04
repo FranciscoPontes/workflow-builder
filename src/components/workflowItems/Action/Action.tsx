@@ -50,6 +50,7 @@ interface IActionProps {
 
 const Action = ({ props }: IActionProps) => {
   const dispatch = useDispatch()
+  const appID = useSelector((state) => state.appData.appID)
 
   const modalData: IModal = {
     title: 'Action settings',
@@ -61,7 +62,9 @@ const Action = ({ props }: IActionProps) => {
   }
 
   const actions = useSelector((state) =>
-    state.workflowData.actions.filter((act) => act.sta_id === props.sta_id),
+    state.workflowData.actions
+      .filter((act) => act.sta_id === props.sta_id)
+      .map((act) => ({ ...act, app_id: appID })),
   )
 
   const actionsLenght = actions.length
@@ -125,7 +128,14 @@ const Action = ({ props }: IActionProps) => {
       >
         <SettingsIcon fontSize="small" />
       </div>
-      <div className={styles.action}>
+      <div
+        className={[
+          styles.action,
+          props.user_action_yn === 'Y'
+            ? styles.UIAction
+            : styles.automaticAction,
+        ].join(' ')}
+      >
         <span>{props.label}</span>
         {props.action_type === EActionTypes.mail ? (
           <MailIcon />

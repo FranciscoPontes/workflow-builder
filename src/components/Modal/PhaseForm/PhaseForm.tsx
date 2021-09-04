@@ -72,6 +72,12 @@ const PhaseForm = ({ props }: IPhaseForm) => {
   }
 
   const deletePhase = async () => {
+    console.log(
+      JSON.stringify({
+        change_type: DBActionTypes.removePhase,
+        id: data.id,
+      }),
+    )
     await DBService.changeData({
       change_type: DBActionTypes.removePhase,
       id: data.id,
