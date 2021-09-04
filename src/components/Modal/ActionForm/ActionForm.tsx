@@ -103,7 +103,6 @@ const ActionForm = ({ props }: IActionForm) => {
   const saveData = async (formikData, setSubmitting) => {
     const actionData = {
       ...data,
-      action_settings: { ...data.action_settings[0] },
       app_id: appID,
     }
     console.log(JSON.stringify(actionData))

@@ -4,10 +4,15 @@ import MailIcon from '@material-ui/icons/Mail'
 import TrendingFlatIcon from '@material-ui/icons/TrendingFlat'
 import NewReleasesIcon from '@material-ui/icons/NewReleases'
 import SettingsIcon from '@material-ui/icons/Settings'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { actionTypes } from '../../../store/actionTypes'
 import { EModalTypes, IModal } from '../../Modal/Modal'
 import { useEffect } from 'react'
+import { EseverityTypes, ISnackbarData } from '../../SnackBar/SnackBar'
+import { DBActionTypes } from '../../../services/dbActionTypes'
+import { DBService } from '../../../services/db_communication'
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 
 export interface IActionSetting {
   id: number
@@ -54,6 +59,62 @@ const Action = ({ props }: IActionProps) => {
     },
   }
 
+  const actions = useSelector((state) =>
+    state.workflowData.actions.filter((act) => act.sta_id === props.sta_id),
+  )
+
+  const actionsLenght = actions.length
+
+  const indexOfThisAction = actions.indexOf(
+    actions.filter((act) => act.id === props.id)[0],
+  )
+  console.log(actions)
+  console.log(indexOfThisAction)
+  const snackbarData: ISnackbarData = {
+    content: 'Action updated!',
+    severity: EseverityTypes.success,
+    show: true,
+  }
+
+  const triggerDataChange = async (data) => {
+    console.log(
+      JSON.stringify({
+        actions: data,
+        change_type: DBActionTypes.updateActions,
+      }),
+    )
+    await DBService.changeData({
+      actions: data,
+      change_type: DBActionTypes.updateActions,
+    })
+
+    dispatch({ type: actionTypes.updateSnackbar, data: snackbarData })
+    dispatch({ type: actionTypes.refresh })
+  }
+
+  const changeActionOrder = async (increment) => {
+    const sortOrderOfThisState = actions[indexOfThisAction].sort_order
+    const sortOrderOfSiblingState =
+      actions[indexOfThisAction + increment].sort_order
+
+    let modifiedActions = [...actions]
+
+    modifiedActions[indexOfThisAction].sort_order = sortOrderOfSiblingState
+    modifiedActions[
+      indexOfThisAction + increment
+    ].sort_order = sortOrderOfThisState
+
+    await triggerDataChange(modifiedActions)
+  }
+
+  const changeActionOrderUp = async () => {
+    if (indexOfThisAction + 1 !== actionsLenght) changeActionOrder(1)
+  }
+
+  const changeActionOrderDown = async () => {
+    if (indexOfThisAction !== 0) changeActionOrder(-1)
+  }
+
   return (
     <div style={{ display: 'flex', width: '60%' }}>
       <div
@@ -73,6 +134,33 @@ const Action = ({ props }: IActionProps) => {
         ) : (
           <NewReleasesIcon />
         )}
+      </div>
+      <div style={{ display: 'flex' }}>
+        <div
+          onClick={changeActionOrderDown}
+          style={{
+            cursor: indexOfThisAction !== 0 ? 'pointer' : 'default',
+            height: 'fit-content',
+          }}
+        >
+          <ArrowUpwardIcon
+            color={indexOfThisAction !== 0 ? 'inherit' : 'disabled'}
+          />
+        </div>
+        <div
+          onClick={changeActionOrderUp}
+          style={{
+            cursor:
+              indexOfThisAction + 1 !== actionsLenght ? 'pointer' : 'default',
+            height: 'fit-content',
+          }}
+        >
+          <ArrowDownwardIcon
+            color={
+              indexOfThisAction + 1 !== actionsLenght ? 'inherit' : 'disabled'
+            }
+          />
+        </div>
       </div>
     </div>
   )

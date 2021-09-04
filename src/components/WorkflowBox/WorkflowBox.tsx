@@ -27,9 +27,7 @@ export const WorkflowBox = () => {
   }
 
   const stateActions = (sta: stateDefinition): TActions => {
-    return data.actions
-      .filter((act) => act.sta_id === sta.id)
-      .sort((x, y) => x.sort_order - y.sort_order)
+    return data.actions.filter((act) => act.sta_id === sta.id)
   }
 
   return (

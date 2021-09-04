@@ -113,7 +113,9 @@ const Layout = ({ props }: ILayout) => {
       ?.sort((x, y) => x.sort_order - y.sort_order)
       .sort((x, y) => x.pha_id - y.pha_id),
     permissions: preparePermissions(data),
-    actions: prepareActions(data),
+    actions: prepareActions(data)
+      ?.sort((x, y) => x.sort_order - y.sort_order)
+      .sort((x, y) => x.sta_id - y.sta_id),
   })
 
   const refreshData = async () => {
