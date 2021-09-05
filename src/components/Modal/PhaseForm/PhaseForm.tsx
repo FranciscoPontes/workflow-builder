@@ -15,6 +15,7 @@ import { useEffect } from 'react'
 import { DBActionTypes } from '../../../services/dbActionTypes'
 import { useRef } from 'react'
 import { formatCode, formatLabel } from '../../../utils/inputFormatter'
+import { EseverityTypes, ISnackbarData } from '../../SnackBar/SnackBar'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,8 +49,14 @@ const PhaseForm = ({ props }: IPhaseForm) => {
     code: props?.code || '',
     label: props?.label || '',
     sort_order: props?.sort_order || getNewSortOrder(),
-    id: props?.id,
+    id: props?.id || null,
   })
+
+  const snackbarData: ISnackbarData = {
+    content: `Phase ${!data.id ? 'created' : 'updated'}!`,
+    severity: EseverityTypes.success,
+    show: true,
+  }
 
   const saveData = async (formikData, setSubmitting) => {
     const phaseData = {
@@ -68,6 +75,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
     await DBService.changeData(preparedDBData)
 
     setSubmitting(false)
+    dispatch({ type: actionTypes.updateSnackbar, data: snackbarData })
     dispatch({ type: actionTypes.refresh })
     if (data.id) dispatch({ type: actionTypes.hideModal })
   }
@@ -82,6 +90,10 @@ const PhaseForm = ({ props }: IPhaseForm) => {
     await DBService.changeData({
       change_type: DBActionTypes.removePhase,
       id: data.id,
+    })
+    dispatch({
+      type: actionTypes.updateSnackbar,
+      data: { ...snackbarData, content: 'Phase deleted!' },
     })
     dispatch({ type: actionTypes.refresh })
     dispatch({ type: actionTypes.hideModal })
