@@ -86,6 +86,8 @@ const ActionForm = ({ props }: IActionForm) => {
     reqt_id: props.reqt_id || '',
   })
 
+  const actionSettingValue: string = data.action_settings[0]?.string_value || ''
+
   const getNewSortOrder = (): number => {
     if (!workflowData.actions) return 1
 
@@ -111,6 +113,8 @@ const ActionForm = ({ props }: IActionForm) => {
     const actionData = {
       ...data,
       app_id: appID,
+      reqt_id: data.reqt_id !== '' ? data.reqt_id : null,
+      sta_id: data.sta_id !== '' ? data.sta_id : null,
     }
     console.log(JSON.stringify(actionData))
 
@@ -219,7 +223,9 @@ const ActionForm = ({ props }: IActionForm) => {
               <InputLabel>Request type</InputLabel>
               <Select
                 value={data.reqt_id}
-                onChange={(e) => setData({ ...data, reqt_id: e.target.value })}
+                onChange={(e) =>
+                  setData({ ...data, reqt_id: parseInt(e.target.value) })
+                }
                 label="State"
               >
                 <MenuItem value={''}>
@@ -283,7 +289,7 @@ const ActionForm = ({ props }: IActionForm) => {
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel>Next state code</InputLabel>
                 <Select
-                  value={data.action_settings[0].string_value}
+                  value={actionSettingValue}
                   onChange={(e) =>
                     setData({
                       ...data,
@@ -313,7 +319,7 @@ const ActionForm = ({ props }: IActionForm) => {
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel>Mail Template code</InputLabel>
                 <Select
-                  value={data.action_settings[0].string_value}
+                  value={actionSettingValue}
                   onChange={(e) =>
                     setData({
                       ...data,
@@ -341,7 +347,7 @@ const ActionForm = ({ props }: IActionForm) => {
               <TextField
                 label={actionTypeActionSettingLabelMapping[data.action_type]}
                 variant="outlined"
-                value={data.action_settings[0].string_value}
+                value={actionSettingValue}
                 onChange={(e) =>
                   setData({
                     ...data,
