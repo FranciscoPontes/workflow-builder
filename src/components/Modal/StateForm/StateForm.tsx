@@ -17,6 +17,7 @@ import { IConfirmationData } from '../../UIConfirmation/UIConfirmation'
 import { useEffect } from 'react'
 import { DBActionTypes } from '../../../services/dbActionTypes'
 import styles from './StateForm.module.css'
+import { formatCode, formatLabel } from '../../../utils/inputFormatter'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -168,8 +169,8 @@ const StateForm = ({ props }: IStateForm) => {
             onChange={(e) =>
               setData({
                 ...data,
-                code: e.target.value.toUpperCase(),
-                label: data.id ? data.label : e.target.value.toLowerCase(),
+                code: formatCode(e.target.value),
+                label: data.id ? data.label : formatLabel(e.target.value),
               })
             }
             required

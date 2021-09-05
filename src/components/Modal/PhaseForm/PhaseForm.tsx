@@ -14,6 +14,7 @@ import { IConfirmationData } from '../../UIConfirmation/UIConfirmation'
 import { useEffect } from 'react'
 import { DBActionTypes } from '../../../services/dbActionTypes'
 import { useRef } from 'react'
+import { formatCode, formatLabel } from '../../../utils/inputFormatter'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -128,8 +129,8 @@ const PhaseForm = ({ props }: IPhaseForm) => {
             onChange={(e) =>
               setData({
                 ...data,
-                code: e.target.value.toUpperCase(),
-                label: data.id ? data.label : e.target.value.toLowerCase(),
+                code: formatCode(e.target.value),
+                label: data.id ? data.label : formatLabel(e.target.value),
               })
             }
             required

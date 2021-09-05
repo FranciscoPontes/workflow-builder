@@ -23,6 +23,7 @@ import {
 } from '../../workflowItems/Action/Action'
 import { stateDefinition } from '../../workflowItems/State/State'
 import FormHelperText from '@material-ui/core/FormHelperText'
+import { formatCode, formatLabel } from '../../../utils/inputFormatter'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -263,8 +264,8 @@ const ActionForm = ({ props }: IActionForm) => {
             onChange={(e) =>
               setData({
                 ...data,
-                code: e.target.value.toUpperCase(),
-                label: data.id ? data.label : e.target.value.toLowerCase(),
+                code: formatCode(e.target.value),
+                label: data.id ? data.label : formatLabel(e.target.value),
               })
             }
             required
