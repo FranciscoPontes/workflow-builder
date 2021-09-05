@@ -160,7 +160,7 @@ export const State = ({ props, permissionCount, actions }: IStateProps) => {
             })
           }
         >
-          <AddCircleIcon fontSize="large" />
+          <AddCircleIcon />
         </div>
       </div>
     </div>

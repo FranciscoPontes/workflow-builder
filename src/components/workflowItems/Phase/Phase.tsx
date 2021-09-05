@@ -134,7 +134,7 @@ const Phase = (props: phaseDefinition) => {
             })
           }
         >
-          <AddCircleIcon fontSize="large" />
+          <AddCircleIcon />
         </div>
       </div>
     </div>
