@@ -75,15 +75,15 @@ const ActionForm = ({ props }: IActionForm) => {
     )
 
   const [data, setData] = useState<IAction>({
-    action_type: props.action_type || null,
-    code: props.code,
+    action_type: props.action_type || '',
+    code: props.code || '',
     id: props.id,
-    label: props.label,
-    sta_id: props.sta_id,
+    label: props.label || '',
+    sta_id: props.sta_id || '',
     user_action_yn: props.user_action_yn || 'Y',
     sort_order: props.sort_order,
     action_settings: props.id ? getCorrectActionSetting() : [],
-    reqt_id: props.reqt_id,
+    reqt_id: props.reqt_id || '',
   })
 
   const getNewSortOrder = (): number => {
@@ -203,7 +203,7 @@ const ActionForm = ({ props }: IActionForm) => {
                 label="State"
                 required
               >
-                <MenuItem value={null}>
+                <MenuItem value={''}>
                   <em>None</em>
                 </MenuItem>
                 {stateArray()?.map((sta) => (
@@ -222,7 +222,7 @@ const ActionForm = ({ props }: IActionForm) => {
                 onChange={(e) => setData({ ...data, reqt_id: e.target.value })}
                 label="State"
               >
-                <MenuItem value={null}>
+                <MenuItem value={''}>
                   <em>None</em>
                 </MenuItem>
                 {requestTypes()?.map((reqt) => (
@@ -245,7 +245,7 @@ const ActionForm = ({ props }: IActionForm) => {
                 label="Action Type"
                 required
               >
-                <MenuItem value={null}>
+                <MenuItem value={''}>
                   <em>None</em>
                 </MenuItem>
                 {validActionTypes.map((actt, idx) => (
@@ -297,7 +297,7 @@ const ActionForm = ({ props }: IActionForm) => {
                   }
                   label="Next state code"
                 >
-                  <MenuItem value={null}>
+                  <MenuItem value={''}>
                     <em>None</em>
                   </MenuItem>
                   {stateArray()
@@ -327,7 +327,7 @@ const ActionForm = ({ props }: IActionForm) => {
                   }
                   label="Mail Template code"
                 >
-                  <MenuItem value={null}>
+                  <MenuItem value={''}>
                     <em>None</em>
                   </MenuItem>
                   {mailTemplates()?.map((mt) => (
