@@ -50,7 +50,7 @@ const StateForm = ({ props }: IStateForm) => {
     code: props?.code || '',
     label: props?.label || '',
     sort_order: props?.sort_order,
-    pha_id: props?.pha_id || null,
+    pha_id: props?.pha_id || '',
     id: props?.id || null,
   })
 
@@ -76,7 +76,7 @@ const StateForm = ({ props }: IStateForm) => {
 
   const saveData = async (formikData, setSubmitting) => {
     const stateData = {
-      pha_id: data.pha_id,
+      pha_id: data.pha_id !== '' ? data.pha_id : null,
       app_id: appID,
       code: data.code,
       label: data.label,
@@ -135,7 +135,7 @@ const StateForm = ({ props }: IStateForm) => {
 
   // update new sort order when selected phase changes
   useEffect(() => {
-    if (data.pha_id === props.pha_id && props.id) {
+    if (data.pha_id === props?.pha_id && props.id) {
       setData({
         ...data,
         sort_order: props.sort_order,
@@ -169,7 +169,7 @@ const StateForm = ({ props }: IStateForm) => {
               label="Phase"
               required
             >
-              <MenuItem value={null}>
+              <MenuItem value={''}>
                 <em>None</em>
               </MenuItem>
               {phaseArray().map((pha) => (

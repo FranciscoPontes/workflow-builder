@@ -50,17 +50,6 @@ export const State = ({ props, permissionCount, actions }: IStateProps) => {
     },
   }
 
-  const ActionModalData: IModal = {
-    title: 'New action',
-    description: '',
-    type: EModalTypes.action,
-    metadata: {
-      actionMetadata: {
-        sta_id: props.id,
-      },
-    },
-  }
-
   const snackbarData: ISnackbarData = {
     content: 'State updated!',
     severity: EseverityTypes.success,
@@ -150,17 +139,6 @@ export const State = ({ props, permissionCount, actions }: IStateProps) => {
               indexOfThisState + 1 !== statesLenght ? 'inherit' : 'disabled'
             }
           />
-        </div>
-        <div
-          style={{ margin: '0 10px', cursor: 'pointer', height: 'fit-content' }}
-          onClick={() =>
-            dispatch({
-              type: actionTypes.showModal,
-              data: ActionModalData,
-            })
-          }
-        >
-          <AddCircleIcon />
         </div>
       </div>
     </div>

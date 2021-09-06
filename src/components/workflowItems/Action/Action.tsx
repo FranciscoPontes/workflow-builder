@@ -136,7 +136,11 @@ const Action = ({ props }: IActionProps) => {
             : styles.automaticAction,
         ].join(' ')}
       >
-        <span>{props.label}</span>
+        <span>
+          {props.user_action_yn !== 'Y'
+            ? `${props.label} - Automatic action`
+            : props.label}
+        </span>
         {props.action_type === EActionTypes.mail ? (
           <MailIcon />
         ) : props.action_type === EActionTypes.stateChange ? (

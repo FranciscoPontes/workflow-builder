@@ -6,11 +6,12 @@
 
 .state {
   background-color: #dee2e2;
+  border: 1px solid black;
   box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgb(0 0 0 / 0%);
   width: 80%;
   min-height: 20vh;
   padding: 10px;
-  border-radius: 2%;
+  /* border-radius: 2%; */
   margin: 10px;
   display: flex;
   flex-flow: column;

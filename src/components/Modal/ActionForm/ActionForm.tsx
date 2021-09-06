@@ -72,19 +72,20 @@ const ActionForm = ({ props }: IActionForm) => {
 
   const getCorrectActionSetting = (): Array<IActionSetting> =>
     props.action_settings?.filter(
-      (acts) => acts.name === actionTypeActionSettingMapping[props.action_type],
+      (acts) =>
+        acts.name === actionTypeActionSettingMapping[props?.action_type],
     )
 
   const [data, setData] = useState<IAction>({
-    action_type: props.action_type || '',
-    code: props.code || '',
-    id: props.id,
-    label: props.label || '',
-    sta_id: props.sta_id || '',
-    user_action_yn: props.user_action_yn || 'Y',
-    sort_order: props.sort_order,
-    action_settings: props.id ? getCorrectActionSetting() : [],
-    reqt_id: props.reqt_id || '',
+    action_type: props?.action_type || '',
+    code: props?.code || '',
+    id: props?.id,
+    label: props?.label || '',
+    sta_id: props?.sta_id || '',
+    user_action_yn: props?.user_action_yn || 'Y',
+    sort_order: props?.sort_order,
+    action_settings: props?.id ? getCorrectActionSetting() : [],
+    reqt_id: props?.reqt_id || '',
   })
 
   const snackbarData: ISnackbarData = {
