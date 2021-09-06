@@ -18,6 +18,7 @@ import { useEffect } from 'react'
 import { DBActionTypes } from '../../../services/dbActionTypes'
 import styles from './StateForm.module.css'
 import { formatCode, formatLabel } from '../../../utils/inputFormatter'
+import { EseverityTypes, ISnackbarData } from '../../SnackBar/SnackBar'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,6 +54,12 @@ const StateForm = ({ props }: IStateForm) => {
     id: props?.id || null,
   })
 
+  const snackbarData: ISnackbarData = {
+    content: `State ${!data.id ? 'created' : 'updated'}!`,
+    severity: EseverityTypes.success,
+    show: true,
+  }
+
   const getNewSortOrder = (): number => {
     if (!workflowData.states) return 1
 
@@ -87,6 +94,7 @@ const StateForm = ({ props }: IStateForm) => {
       change_type: DBActionTypes.updateStates,
     })
     setSubmitting(false)
+    dispatch({ type: actionTypes.updateSnackbar, data: snackbarData })
     dispatch({ type: actionTypes.refresh })
     if (data.id) dispatch({ type: actionTypes.hideModal })
   }
@@ -97,6 +105,10 @@ const StateForm = ({ props }: IStateForm) => {
       id: props.id,
     })
     dispatch({ type: actionTypes.refresh })
+    dispatch({
+      type: actionTypes.updateSnackbar,
+      data: { ...snackbarData, content: 'State deleted!' },
+    })
     dispatch({ type: actionTypes.hideModal })
   }
 
@@ -113,18 +125,24 @@ const StateForm = ({ props }: IStateForm) => {
 
   // when adding new states, keep increasing new sort order for quick batch insert
   useEffect(() => {
-    if (!data.id) {
+    if (!data.id && !data.sort_order) {
       setData({
         ...data,
         sort_order: getNewSortOrder(),
       })
     }
-  }, [workflowData])
+  }, [data])
 
   // update new sort order when selected phase changes
   useEffect(() => {
+    if (data.pha_id === props.pha_id && props.id) {
+      setData({
+        ...data,
+        sort_order: props.sort_order,
+      })
+      return
+    }
     console.log('Changing sort order due to phase change..')
-    console.log(getNewSortOrder())
     setData({
       ...data,
       sort_order: getNewSortOrder(),
@@ -182,15 +200,6 @@ const StateForm = ({ props }: IStateForm) => {
             onChange={(e) => setData({ ...data, label: e.target.value })}
             required
           />
-          {/* <TextField
-            id="phase-label"
-            label="Sort order"
-            variant="outlined"
-            type="number"
-            required
-            value={data.sort_order}
-            onChange={(e) => setData({ ...data, sortOrder: e.target.value })}
-          /> */}
           <div
             style={{
               display: 'flex',

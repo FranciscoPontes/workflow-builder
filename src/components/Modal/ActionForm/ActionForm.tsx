@@ -24,6 +24,7 @@ import {
 import { stateDefinition } from '../../workflowItems/State/State'
 import FormHelperText from '@material-ui/core/FormHelperText'
 import { formatCode, formatLabel } from '../../../utils/inputFormatter'
+import { EseverityTypes, ISnackbarData } from '../../SnackBar/SnackBar'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -86,6 +87,12 @@ const ActionForm = ({ props }: IActionForm) => {
     reqt_id: props.reqt_id || '',
   })
 
+  const snackbarData: ISnackbarData = {
+    content: `Action ${!data.id ? 'created' : 'updated'}!`,
+    severity: EseverityTypes.success,
+    show: true,
+  }
+
   const actionSettingValue: string = data.action_settings[0]?.string_value || ''
 
   const getNewSortOrder = (): number => {
@@ -123,6 +130,7 @@ const ActionForm = ({ props }: IActionForm) => {
       change_type: DBActionTypes.updateActions,
     })
     setSubmitting(false)
+    dispatch({ type: actionTypes.updateSnackbar, data: snackbarData })
     dispatch({ type: actionTypes.refresh })
     if (data.id) dispatch({ type: actionTypes.hideModal })
   }
@@ -131,6 +139,10 @@ const ActionForm = ({ props }: IActionForm) => {
     await DBService.changeData({
       change_type: DBActionTypes.removeAction,
       id: props.id,
+    })
+    dispatch({
+      type: actionTypes.updateSnackbar,
+      data: { ...snackbarData, content: 'Action deleted!' },
     })
     dispatch({ type: actionTypes.refresh })
     dispatch({ type: actionTypes.hideModal })

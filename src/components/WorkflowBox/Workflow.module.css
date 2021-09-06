@@ -26,4 +26,5 @@
   display: flex;
   flex-flow: column;
   margin-bottom: 10px;
+  width: 90%;
 }

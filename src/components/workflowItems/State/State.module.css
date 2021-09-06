@@ -1,12 +1,13 @@
 .stateContainer {
   display: flex;
   margin: 10px 3px;
+  justify-content: center;
 }
 
 .state {
   background-color: #7f7f9a;
   color: white;
-  width: 70vh;
+  width: 80%;
   min-height: 20vh;
   padding: 10px;
   border-radius: 2%;
