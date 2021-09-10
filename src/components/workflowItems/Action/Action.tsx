@@ -51,6 +51,7 @@ interface IActionProps {
 const Action = ({ props }: IActionProps) => {
   const dispatch = useDispatch()
   const appID = useSelector((state) => state.appData.appID)
+  const workflowData = useSelector((state) => state.workflowData)
 
   const modalData: IModal = {
     title: 'Action settings',
@@ -66,6 +67,12 @@ const Action = ({ props }: IActionProps) => {
       .filter((act) => act.sta_id === props.sta_id)
       .map((act) => ({ ...act, app_id: appID })),
   )
+
+  const actionTypeActionSettingMapping = {
+    [EActionTypes.mail]: 'MAIL_TEMPLATE_CODE',
+    [EActionTypes.plsql]: 'PLSQL_FUNCTION_NAME',
+    [EActionTypes.stateChange]: 'NEXT_STATE_CODE_1',
+  }
 
   const actionsLenght = actions.length
 
@@ -118,6 +125,40 @@ const Action = ({ props }: IActionProps) => {
     if (indexOfThisAction !== 0) changeActionOrder(-1)
   }
 
+  const requestTypes = workflowData.request_types?.map((reqt) => reqt)
+
+  const getCorrectActionSetting: Array<IActionSetting> = props.action_settings?.filter(
+    (acts) => acts.name === actionTypeActionSettingMapping[props?.action_type],
+  )
+
+  const actionSettingInfo = (
+    <div
+      style={{
+        display: 'flex',
+        flexFlow: 'column',
+      }}
+    >
+      <span>
+        {props.action_type === EActionTypes.mail
+          ? `Mail code: ${getCorrectActionSetting[0].string_value || ''}`
+          : props.action_type === EActionTypes.plsql
+          ? `PL/SQL Function: ${getCorrectActionSetting[0].string_value || ''}`
+          : props.action_type === EActionTypes.stateChange
+          ? `From ${props.code} to ${
+              getCorrectActionSetting[0].string_value || ''
+            }`
+          : ''}
+      </span>
+      <span>
+        {`Request type: ${
+          props.reqt_id
+            ? requestTypes.filter((reqt) => reqt.id === props.reqt_id)[0].code
+            : 'All'
+        }`}
+      </span>
+    </div>
+  )
+
   return (
     <div style={{ display: 'flex', width: '60%' }}>
       <div
@@ -136,11 +177,19 @@ const Action = ({ props }: IActionProps) => {
             : styles.automaticAction,
         ].join(' ')}
       >
-        <span>
-          {props.user_action_yn !== 'Y'
-            ? `${props.label} - Automatic action`
-            : props.label}
-        </span>
+        <div
+          style={{
+            display: 'flex',
+            flexFlow: 'column',
+          }}
+        >
+          <h4>
+            {`${props.label} - ${
+              props.user_action_yn !== 'Y' ? 'Automatic action' : 'User Action'
+            }`}
+          </h4>
+          <span>{actionSettingInfo}</span>
+        </div>
         {props.action_type === EActionTypes.mail ? (
           <MailIcon />
         ) : props.action_type === EActionTypes.stateChange ? (

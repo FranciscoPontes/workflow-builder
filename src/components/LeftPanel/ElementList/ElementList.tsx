@@ -115,6 +115,7 @@ export default function ElementList() {
             <div
               onClick={() => handleClickAction(el.actionType)}
               className={styles.element}
+              key={el.label}
             >
               <ListItem button>
                 <ListItemIcon>{el.icon}</ListItemIcon>
