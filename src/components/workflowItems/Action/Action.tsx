@@ -160,7 +160,7 @@ const Action = ({ props }: IActionProps) => {
   )
 
   return (
-    <div style={{ display: 'flex', width: '60%' }}>
+    <div style={{ display: 'flex', width: '80%' }}>
       <div
         style={{ cursor: 'pointer', height: 'fit-content' }}
         onClick={() =>
