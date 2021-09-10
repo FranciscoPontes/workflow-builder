@@ -30,12 +30,12 @@ const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
       margin: theme.spacing(1),
-      width: '25ch',
+      width: '65%',
     },
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120,
+    minWidth: 240,
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -379,7 +379,7 @@ const ActionForm = ({ props }: IActionForm) => {
           <div
             style={{
               display: 'flex',
-              justifyContent: 'space-between',
+              justifyContent: data?.id ? 'space-between' : 'center',
               margin: '20px',
             }}
           >
