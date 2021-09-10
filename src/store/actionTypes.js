@@ -9,4 +9,6 @@ export const actionTypes = {
   showConfirmation: 'SHOW_CONFIRMATION',
   hideConfirmation: 'HIDE_CONFIRMATION',
   setAppData: 'SET_APP_DATA',
+  setSelectedPhase: 'SET_SELECTED_PHASE',
+  setSelectedState: 'SET_SELECTED_STATE',
 }

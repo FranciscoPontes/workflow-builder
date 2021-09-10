@@ -29,10 +29,15 @@ interface IStateProps {
 }
 
 export const State = ({ props, permissionCount, actions }: IStateProps) => {
-  const classes: Array<string> = [styles.state]
   const states = useSelector((state) =>
     state.workflowData.states.filter((sta) => sta.pha_id === props.pha_id),
   )
+  const selectedState = useSelector((state) => state.selectedState)
+  const classes: Array<string> = [
+    styles.state,
+    selectedState === props.id ? styles.selected : '',
+  ]
+
   const dispatch = useDispatch()
 
   const statesLenght = states.length
@@ -93,6 +98,11 @@ export const State = ({ props, permissionCount, actions }: IStateProps) => {
     if (indexOfThisState !== 0) changeStateOrder(-1)
   }
 
+  const setSelectedState = () => {
+    dispatch({ type: actionTypes.setSelectedState, data: props.id })
+    dispatch({ type: actionTypes.setSelectedPhase, data: null })
+  }
+
   return (
     <div className={styles.stateContainer}>
       <div
@@ -104,7 +114,9 @@ export const State = ({ props, permissionCount, actions }: IStateProps) => {
         <SettingsIcon fontSize="small" />
       </div>
       <div className={classes.join(' ')}>
-        <span>{props.code}</span>
+        <span style={{ cursor: 'pointer' }} onClick={setSelectedState}>
+          {props.code}
+        </span>
         {/* State dependencies - permissions and actions */}
         <div className={styles.stateDependencies}>
           <Badge color="primary" badgeContent={permissionCount} max={99}>

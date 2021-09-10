@@ -51,6 +51,7 @@ const ActionForm = ({ props }: IActionForm) => {
   const workflowData = useSelector((state) => state.workflowData)
   const appID = useSelector((state) => state.appData.appID)
   const classes = useStyles()
+  const selectedState = useSelector((state) => state.selectedState)
 
   const validActionTypes: Array<EActionTypes> = [
     EActionTypes.mail,
@@ -81,7 +82,7 @@ const ActionForm = ({ props }: IActionForm) => {
     code: props?.code || '',
     id: props?.id,
     label: props?.label || '',
-    sta_id: props?.sta_id || '',
+    sta_id: props?.sta_id || selectedState || '',
     user_action_yn: props?.user_action_yn || 'Y',
     sort_order: props?.sort_order,
     action_settings: props?.id ? getCorrectActionSetting() : [],

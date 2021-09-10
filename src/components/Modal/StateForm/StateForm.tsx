@@ -45,12 +45,13 @@ const StateForm = ({ props }: IStateForm) => {
   const workflowData = useSelector((state) => state.workflowData)
   const appID = useSelector((state) => state.appData.appID)
   const classes = useStyles()
+  const selectedPhase = useSelector((state) => state.selectedPhase)
 
   const [data, setData] = useState<stateDefinition>({
     code: props?.code || '',
     label: props?.label || '',
     sort_order: props?.sort_order,
-    pha_id: props?.pha_id || '',
+    pha_id: props?.pha_id || selectedPhase || '',
     id: props?.id || null,
   })
 

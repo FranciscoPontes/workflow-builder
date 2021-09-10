@@ -27,6 +27,8 @@ const initialState = {
     appCode: null,
     DBTier: null,
   },
+  selectedPhase: null,
+  selectedState: null,
 }
 
 const storeSettings = function (state = initialState, action) {
@@ -54,6 +56,13 @@ const storeSettings = function (state = initialState, action) {
       return { ...state, triggerRefresh: true }
     case actionTypes.stopRefresh:
       return { ...state, triggerRefresh: false }
+    /**
+     * selectable elements
+     */
+    case actionTypes.setSelectedPhase:
+      return { ...state, selectedPhase: action.data }
+    case actionTypes.setSelectedState:
+      return { ...state, selectedState: action.data }
     default:
       return state
   }

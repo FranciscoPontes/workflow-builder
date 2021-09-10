@@ -31,6 +31,7 @@ export type workflowData = {
 
 export const WorkflowBox = () => {
   const data: workflowData = useSelector((state) => state.workflowData)
+  const selectedPhase = useSelector((state) => state.selectedPhase)
 
   const statePermissionCount = (sta: stateDefinition): number => {
     return data.permissions?.filter((per) => per.sta_id === sta.id).length
@@ -44,7 +45,13 @@ export const WorkflowBox = () => {
     <div id={styles.box}>
       {data
         ? data.phases?.map((phase) => (
-            <div className={styles.workflowPhases} key={phase.code}>
+            <div
+              className={[
+                styles.workflowPhases,
+                selectedPhase === phase.id ? styles.selected : '',
+              ].join(' ')}
+              key={phase.code}
+            >
               <div className={styles.phase}>
                 <Phase
                   code={phase.code}

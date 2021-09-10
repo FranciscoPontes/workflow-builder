@@ -82,6 +82,11 @@ const Phase = (props: phaseDefinition) => {
     },
   }
 
+  const changeSelectedPhase = () => {
+    dispatch({ type: actionTypes.setSelectedPhase, data: props.id })
+    dispatch({ type: actionTypes.setSelectedState, data: null })
+  }
+
   return (
     <div className={styles.phase}>
       <div
@@ -95,7 +100,9 @@ const Phase = (props: phaseDefinition) => {
       >
         <SettingsIcon fontSize="small" />
       </div>
-      <span>{props.code}</span>
+      <span style={{ cursor: 'pointer' }} onClick={changeSelectedPhase}>
+        {props.code}
+      </span>
       <div style={{ display: 'flex' }}>
         <div
           onClick={changePhaseOrderDown}

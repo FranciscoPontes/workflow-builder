@@ -17,6 +17,10 @@
   flex-flow: column;
 }
 
+.selected {
+  border: 4px solid #d6bd09;
+}
+
 .stateDependencies {
   text-align: left;
   width: 100%;
