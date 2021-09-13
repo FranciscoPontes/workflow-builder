@@ -60,6 +60,7 @@ export const WorkflowBox = () => {
                   sort_order={phase.sort_order}
                   id={phase.id}
                   label={phase.label}
+                  active_yn={phase.active_yn}
                 />
               </div>
               {!collapsedPhases.includes(phase.id) ? (

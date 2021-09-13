@@ -13,6 +13,7 @@ import { DBActionTypes } from '../../../services/dbActionTypes'
 import { DBService } from '../../../services/db_communication'
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
+import { ESwitch } from '../../../types/types'
 
 export interface IActionSetting {
   id: number
@@ -41,7 +42,8 @@ export interface IAction {
   user_action_yn: EUserAction
   sort_order: number
   action_settings?: Array<IActionSetting>
-  reqt_id: number
+  reqt_id: number,
+  active_yn: ESwitch
 }
 
 interface IActionProps {

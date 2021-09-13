@@ -13,6 +13,7 @@ import Badge from '@material-ui/core/Badge'
 import Typography from '@material-ui/core/Typography'
 import Action, { IAction } from '../Action/Action'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
+import { ESwitch } from '../../../types/types'
 
 export interface stateDefinition {
   id: number
@@ -20,6 +21,7 @@ export interface stateDefinition {
   code: string
   label: string
   sort_order: number
+  active_yn: ESwitch
 }
 
 interface IStateProps {

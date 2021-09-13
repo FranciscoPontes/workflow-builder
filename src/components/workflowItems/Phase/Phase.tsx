@@ -12,13 +12,14 @@ import { EseverityTypes, ISnackbarData } from '../../SnackBar/SnackBar'
 import { DBActionTypes } from '../../../services/dbActionTypes'
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
-import { TStore } from '../../../types/types'
+import { ESwitch, TStore } from '../../../types/types'
 
 export interface phaseDefinition {
   id: number
   code: string
   label: string
   sort_order: number
+  active_yn: ESwitch
 }
 
 const Phase = (props: phaseDefinition) => {

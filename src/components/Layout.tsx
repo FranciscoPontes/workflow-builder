@@ -6,22 +6,19 @@ import {
   WorkflowBox,
   workflowData,
 } from './WorkflowBox/WorkflowBox'
-import Phase, { phaseDefinition } from './Phase/Phase'
-import { State, stateDefinition } from './State/State'
 import { EModalTypes, IModal, SimpleModal } from './Modal/Modal'
 import { useEffect } from 'react'
 import { DBService } from '../services/db_communication'
-import NewItemsSpeedDial, {
-  TPhaseList,
-} from './newItemsSpeedDial/newItemsSpeedDial'
 import { useDispatch, useSelector } from 'react-redux'
 import CustomSnackbar, { EseverityTypes } from './SnackBar/SnackBar'
 import { actionTypes } from '../store/actionTypes'
 import UIConfirmation from './UIConfirmation/UIConfirmation'
 import { IPermission } from './workflowItems/Permission/Permission'
 import { IAction, IActionSetting } from './workflowItems/Action/Action'
-import AddCircleIcon from '@material-ui/icons/AddCircle'
 import LeftPanel from './LeftPanel/LeftPanel'
+import { TStore } from '../types/types'
+import { phaseDefinition } from './workflowItems/Phase/Phase'
+import { stateDefinition } from './workflowItems/State/State'
 
 enum EDBTiers {
   DEV = 'DEV',
@@ -41,10 +38,10 @@ export interface ILayout {
 
 // objet panel in the left + workflow box
 const Layout = ({ props }: ILayout) => {
-  const refresh = useSelector((state) => state.triggerRefresh)
+  const refresh = useSelector((state: TStore) => state.triggerRefresh)
   const dispatch = useDispatch()
-  const workflowData = useSelector((state) => state.workflowData)
-  const modalData = useSelector((state) => state.modalData)
+  const workflowData = useSelector((state: TStore) => state.workflowData)
+  const modalData = useSelector((state: TStore) => state.modalData)
 
   const preparePhases = (data: workflowData): Array<phaseDefinition> => {
     return data.phases?.map((pha) => {
@@ -53,6 +50,7 @@ const Layout = ({ props }: ILayout) => {
         code: pha.code,
         label: pha.label,
         sort_order: pha.sort_order,
+        active_yn: pha.active_yn,
       }
       return treatedPhase
     })
@@ -66,6 +64,7 @@ const Layout = ({ props }: ILayout) => {
         code: sta.code,
         label: sta.label,
         sort_order: sta.sort_order,
+        active_yn: sta.active_yn,
       }
       return treatedState
     })
@@ -103,6 +102,7 @@ const Layout = ({ props }: ILayout) => {
         sort_order: act.sort_order,
         action_settings: getActionSettings(data, act.id),
         reqt_id: act.reqt_id,
+        active_yn: act.active_yn,
       }
       return treatedAct
     })
@@ -133,6 +133,9 @@ const Layout = ({ props }: ILayout) => {
     request_types: prepareRequestTypes(data),
   })
 
+  /**
+   * Refresh application data from ORDS endpoint
+   */
   const refreshData = async () => {
     await DBService.getApplicationData({
       appCode: props.appCode,
@@ -159,7 +162,9 @@ const Layout = ({ props }: ILayout) => {
   }
 
   // set app data
-  useEffect(() => dispatch({ type: actionTypes.setAppData, data: props }), [])
+  useEffect(() => {
+    dispatch({ type: actionTypes.setAppData, data: props })
+  }, [])
 
   useEffect(() => {
     ;(async () => {

@@ -1,6 +1,11 @@
 import { workflowData } from '../components/WorkflowBox/WorkflowBox'
 import { EseverityTypes } from './../components/SnackBar/SnackBar'
 
+enum ESwitch {
+  y = 'Y',
+  n = 'N',
+}
+
 type TStore = {
   triggerRefresh: boolean
   workflowData: workflowData
@@ -32,4 +37,4 @@ type TStore = {
   collapsedPhases: Array<number>
 }
 
-export { TStore }
+export { TStore, ESwitch }
