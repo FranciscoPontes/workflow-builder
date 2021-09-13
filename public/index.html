@@ -18,10 +18,17 @@
       const appData = {
         appCode: 'SB1',
         DBTier: 'DEV',
-        appID: 21
+        appID: 21,
       }
 
+      // const appData = {
+      //   appCode: 'OWP',
+      //   DBTier: 'DEV',
+      //   appID: 5221,
+      // }
+
       window.baseURL = 'https://q-apex.ams.com/ords/appsq/req_owner/'
+      // window.baseURL = 'https://apex.ams.com/ords/appsprod/req_owner/'
 
       document.addEventListener('readystatechange', (event) => {
         if (event.target.readyState === 'complete') {
