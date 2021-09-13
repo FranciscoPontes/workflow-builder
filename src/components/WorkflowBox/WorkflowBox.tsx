@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { TStore } from '../../types/types'
 import NewItemsSpeedDial from '../newItemsSpeedDial/newItemsSpeedDial'
 import { IAction } from '../workflowItems/Action/Action'
 import { IPermission } from '../workflowItems/Permission/Permission'
@@ -30,8 +31,9 @@ export type workflowData = {
 }
 
 export const WorkflowBox = () => {
-  const data: workflowData = useSelector((state) => state.workflowData)
-  const selectedPhase = useSelector((state) => state.selectedPhase)
+  const data: workflowData = useSelector((state: TStore) => state.workflowData)
+  const selectedPhase = useSelector((state: TStore) => state.selectedPhase)
+  const collapsedPhases = useSelector((state: TStore) => state.collapsedPhases)
 
   const statePermissionCount = (sta: stateDefinition): number => {
     return data.permissions?.filter((per) => per.sta_id === sta.id).length
@@ -60,18 +62,20 @@ export const WorkflowBox = () => {
                   label={phase.label}
                 />
               </div>
-              <div className={styles.states}>
-                {data.states
-                  ?.filter((sta) => sta.pha_id === phase.id)
-                  .map((sta) => (
-                    <State
-                      key={sta.code}
-                      props={sta}
-                      permissionCount={statePermissionCount(sta)}
-                      actions={stateActions(sta)}
-                    />
-                  ))}
-              </div>
+              {!collapsedPhases.includes(phase.id) ? (
+                <div className={styles.states}>
+                  {data.states
+                    ?.filter((sta) => sta.pha_id === phase.id)
+                    .map((sta) => (
+                      <State
+                        key={sta.code}
+                        props={sta}
+                        permissionCount={statePermissionCount(sta)}
+                        actions={stateActions(sta)}
+                      />
+                    ))}
+                </div>
+              ) : null}
             </div>
           ))
         : null}

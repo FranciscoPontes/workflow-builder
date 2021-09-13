@@ -10,7 +10,9 @@ import { DBService } from '../../../services/db_communication'
 import { actionTypes } from '../../../store/actionTypes'
 import { EseverityTypes, ISnackbarData } from '../../SnackBar/SnackBar'
 import { DBActionTypes } from '../../../services/dbActionTypes'
-import AddCircleIcon from '@material-ui/icons/AddCircle'
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import { TStore } from '../../../types/types'
 
 export interface phaseDefinition {
   id: number
@@ -20,8 +22,9 @@ export interface phaseDefinition {
 }
 
 const Phase = (props: phaseDefinition) => {
-  const workflowData = useSelector((state) => state.workflowData)
+  const workflowData = useSelector((state: TStore) => state.workflowData)
   const phases = workflowData.phases
+  const collapsedPhases = useSelector((state: TStore) => state.collapsedPhases)
   const dispatch = useDispatch()
 
   const phasesLenght = phases.length
@@ -87,18 +90,44 @@ const Phase = (props: phaseDefinition) => {
     dispatch({ type: actionTypes.setSelectedState, data: null })
   }
 
+  /**
+   * Adds or removes the phase id from the store collapsed phases array
+   * @returns the modified array
+   */
+  const handlePhaseCollapse = (): Array<number> =>
+    collapsedPhases.includes(props.id)
+      ? collapsedPhases.filter((id) => id !== props.id)
+      : collapsedPhases.concat(props.id)
+
   return (
     <div className={styles.phase}>
-      <div
-        onClick={() =>
-          dispatch({
-            type: actionTypes.showModal,
-            data: phaseModalData,
-          })
-        }
-        style={{ cursor: 'pointer' }}
-      >
-        <SettingsIcon fontSize="small" />
+      <div style={{ display: 'flex' }}>
+        <div
+          onClick={() =>
+            dispatch({
+              type: actionTypes.showModal,
+              data: phaseModalData,
+            })
+          }
+          style={{ cursor: 'pointer' }}
+        >
+          <SettingsIcon fontSize="small" />
+        </div>
+        <div
+          onClick={() =>
+            dispatch({
+              type: actionTypes.setCollapsedPhases,
+              data: handlePhaseCollapse(),
+            })
+          }
+          style={{ cursor: 'pointer' }}
+        >
+          {collapsedPhases.includes(props.id) ? (
+            <ArrowDropDownIcon />
+          ) : (
+            <ArrowDropUpIcon />
+          )}
+        </div>
       </div>
       <span style={{ cursor: 'pointer' }} onClick={changeSelectedPhase}>
         {props.code}

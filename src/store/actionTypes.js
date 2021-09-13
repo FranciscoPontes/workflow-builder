@@ -11,4 +11,5 @@ export const actionTypes = {
   setAppData: 'SET_APP_DATA',
   setSelectedPhase: 'SET_SELECTED_PHASE',
   setSelectedState: 'SET_SELECTED_STATE',
+  setCollapsedPhases: 'SET_COLLAPSED_PHASES',
 }

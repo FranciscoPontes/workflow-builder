@@ -1,7 +1,9 @@
 import { createStore } from 'redux'
+import { EseverityTypes } from '../components/SnackBar/SnackBar'
+import { TStore } from '../types/types'
 import { actionTypes } from './actionTypes'
 
-const initialState = {
+const initialState: TStore = {
   triggerRefresh: false,
   workflowData: null,
   modalData: {
@@ -14,7 +16,7 @@ const initialState = {
   snackbarData: {
     show: false,
     content: '',
-    severity: 'success',
+    severity: EseverityTypes.success,
   },
   confirmationData: {
     open: false,
@@ -29,9 +31,10 @@ const initialState = {
   },
   selectedPhase: null,
   selectedState: null,
+  collapsedPhases: [],
 }
 
-const storeSettings = function (state = initialState, action) {
+const storeSettings = function (state = initialState, action): TStore {
   switch (action.type) {
     case actionTypes.setAppData:
       return { ...state, appData: action.data }
@@ -63,6 +66,11 @@ const storeSettings = function (state = initialState, action) {
       return { ...state, selectedPhase: action.data }
     case actionTypes.setSelectedState:
       return { ...state, selectedState: action.data }
+    /**
+     * collapsed phases
+     */
+    case actionTypes.setCollapsedPhases:
+      return { ...state, collapsedPhases: action.data }
     default:
       return state
   }
