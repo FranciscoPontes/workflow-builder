@@ -108,7 +108,7 @@ const ActionForm = ({ props }: IActionForm) => {
     return Math.max(...sortOrderArray) + 1
   }
 
-  const stateArray = () =>
+  const stateArray = (): Array<{ id: number; label: string }> =>
     workflowData.states?.map((sta: stateDefinition) => ({
       id: sta.id,
       label: sta.code,
@@ -323,7 +323,7 @@ const ActionForm = ({ props }: IActionForm) => {
                   {stateArray()
                     ?.filter((sta) => sta.id !== data.sta_id)
                     .map((sta) => (
-                      <MenuItem key={sta.id} value={sta.id}>
+                      <MenuItem key={sta.label} value={sta.label}>
                         {sta.label}
                       </MenuItem>
                     ))}
