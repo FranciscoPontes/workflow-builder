@@ -118,7 +118,14 @@ export default function ElementList() {
               key={el.label}
             >
               <ListItem button>
-                <ListItemIcon>{el.icon}</ListItemIcon>
+                <ListItemIcon
+                  style={{
+                    minWidth: 'fit-content',
+                    marginRight: '5px',
+                  }}
+                >
+                  {el.icon}
+                </ListItemIcon>
                 <ListItemText primary={el.label} />
               </ListItem>
             </div>
