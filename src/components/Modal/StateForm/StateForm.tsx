@@ -94,9 +94,24 @@ const StateForm = ({ props }: IStateForm) => {
       states: [stateData],
       change_type: DBActionTypes.updateStates,
     })
+      .then(() => {
+        dispatch({ type: actionTypes.updateSnackbar, data: snackbarData })
+        dispatch({ type: actionTypes.refresh })
+      })
+      .catch((err) => {
+        console.error(err.message)
+        dispatch({
+          type: actionTypes.updateSnackbar,
+          data: {
+            ...snackbarData,
+            severity: EseverityTypes.error,
+            content: `Error ${!data.id ? 'creating' : 'updating'} state! ${
+              err.message
+            }`,
+          },
+        })
+      })
     setSubmitting(false)
-    dispatch({ type: actionTypes.updateSnackbar, data: snackbarData })
-    dispatch({ type: actionTypes.refresh })
     if (data.id) dispatch({ type: actionTypes.hideModal })
   }
 
@@ -105,12 +120,25 @@ const StateForm = ({ props }: IStateForm) => {
       change_type: DBActionTypes.removeState,
       id: props.id,
     })
-    dispatch({ type: actionTypes.refresh })
-    dispatch({
-      type: actionTypes.updateSnackbar,
-      data: { ...snackbarData, content: 'State deleted!' },
-    })
-    dispatch({ type: actionTypes.hideModal })
+      .then(() => {
+        dispatch({ type: actionTypes.refresh })
+        dispatch({
+          type: actionTypes.updateSnackbar,
+          data: { ...snackbarData, content: 'State deleted!' },
+        })
+        dispatch({ type: actionTypes.hideModal })
+      })
+      .catch((err) => {
+        console.error(err.message)
+        dispatch({
+          type: actionTypes.updateSnackbar,
+          data: {
+            ...snackbarData,
+            severity: EseverityTypes.error,
+            content: `Error deleting action! ${err.message}`,
+          },
+        })
+      })
   }
 
   const confirmData: IConfirmationData = {

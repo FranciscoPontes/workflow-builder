@@ -15,7 +15,7 @@ import NewItemsSpeedDial, {
   TPhaseList,
 } from './newItemsSpeedDial/newItemsSpeedDial'
 import { useDispatch, useSelector } from 'react-redux'
-import CustomSnackbar from './SnackBar/SnackBar'
+import CustomSnackbar, { EseverityTypes } from './SnackBar/SnackBar'
 import { actionTypes } from '../store/actionTypes'
 import UIConfirmation from './UIConfirmation/UIConfirmation'
 import { IPermission } from './workflowItems/Permission/Permission'
@@ -134,15 +134,28 @@ const Layout = ({ props }: ILayout) => {
   })
 
   const refreshData = async () => {
-    const appData = await DBService.getApplicationData({
+    await DBService.getApplicationData({
       appCode: props.appCode,
       DBTier: props.DBTier,
-    }).then((res) => res)
-    console.log(appData)
-    dispatch({
-      type: actionTypes.updateData,
-      data: arrangedTemplateData(appData),
     })
+      .then((appData) => {
+        console.log(appData)
+        dispatch({
+          type: actionTypes.updateData,
+          data: arrangedTemplateData(appData),
+        })
+      })
+      .catch((err) => {
+        console.error(`Error fetching app data. ${err.message}`)
+        dispatch({
+          type: actionTypes.updateSnackbar,
+          data: {
+            show: true,
+            severity: EseverityTypes.error,
+            content: `Error fetching app data. ${err.message}`,
+          },
+        })
+      })
   }
 
   // set app data
@@ -175,7 +188,9 @@ const Layout = ({ props }: ILayout) => {
           <CustomSnackbar />
           <UIConfirmation />
         </Fragment>
-      ) : null}
+      ) : (
+        <CustomSnackbar />
+      )}
     </div>
   )
 }

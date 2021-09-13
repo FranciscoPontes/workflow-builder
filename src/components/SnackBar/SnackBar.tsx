@@ -1,17 +1,18 @@
 import React from 'react'
 import Button from '@material-ui/core/Button'
 import Snackbar from '@material-ui/core/Snackbar'
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert'
 import { useDispatch, useSelector } from 'react-redux'
 import { actionTypes } from '../../store/actionTypes'
+import { TStore } from '../../types/types'
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert'
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />
 }
 
 export enum EseverityTypes {
-  success = 'SUCCESS',
-  error = 'ERROR',
+  success = 'success',
+  error = 'error',
 }
 
 export interface ISnackbarData {
@@ -21,24 +22,29 @@ export interface ISnackbarData {
 }
 
 export default function CustomSnackbar() {
-  const snackbarData: ISnackbarData = useSelector((state) => state.snackbarData)
+  const snackbarData: ISnackbarData = useSelector(
+    (state: TStore) => state.snackbarData,
+  )
   const dispatch = useDispatch()
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === 'clickaway') return
+    // if (reason === 'clickaway') return
     dispatch({ type: actionTypes.closeSnackbar })
   }
 
-  return (
+  return snackbarData.show ? (
     <Snackbar
       open={snackbarData?.show}
-      autoHideDuration={1000}
+      autoHideDuration={
+        snackbarData.severity === EseverityTypes.success ? 2000 : null
+      }
       onClose={handleClose}
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'left',
       }}
-      message={snackbarData?.content}
-    />
-  )
+    >
+      <Alert severity={snackbarData.severity}>{snackbarData.content}</Alert>
+    </Snackbar>
+  ) : null
 }

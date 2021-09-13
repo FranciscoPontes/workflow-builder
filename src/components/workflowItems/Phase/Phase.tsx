@@ -44,9 +44,21 @@ const Phase = (props: phaseDefinition) => {
       phases: data,
       change_type: DBActionTypes.updatePhases,
     })
-
-    dispatch({ type: actionTypes.updateSnackbar, data: snackbarData })
-    dispatch({ type: actionTypes.refresh })
+      .then(() => {
+        dispatch({ type: actionTypes.updateSnackbar, data: snackbarData })
+        dispatch({ type: actionTypes.refresh })
+      })
+      .catch((err) => {
+        console.error(err.message)
+        dispatch({
+          type: actionTypes.updateSnackbar,
+          data: {
+            ...snackbarData,
+            severity: EseverityTypes.error,
+            content: `Error updating phase order! ${err.message}`,
+          },
+        })
+      })
   }
 
   const changePhaseOrder = async (increment) => {

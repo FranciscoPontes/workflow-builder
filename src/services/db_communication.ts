@@ -15,14 +15,8 @@ const getApplicationData = async ({
       const allData = JSON.parse(res.data.items[0].result)
       return allData[DBTier]
     })
-    .catch((error) => console.error(error))
 
 const changeData = async (data): Promise<any> =>
-  await axios
-    .post(`${window.baseURL}req-app-config/change_app_data`, data)
-    .then((res) => {
-      console.log(res)
-    })
-    .catch((error) => console.error(error))
+  await axios.post(`${window.baseURL}req-app-config/change_app_data`, data)
 
 export const DBService = { getApplicationData, changeData }

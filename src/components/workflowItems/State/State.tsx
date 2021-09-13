@@ -70,9 +70,21 @@ export const State = ({ props, permissionCount, actions }: IStateProps) => {
       states: data,
       change_type: DBActionTypes.updateStates,
     })
-
-    dispatch({ type: actionTypes.updateSnackbar, data: snackbarData })
-    dispatch({ type: actionTypes.refresh })
+      .then(() => {
+        dispatch({ type: actionTypes.updateSnackbar, data: snackbarData })
+        dispatch({ type: actionTypes.refresh })
+      })
+      .catch((err) => {
+        console.error(`Catched error ${err}`)
+        dispatch({
+          type: actionTypes.updateSnackbar,
+          data: {
+            ...snackbarData,
+            severity: EseverityTypes.error,
+            content: `Error updating state order! ${err.message}`,
+          },
+        })
+      })
   }
 
   const changeStateOrder = async (increment) => {
@@ -133,7 +145,10 @@ export const State = ({ props, permissionCount, actions }: IStateProps) => {
       <div style={{ display: 'flex' }}>
         <div
           onClick={changeStateOrderDown}
-          style={{ cursor: indexOfThisState !== 0 ? 'pointer' : 'default' }}
+          style={{
+            cursor: indexOfThisState !== 0 ? 'pointer' : 'default',
+            height: 'fit-content',
+          }}
         >
           <ArrowUpwardIcon
             color={indexOfThisState !== 0 ? 'inherit' : 'disabled'}
@@ -144,6 +159,7 @@ export const State = ({ props, permissionCount, actions }: IStateProps) => {
           style={{
             cursor:
               indexOfThisState + 1 !== statesLenght ? 'pointer' : 'default',
+            height: 'fit-content',
           }}
         >
           <ArrowDownwardIcon

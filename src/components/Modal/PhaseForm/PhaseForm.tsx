@@ -73,10 +73,25 @@ const PhaseForm = ({ props }: IPhaseForm) => {
     }
 
     await DBService.changeData(preparedDBData)
+      .then(() => {
+        dispatch({ type: actionTypes.updateSnackbar, data: snackbarData })
+        dispatch({ type: actionTypes.refresh })
+      })
+      .catch((err) => {
+        console.error(err.message)
+        dispatch({
+          type: actionTypes.updateSnackbar,
+          data: {
+            ...snackbarData,
+            severity: EseverityTypes.error,
+            content: `Error ${!data.id ? 'creating' : 'updating'} phase! ${
+              err.message
+            }`,
+          },
+        })
+      })
 
     setSubmitting(false)
-    dispatch({ type: actionTypes.updateSnackbar, data: snackbarData })
-    dispatch({ type: actionTypes.refresh })
     if (data.id) dispatch({ type: actionTypes.hideModal })
   }
 
@@ -91,12 +106,25 @@ const PhaseForm = ({ props }: IPhaseForm) => {
       change_type: DBActionTypes.removePhase,
       id: data.id,
     })
-    dispatch({
-      type: actionTypes.updateSnackbar,
-      data: { ...snackbarData, content: 'Phase deleted!' },
-    })
-    dispatch({ type: actionTypes.refresh })
-    dispatch({ type: actionTypes.hideModal })
+      .then(() => {
+        dispatch({
+          type: actionTypes.updateSnackbar,
+          data: { ...snackbarData, content: 'Phase deleted!' },
+        })
+        dispatch({ type: actionTypes.refresh })
+        dispatch({ type: actionTypes.hideModal })
+      })
+      .catch((err) => {
+        console.error(err.message)
+        dispatch({
+          type: actionTypes.updateSnackbar,
+          data: {
+            ...snackbarData,
+            severity: EseverityTypes.error,
+            content: `Error deleting action! ${err.message}`,
+          },
+        })
+      })
   }
 
   const confirmData: IConfirmationData = {
