@@ -22,11 +22,6 @@ export interface IActionSetting {
   string_value: string
 }
 
-enum EUserAction {
-  yes = 'Y',
-  no = 'N',
-}
-
 export enum EActionTypes {
   mail = 'SEND_MAIL',
   plsql = 'PLSQL',
@@ -39,10 +34,10 @@ export interface IAction {
   id: number
   label: string
   sta_id: number
-  user_action_yn: EUserAction
+  user_action_yn: ESwitch
   sort_order: number
   action_settings?: Array<IActionSetting>
-  reqt_id: number,
+  reqt_id: number
   active_yn: ESwitch
 }
 

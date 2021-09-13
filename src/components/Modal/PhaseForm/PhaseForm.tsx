@@ -6,7 +6,6 @@ import Button from '@material-ui/core/Button'
 import { Formik } from 'formik'
 import { DBService } from '../../../services/db_communication'
 import { useDispatch, useSelector } from 'react-redux'
-import { phaseDefinition } from '../../Phase/Phase'
 import DeleteIcon from '@material-ui/icons/Delete'
 import styles from './PhaseForm.module.css'
 import { actionTypes } from '../../../store/actionTypes'
@@ -16,6 +15,7 @@ import { DBActionTypes } from '../../../services/dbActionTypes'
 import { useRef } from 'react'
 import { formatCode, formatLabel } from '../../../utils/inputFormatter'
 import { EseverityTypes, ISnackbarData } from '../../SnackBar/SnackBar'
+import { phaseDefinition } from '../../workflowItems/Phase/Phase'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,7 +34,6 @@ const PhaseForm = ({ props }: IPhaseForm) => {
   const dispatch = useDispatch()
   const workflowData = useSelector((state) => state.workflowData)
   const appID = useSelector((state) => state.appData.appID)
-  const modalData = useSelector((state) => state.modalData)
   const classes = useStyles()
 
   const getNewSortOrder = (): number => {
@@ -50,6 +49,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
     label: props?.label || '',
     sort_order: props?.sort_order || getNewSortOrder(),
     id: props?.id || null,
+    active_yn: props?.active_yn || null,
   })
 
   const snackbarData: ISnackbarData = {
@@ -60,11 +60,8 @@ const PhaseForm = ({ props }: IPhaseForm) => {
 
   const saveData = async (formikData, setSubmitting) => {
     const phaseData = {
-      id: data.id,
+      ...data,
       app_id: appID,
-      code: data.code,
-      label: data.label,
-      sort_order: data.sort_order,
     }
 
     const preparedDBData = {
@@ -183,17 +180,6 @@ const PhaseForm = ({ props }: IPhaseForm) => {
             onChange={(e) => setData({ ...data, label: e.target.value })}
             required
           />
-          {/* <TextField
-            id="phase-label"
-            label="Sort order"
-            variant="outlined"
-            type="number"
-            required
-            value={data.sortOrder}
-            onChange={(e) =>
-              setData({ ...data, sortOrder: parseInt(e.target.value) })
-            }
-          /> */}
           <div
             style={{
               display: 'flex',

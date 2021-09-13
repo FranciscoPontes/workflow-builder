@@ -25,6 +25,8 @@ import { stateDefinition } from '../../workflowItems/State/State'
 import FormHelperText from '@material-ui/core/FormHelperText'
 import { formatCode, formatLabel } from '../../../utils/inputFormatter'
 import { EseverityTypes, ISnackbarData } from '../../SnackBar/SnackBar'
+import { ESwitch, TStore } from '../../../types/types'
+import CustomSwitch from '../../Switch'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,10 +50,10 @@ interface IActionForm {
 
 const ActionForm = ({ props }: IActionForm) => {
   const dispatch = useDispatch()
-  const workflowData = useSelector((state) => state.workflowData)
-  const appID = useSelector((state) => state.appData.appID)
+  const workflowData = useSelector((state: TStore) => state.workflowData)
+  const appID = useSelector((state: TStore) => state.appData.appID)
   const classes = useStyles()
-  const selectedState = useSelector((state) => state.selectedState)
+  const selectedState = useSelector((state: TStore) => state.selectedState)
 
   const validActionTypes: Array<EActionTypes> = [
     EActionTypes.mail,
@@ -83,7 +85,7 @@ const ActionForm = ({ props }: IActionForm) => {
     id: props?.id,
     label: props?.label || '',
     sta_id: props?.sta_id || selectedState || '',
-    user_action_yn: props?.user_action_yn || 'Y',
+    user_action_yn: props?.user_action_yn || ESwitch.y,
     sort_order: props?.sort_order,
     action_settings: props?.id ? getCorrectActionSetting() : [],
     reqt_id: props?.reqt_id || '',
@@ -223,7 +225,25 @@ const ActionForm = ({ props }: IActionForm) => {
           className={[classes.root, styles.actionForm].join(' ')}
         >
           <div className={styles.formRow}>
-            <FormControl variant="outlined" className={classes.formControl}>
+            <div
+              style={{
+                width: '50%',
+                marginLeft: '20px',
+              }}
+            >
+              <CustomSwitch
+                label="User Action"
+                active={data.user_action_yn}
+                onChange={() =>
+                  setData({
+                    ...data,
+                    user_action_yn:
+                      data.user_action_yn === ESwitch.y ? ESwitch.n : ESwitch.y,
+                  })
+                }
+              />
+            </div>
+            {/* <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel>User Action</InputLabel>
               <Select
                 value={data.user_action_yn}
@@ -236,11 +256,7 @@ const ActionForm = ({ props }: IActionForm) => {
                 <MenuItem value="N">No</MenuItem>
                 <MenuItem value="Y">Yes</MenuItem>
               </Select>
-              {/* <FormHelperText>
-                A User Action generates a button in the form with the below
-                defined label
-              </FormHelperText> */}
-            </FormControl>
+            </FormControl> */}
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel>State</InputLabel>
               <Select
