@@ -1,47 +1,47 @@
-import React, { Fragment, useState } from 'react'
-import styles from './Layout.module.css'
+import React, { Fragment, useState } from "react";
+import styles from "./Layout.module.css";
 import {
   TMailTemplates,
   TRequestTypes,
   WorkflowBox,
   workflowData,
-} from './WorkflowBox/WorkflowBox'
-import { EModalTypes, IModal, SimpleModal } from './Modal/Modal'
-import { useEffect } from 'react'
-import { DBService } from '../services/db_communication'
-import { useDispatch, useSelector } from 'react-redux'
-import CustomSnackbar, { EseverityTypes } from './SnackBar/SnackBar'
-import { actionTypes } from '../store/actionTypes'
-import UIConfirmation from './UIConfirmation/UIConfirmation'
-import { IPermission } from './workflowItems/Permission/Permission'
-import { IAction, IActionSetting } from './workflowItems/Action/Action'
-import LeftPanel from './LeftPanel/LeftPanel'
-import { TStore } from '../types/types'
-import { phaseDefinition } from './workflowItems/Phase/Phase'
-import { stateDefinition } from './workflowItems/State/State'
+} from "./WorkflowBox/WorkflowBox";
+import { EModalTypes, IModal, SimpleModal } from "./Modal/Modal";
+import { useEffect } from "react";
+import { DBService } from "../services/db_communication";
+import { useDispatch, useSelector } from "react-redux";
+import CustomSnackbar, { EseverityTypes } from "./SnackBar/SnackBar";
+import { actionTypes } from "../store/actionTypes";
+import UIConfirmation from "./UIConfirmation/UIConfirmation";
+import { IPermission } from "./workflowItems/Permission/Permission";
+import { IAction, IActionSetting } from "./workflowItems/Action/Action";
+import LeftPanel from "./LeftPanel/LeftPanel";
+import { TStore } from "../types/types";
+import { phaseDefinition } from "./workflowItems/Phase/Phase";
+import { stateDefinition } from "./workflowItems/State/State";
 
 enum EDBTiers {
-  DEV = 'DEV',
-  Q = 'Q',
-  PROD = 'PROD',
+  DEV = "DEV",
+  Q = "Q",
+  PROD = "PROD",
 }
 
 type TLayout = {
-  appCode: string
-  DBTier: EDBTiers
-  appID: number
-}
+  appCode: string;
+  DBTier: EDBTiers;
+  appID: number;
+};
 
 export interface ILayout {
-  props: TLayout
+  props: TLayout;
 }
 
 // objet panel in the left + workflow box
 const Layout = ({ props }: ILayout) => {
-  const refresh = useSelector((state: TStore) => state.triggerRefresh)
-  const dispatch = useDispatch()
-  const workflowData = useSelector((state: TStore) => state.workflowData)
-  const modalData = useSelector((state: TStore) => state.modalData)
+  const refresh = useSelector((state: TStore) => state.triggerRefresh);
+  const dispatch = useDispatch();
+  const workflowData = useSelector((state: TStore) => state.workflowData);
+  const modalData = useSelector((state: TStore) => state.modalData);
 
   const preparePhases = (data: workflowData): Array<phaseDefinition> => {
     return data.phases?.map((pha) => {
@@ -51,10 +51,10 @@ const Layout = ({ props }: ILayout) => {
         label: pha.label,
         sort_order: pha.sort_order,
         active_yn: pha.active_yn,
-      }
-      return treatedPhase
-    })
-  }
+      };
+      return treatedPhase;
+    });
+  };
 
   const prepareStates = (data: workflowData): Array<stateDefinition> => {
     return data.states?.map((sta) => {
@@ -65,10 +65,10 @@ const Layout = ({ props }: ILayout) => {
         label: sta.label,
         sort_order: sta.sort_order,
         active_yn: sta.active_yn,
-      }
-      return treatedState
-    })
-  }
+      };
+      return treatedState;
+    });
+  };
 
   const preparePermissions = (data: workflowData): Array<IPermission> => {
     return data.permissions?.map((per) => {
@@ -79,16 +79,16 @@ const Layout = ({ props }: ILayout) => {
         permission_type: per.permission_type,
         user_type: per.user_type,
         username: per.username,
-      }
-      return treatedPer
-    })
-  }
+      };
+      return treatedPer;
+    });
+  };
 
   const getActionSettings = (
     data: object,
-    actID: number,
+    actID: number
   ): Array<IActionSetting> =>
-    data.action_settings?.filter((acts) => acts.act_id === actID)
+    data.action_settings?.filter((acts) => acts.act_id === actID);
 
   const prepareActions = (data: workflowData): Array<IAction> => {
     return data.actions?.map((act) => {
@@ -103,22 +103,22 @@ const Layout = ({ props }: ILayout) => {
         action_settings: getActionSettings(data, act.id),
         reqt_id: act.reqt_id,
         active_yn: act.active_yn,
-      }
-      return treatedAct
-    })
-  }
+      };
+      return treatedAct;
+    });
+  };
 
   const prepareMailTemplates = (data: workflowData): TMailTemplates => {
     return data.mail_templates?.map((mailt) => {
-      return { code: mailt.code }
-    })
-  }
+      return { code: mailt.code };
+    });
+  };
 
   const prepareRequestTypes = (data: workflowData): TRequestTypes => {
     return data.request_types?.map((reqt) => {
-      return { id: reqt.id, code: reqt.code }
-    })
-  }
+      return { id: reqt.id, code: reqt.code };
+    });
+  };
 
   const arrangedTemplateData = (data: workflowData): workflowData => ({
     phases: preparePhases(data)?.sort((x, y) => x.sort_order - y.sort_order),
@@ -131,7 +131,7 @@ const Layout = ({ props }: ILayout) => {
       .sort((x, y) => x.sta_id - y.sta_id),
     mail_templates: prepareMailTemplates(data),
     request_types: prepareRequestTypes(data),
-  })
+  });
 
   /**
    * Refresh application data from ORDS endpoint
@@ -142,14 +142,16 @@ const Layout = ({ props }: ILayout) => {
       DBTier: props.DBTier,
     })
       .then((appData) => {
-        console.log(appData)
+        console.group("App metadata received");
+        console.log(appData);
+        console.groupEnd();
         dispatch({
           type: actionTypes.updateData,
           data: arrangedTemplateData(appData),
-        })
+        });
       })
       .catch((err) => {
-        console.error(`Error fetching app data. ${err.message}`)
+        console.error(`Error fetching app data. ${err.message}`);
         dispatch({
           type: actionTypes.updateSnackbar,
           data: {
@@ -157,23 +159,29 @@ const Layout = ({ props }: ILayout) => {
             severity: EseverityTypes.error,
             content: `Error fetching app data. ${err.message}`,
           },
-        })
+        });
       })
-  }
+      .finally(() => {
+        console.group("These are the props passed to get app metadata");
+        console.log(props.DBTier);
+        console.log(props.appCode);
+        console.groupEnd();
+      });
+  };
 
   // set app data
   useEffect(() => {
-    dispatch({ type: actionTypes.setAppData, data: props })
-  }, [])
+    dispatch({ type: actionTypes.setAppData, data: props });
+  }, []);
 
   useEffect(() => {
-    ;(async () => {
-      refreshData()
-      if (refresh) dispatch({ type: actionTypes.stopRefresh })
-    })()
+    (async () => {
+      refreshData();
+      if (refresh) dispatch({ type: actionTypes.stopRefresh });
+    })();
 
-    return () => null
-  }, [refresh])
+    return () => null;
+  }, [refresh]);
 
   return (
     <div className={styles.layout}>
@@ -197,7 +205,7 @@ const Layout = ({ props }: ILayout) => {
         <CustomSnackbar />
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

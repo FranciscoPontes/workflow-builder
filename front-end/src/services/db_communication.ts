@@ -18,6 +18,7 @@ const getApplicationData = async ({
   });
 
 const changeData = async (data): Promise<any> =>
-  await axios.post(`${window.baseURL}req-app-config/change_app_data`, data);
+  await axios.post(`http://localhost:3000/change-app-data`, data);
+// await axios.post(`${window.baseURL}req-app-config/change_app_data`, data);
 
 export const DBService = { getApplicationData, changeData };
