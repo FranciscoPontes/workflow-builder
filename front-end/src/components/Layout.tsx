@@ -142,9 +142,9 @@ const Layout = ({ props }: ILayout) => {
       DBTier: props.DBTier,
     })
       .then((appData) => {
-        console.group("App metadata received");
-        console.log(appData);
-        console.groupEnd();
+        // console.group("App metadata received");
+        // console.log(appData);
+        // console.groupEnd();
         dispatch({
           type: actionTypes.updateData,
           data: arrangedTemplateData(appData),
@@ -162,10 +162,10 @@ const Layout = ({ props }: ILayout) => {
         });
       })
       .finally(() => {
-        console.group("These are the props passed to get app metadata");
-        console.log(props.DBTier);
-        console.log(props.appCode);
-        console.groupEnd();
+        // console.group("These are the props passed to get app metadata");
+        // console.log(props.DBTier);
+        // console.log(props.appCode);
+        // console.groupEnd();
       });
   };
 

@@ -22,14 +22,6 @@ let appMetadata = {
   app_code: "OWP",
   request_types: [
     {
-      id: 9861,
-      code: "PARENT_REQT",
-    },
-    {
-      id: 10361,
-      code: "CHILD_REQUEST",
-    },
-    {
       id: 9742,
       code: "WORK_PERMIT",
     },
@@ -74,92 +66,8 @@ let appMetadata = {
       sort_order: 11,
     },
   ],
-  actions: [
-    {
-      id: 24384,
-      active_yn: "Y",
-      code: "EXECUTION_IN_PROGRESS",
-      label: "In progress",
-      reqt_id: 9742,
-      sta_id: 13982,
-      user_action_yn: "Y",
-      action_type: "STATUS_CHANGE",
-      sort_order: 9310,
-    },
-  ],
-  action_settings: [
-    {
-      id: 40996,
-      app_id: 5221,
-      active_yn: "Y",
-      act_id: 24384,
-      name: "NEXT_STATE_CODE_1",
-      label: "Next State Code",
-      description: null,
-      type: "STRING",
-      string_value: null,
-      number_value: null,
-      date_value: null,
-      framework_yn: "Y",
-    },
-    {
-      id: 40997,
-      app_id: 5221,
-      active_yn: "Y",
-      act_id: 24384,
-      name: "UI_BUTTON_NAME_1",
-      label: "UI button id/name",
-      description: "Set the button name/id. Default: action code",
-      type: "STRING",
-      string_value: null,
-      number_value: null,
-      date_value: null,
-      framework_yn: "Y",
-    },
-    {
-      id: 40998,
-      app_id: 5221,
-      active_yn: "Y",
-      act_id: 24384,
-      name: "UI_BUTTON_LABEL_1",
-      label: "UI button label",
-      description: "Set the button label. Default: action label",
-      type: "STRING",
-      string_value: null,
-      number_value: null,
-      date_value: null,
-      framework_yn: "Y",
-    },
-    {
-      id: 40999,
-      app_id: 5221,
-      active_yn: "Y",
-      act_id: 24384,
-      name: "UI_BUTTON_POSITION_1",
-      label: "UI button position",
-      description:
-        "Set the button position (top-left, top-right, bottom-left, bottom-right). Default: bottom-right",
-      type: "STRING",
-      string_value: null,
-      number_value: null,
-      date_value: null,
-      framework_yn: "Y",
-    },
-    {
-      id: 41000,
-      app_id: 5221,
-      active_yn: "Y",
-      act_id: 24384,
-      name: "UI_BUTTON_IMAGE_1",
-      label: "UI button image",
-      description: "Set the button icon. Default: none",
-      type: "STRING",
-      string_value: null,
-      number_value: null,
-      date_value: null,
-      framework_yn: "Y",
-    },
-  ],
+  actions: [],
+  action_settings: [],
   mail_templates: [
     {
       id: 11742,
@@ -251,16 +159,85 @@ let appMetadata = {
   ],
 };
 
+const actionTypes = {
+  mail: "SEND_MAIL",
+  plsql: "PLSQL",
+  stateChange: "STATUS_CHANGE",
+};
+
+const actionTypeActionSettingMapping = {
+  [actionTypes.mail]: "MAIL_TEMPLATE_CODE",
+  [actionTypes.plsql]: "PLSQL_FUNCTION_NAME",
+  [actionTypes.stateChange]: "NEXT_STATE_CODE_1",
+};
+
+const actionSettingSchema = {
+  id: null,
+  act_id: null,
+  name: "",
+  string_value: "",
+};
+
+const deleteObjectFromAppMetadata = (objectID, objectType) => {
+  appMetadata = {
+    ...appMetadata,
+    [objectType]: appMetadata[objectType].filter((sta) => sta.id !== objectID),
+  };
+};
+
+const deleteActionSettings = (actsID) => {
+  deleteObjectFromAppMetadata(actsID, "action_settings");
+};
+
+const deleteAction = (actID) => {
+  deleteObjectFromAppMetadata(actID, "actions");
+
+  appMetadata.action_settings
+    .filter((acts) => acts.act_id === actID)
+    .forEach((acts) => deleteActionSettings(acts.id));
+};
+
+const deleteState = (stateID) => {
+  deleteObjectFromAppMetadata(stateID, "states");
+
+  appMetadata.actions
+    .filter((act) => act.sta_id === stateID)
+    .forEach((act) => deleteAction(act.id));
+};
+
+const deletePhase = (phaseID) => {
+  deleteObjectFromAppMetadata(phaseID, "phases");
+
+  appMetadata.states
+    .filter((sta) => sta.pha_id === phaseID)
+    .forEach((sta) => deleteState(sta.id));
+};
+
+const getNextID = (dataArray) => {
+  if (dataArray.length === 0) {
+    return 1;
+  }
+  const IDArray = dataArray.map((obj) => obj.id);
+  return Math.max(...IDArray) + 1;
+};
+
 const handleAppDataChange = (metadata, changeType) => {
   console.log(`Change type received ${changeType}`);
   console.log(metadata);
 
   switch (changeType) {
     case DBActionTypes.updatePhases:
+      if (metadata.phases.length > 1) {
+        appMetadata = {
+          ...appMetadata,
+          phases: metadata.phases,
+        };
+        return;
+      }
+
       const phase = {
         ...metadata.phases[0],
-        // TODO: select max ID plus one
-        id: 1000,
+        id: getNextID(appMetadata.phases),
         active_yn: "Y",
       };
       appMetadata = {
@@ -268,17 +245,69 @@ const handleAppDataChange = (metadata, changeType) => {
         phases: appMetadata.phases.concat(phase),
       };
       break;
+
     case DBActionTypes.updateStates:
+      if (metadata.states.length > 1) {
+        appMetadata = {
+          ...appMetadata,
+          states: metadata.states,
+        };
+        return;
+      }
+
+      const state = {
+        ...metadata.states[0],
+        id: getNextID(appMetadata.states),
+        active_yn: "Y",
+      };
       appMetadata = {
         ...appMetadata,
-        states: appMetadata.states.concat(metadata.states[0]),
+        states: appMetadata.states.concat(state),
       };
       break;
+
     case DBActionTypes.updateActions:
+      if (metadata.actions.length > 1) {
+        appMetadata = {
+          ...appMetadata,
+          actions: metadata.actions,
+        };
+        return;
+      }
+
+      const actionSettingName =
+        actionTypeActionSettingMapping[metadata.actions[0].action_type];
+
+      const action = {
+        ...metadata.actions[0],
+        id: getNextID(appMetadata.actions),
+      };
+
+      // generate action setting
+      const nextID = getNextID(appMetadata.action_settings);
+
+      const actionSetting = {
+        ...actionSettingSchema,
+        id: nextID,
+        act_id: nextID,
+        name: actionSettingName,
+      };
+
       appMetadata = {
         ...appMetadata,
-        actions: appMetadata.actions.concat(metadata.actions[0]),
+        actions: appMetadata.actions.concat(action),
+        action_settings: appMetadata.action_settings.concat(actionSetting),
       };
+      break;
+
+    case DBActionTypes.removePhase:
+      deletePhase(metadata.id);
+      break;
+    case DBActionTypes.removeState:
+      deleteState(metadata.id);
+      break;
+    case DBActionTypes.removeAction:
+      deleteAction(metadata.id);
       break;
     default:
       break;
