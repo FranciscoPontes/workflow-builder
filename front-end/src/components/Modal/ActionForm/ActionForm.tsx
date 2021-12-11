@@ -1,38 +1,38 @@
-import React, { Fragment } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import TextField from '@material-ui/core/TextField'
-import { useState } from 'react'
-import Button from '@material-ui/core/Button'
-import { Formik } from 'formik'
-import { DBService } from '../../../services/db_communication'
-import { useDispatch, useSelector } from 'react-redux'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import { actionTypes } from '../../../store/actionTypes'
-import DeleteIcon from '@material-ui/icons/Delete'
-import { IConfirmationData } from '../../UIConfirmation/UIConfirmation'
-import { useEffect } from 'react'
-import { DBActionTypes } from '../../../services/dbActionTypes'
-import styles from './ActionForm.module.css'
+import React, { Fragment } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import { useState } from "react";
+import Button from "@material-ui/core/Button";
+import { Formik } from "formik";
+import { DBService } from "../../../services/db_communication";
+import { useDispatch, useSelector } from "react-redux";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import { actionTypes } from "../../../store/actionTypes";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { IConfirmationData } from "../../UIConfirmation/UIConfirmation";
+import { useEffect } from "react";
+import { DBActionTypes } from "../../../services/dbActionTypes";
+import styles from "./ActionForm.module.css";
 import {
   EActionTypes,
   IAction,
   IActionSetting,
-} from '../../workflowItems/Action/Action'
-import { stateDefinition } from '../../workflowItems/State/State'
-import FormHelperText from '@material-ui/core/FormHelperText'
-import { formatCode, formatLabel } from '../../../utils/inputFormatter'
-import { EseverityTypes, ISnackbarData } from '../../SnackBar/SnackBar'
-import { ESwitch, TStore } from '../../../types/types'
-import CustomSwitch from '../../Switch'
+} from "../../workflowItems/Action/Action";
+import { stateDefinition } from "../../workflowItems/State/State";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import { formatCode, formatLabel } from "../../../utils/inputFormatter";
+import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
+import { ESwitch, TStore } from "../../../types/types";
+import CustomSwitch from "../../Switch";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    '& > *': {
+    "& > *": {
       margin: theme.spacing(1),
-      width: '65%',
+      width: "65%",
     },
   },
   formControl: {
@@ -42,133 +42,133 @@ const useStyles = makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
-}))
+}));
 
 interface IActionForm {
-  props: IAction
+  props: IAction;
 }
 
 const ActionForm = ({ props }: IActionForm) => {
-  const dispatch = useDispatch()
-  const workflowData = useSelector((state: TStore) => state.workflowData)
-  const appID = useSelector((state: TStore) => state.appData.appID)
-  const classes = useStyles()
-  const selectedState = useSelector((state: TStore) => state.selectedState)
+  const dispatch = useDispatch();
+  const workflowData = useSelector((state: TStore) => state.workflowData);
+  const appID = useSelector((state: TStore) => state.appData.appID);
+  const classes = useStyles();
+  const selectedState = useSelector((state: TStore) => state.selectedState);
 
   const validActionTypes: Array<EActionTypes> = [
     EActionTypes.mail,
     EActionTypes.plsql,
     EActionTypes.stateChange,
-  ]
+  ];
 
   const actionTypeActionSettingMapping = {
-    [EActionTypes.mail]: 'MAIL_TEMPLATE_CODE',
-    [EActionTypes.plsql]: 'PLSQL_FUNCTION_NAME',
-    [EActionTypes.stateChange]: 'NEXT_STATE_CODE_1',
-  }
+    [EActionTypes.mail]: "MAIL_TEMPLATE_CODE",
+    [EActionTypes.plsql]: "PLSQL_FUNCTION_NAME",
+    [EActionTypes.stateChange]: "NEXT_STATE_CODE_1",
+  };
 
   const actionTypeActionSettingLabelMapping = {
-    [EActionTypes.mail]: 'Mail template code',
-    [EActionTypes.plsql]: 'PLSQL Function Name',
-    [EActionTypes.stateChange]: 'Next state code',
-  }
+    [EActionTypes.mail]: "Mail template code",
+    [EActionTypes.plsql]: "PLSQL Function Name",
+    [EActionTypes.stateChange]: "Next state code",
+  };
 
   const getCorrectActionSetting = (): Array<IActionSetting> =>
     props.action_settings?.filter(
-      (acts) =>
-        acts.name === actionTypeActionSettingMapping[props?.action_type],
-    )
+      (acts) => acts.name === actionTypeActionSettingMapping[props?.action_type]
+    );
 
   const [data, setData] = useState<IAction>({
-    action_type: props?.action_type || '',
-    code: props?.code || '',
+    action_type: props?.action_type || "",
+    code: props?.code || "",
     id: props?.id,
-    label: props?.label || '',
-    sta_id: props?.sta_id || selectedState || '',
+    label: props?.label || "",
+    sta_id: props?.sta_id || selectedState || "",
     user_action_yn: props?.user_action_yn || ESwitch.y,
     sort_order: props?.sort_order,
     action_settings: props?.id ? getCorrectActionSetting() : [],
-    reqt_id: props?.reqt_id || '',
-  })
+    reqt_id: props?.reqt_id || "",
+  });
 
   const snackbarData: ISnackbarData = {
-    content: `Action ${!data.id ? 'created' : 'updated'}!`,
+    content: `Action ${!data.id ? "created" : "updated"}!`,
     severity: EseverityTypes.success,
     show: true,
-  }
+  };
 
-  const actionSettingValue: string = data.action_settings[0]?.string_value || ''
+  const actionSettingValue: string =
+    data.action_settings[0]?.string_value || "";
 
   const getNewSortOrder = (): number => {
-    if (!workflowData.actions) return 1
+    if (!workflowData.actions) return 1;
 
     const sortOrderArray: Array<number> = workflowData.actions
       ?.filter((act) => act.sta_id === data.sta_id)
-      .map((act) => act.sort_order)
+      .map((act) => act.sort_order);
 
-    if (sortOrderArray.length === 0) return 1
-    return Math.max(...sortOrderArray) + 1
-  }
+    if (sortOrderArray.length === 0) return 1;
+    return Math.max(...sortOrderArray) + 1;
+  };
 
   const stateArray = (): Array<{ id: number; label: string }> =>
     workflowData.states?.map((sta: stateDefinition) => ({
       id: sta.id,
       label: sta.code,
-    }))
+    }));
 
-  const mailTemplates = () => workflowData.mail_templates?.map((mt) => mt.code)
+  const mailTemplates = () => workflowData.mail_templates?.map((mt) => mt.code);
 
-  const requestTypes = () => workflowData.request_types?.map((reqt) => reqt)
+  const requestTypes = () => workflowData.request_types?.map((reqt) => reqt);
 
   const saveData = async (formikData, setSubmitting) => {
     const actionData = {
       ...data,
       app_id: appID,
-      reqt_id: data.reqt_id !== '' ? data.reqt_id : null,
-      sta_id: data.sta_id !== '' ? data.sta_id : null,
-    }
-    console.log(JSON.stringify(actionData))
+      reqt_id: data.reqt_id !== "" ? data.reqt_id : null,
+      sta_id: data.sta_id !== "" ? data.sta_id : null,
+    };
+    console.log(JSON.stringify(actionData));
 
     await DBService.changeData({
       actions: [actionData],
       change_type: DBActionTypes.updateActions,
     })
       .then(() => {
-        dispatch({ type: actionTypes.updateSnackbar, data: snackbarData })
-        dispatch({ type: actionTypes.refresh })
+        dispatch({ type: actionTypes.updateSnackbar, data: snackbarData });
+        dispatch({ type: actionTypes.refresh });
       })
       .catch((err) => {
-        console.error(err.message)
+        console.error(err.message);
         dispatch({
           type: actionTypes.updateSnackbar,
           data: {
             ...snackbarData,
             severity: EseverityTypes.error,
-            content: `Error ${!data.id ? 'creating' : 'updating'} action! ${
+            content: `Error ${!data.id ? "creating" : "updating"} action! ${
               err.message
             }`,
           },
-        })
-      })
-    setSubmitting(false)
-    if (data.id) dispatch({ type: actionTypes.hideModal })
-  }
+        });
+      });
+    setSubmitting(false);
+    if (data.id) dispatch({ type: actionTypes.hideModal });
+  };
 
   const deleteAction = async () => {
     await DBService.changeData({
       change_type: DBActionTypes.removeAction,
       id: props.id,
     })
-    dispatch({
-      type: actionTypes.updateSnackbar,
-      data: { ...snackbarData, content: 'Action deleted!' },
-    })
       .then(() => {
-        dispatch({ type: actionTypes.refresh })
-        dispatch({ type: actionTypes.hideModal })
+        dispatch({
+          type: actionTypes.updateSnackbar,
+          data: { ...snackbarData, content: "Action deleted!" },
+        });
+        dispatch({ type: actionTypes.refresh });
+        dispatch({ type: actionTypes.hideModal });
       })
       .catch((err) => {
-        console.error(err.message)
+        console.error(err.message);
         dispatch({
           type: actionTypes.updateSnackbar,
           data: {
@@ -176,20 +176,20 @@ const ActionForm = ({ props }: IActionForm) => {
             severity: EseverityTypes.error,
             content: `Error deleting action! ${err.message}`,
           },
-        })
-      })
-  }
+        });
+      });
+  };
 
   const confirmData: IConfirmationData = {
-    title: 'Delete Action?',
+    title: "Delete Action?",
     description:
-      'This action will delete all associated dependencies (action settings)',
+      "This action will delete all associated dependencies (action settings)",
     callback: deleteAction,
-  }
+  };
 
   const tryDelete = () => {
-    dispatch({ type: actionTypes.showConfirmation, data: confirmData })
-  }
+    dispatch({ type: actionTypes.showConfirmation, data: confirmData });
+  };
 
   // when adding new states, keep increasing new sort order for quick batch insert
   useEffect(() => {
@@ -197,20 +197,20 @@ const ActionForm = ({ props }: IActionForm) => {
       setData({
         ...data,
         sort_order: getNewSortOrder(),
-      })
+      });
     }
-  }, [workflowData])
+  }, [workflowData]);
 
   // update new sort order when selected phase changes
   useEffect(() => {
-    if (data.id) return
-    console.log('Changing sort order due to state change..')
-    console.log(getNewSortOrder())
+    if (data.id) return;
+    console.log("Changing sort order due to state change..");
+    console.log(getNewSortOrder());
     setData({
       ...data,
       sort_order: getNewSortOrder(),
-    })
-  }, [data.sta_id])
+    });
+  }, [data.sta_id]);
 
   return (
     <Formik
@@ -222,13 +222,13 @@ const ActionForm = ({ props }: IActionForm) => {
       {({ handleSubmit, isSubmitting }) => (
         <form
           onSubmit={handleSubmit}
-          className={[classes.root, styles.actionForm].join(' ')}
+          className={[classes.root, styles.actionForm].join(" ")}
         >
           <div className={styles.formRow}>
             <div
               style={{
-                width: '50%',
-                marginLeft: '20px',
+                width: "50%",
+                marginLeft: "20px",
               }}
             >
               <CustomSwitch
@@ -265,7 +265,7 @@ const ActionForm = ({ props }: IActionForm) => {
                 label="State"
                 required
               >
-                <MenuItem value={''}>
+                <MenuItem value={""}>
                   <em>None</em>
                 </MenuItem>
                 {stateArray()?.map((sta) => (
@@ -286,7 +286,7 @@ const ActionForm = ({ props }: IActionForm) => {
                 }
                 label="State"
               >
-                <MenuItem value={''}>
+                <MenuItem value={""}>
                   <em>None</em>
                 </MenuItem>
                 {requestTypes()?.map((reqt) => (
@@ -309,7 +309,7 @@ const ActionForm = ({ props }: IActionForm) => {
                 label="Action Type"
                 required
               >
-                <MenuItem value={''}>
+                <MenuItem value={""}>
                   <em>None</em>
                 </MenuItem>
                 {validActionTypes.map((actt, idx) => (
@@ -361,7 +361,7 @@ const ActionForm = ({ props }: IActionForm) => {
                   }
                   label="Next state code"
                 >
-                  <MenuItem value={''}>
+                  <MenuItem value={""}>
                     <em>None</em>
                   </MenuItem>
                   {stateArray()
@@ -391,7 +391,7 @@ const ActionForm = ({ props }: IActionForm) => {
                   }
                   label="Mail Template code"
                 >
-                  <MenuItem value={''}>
+                  <MenuItem value={""}>
                     <em>None</em>
                   </MenuItem>
                   {mailTemplates()?.map((mt) => (
@@ -422,9 +422,9 @@ const ActionForm = ({ props }: IActionForm) => {
           ) : null}
           <div
             style={{
-              display: 'flex',
-              justifyContent: data?.id ? 'space-between' : 'center',
-              margin: '20px',
+              display: "flex",
+              justifyContent: data?.id ? "space-between" : "center",
+              margin: "20px",
             }}
           >
             {data?.id ? (
@@ -450,7 +450,7 @@ const ActionForm = ({ props }: IActionForm) => {
         </form>
       )}
     </Formik>
-  )
-}
+  );
+};
 
-export default ActionForm
+export default ActionForm;
