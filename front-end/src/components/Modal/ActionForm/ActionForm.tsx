@@ -31,16 +31,49 @@ import CustomSwitch from "../../Switch";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
-      margin: theme.spacing(1),
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1),
+      marginRight: theme.spacing(1),
       width: "65%",
+      backgroundColor: theme.palette.background.paper,
     },
   },
   formControl: {
-    margin: theme.spacing(1),
-    minWidth: 240,
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: "100%",
+    // [theme.breakpoints.up("md")]: {
+    //   minWidth: 240,
+    // },
+    // [theme.breakpoints.down("md")]: {
+    //   minWidth: 120,
+    // },
+  },
+  noMarginRight: {
+    marginRight: "none",
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
+  },
+  responsiveFontSize: {
+    // [theme.breakpoints.up("md")]: {
+    //   minWidth: 240,
+    // },
+    [theme.breakpoints.down("md")]: {
+      fontSize: "smaller",
+    },
+  },
+  actionForm: {
+    display: "flex",
+    flexFlow: "column",
+    alignItems: "center",
+  },
+
+  formRow: {
+    display: "flex",
+    // width: "100%",
+    justifyContent: "center",
   },
 }));
 
@@ -222,13 +255,14 @@ const ActionForm = ({ props }: IActionForm) => {
       {({ handleSubmit, isSubmitting }) => (
         <form
           onSubmit={handleSubmit}
-          className={[classes.root, styles.actionForm].join(" ")}
+          className={[classes.root, classes.actionForm].join(" ")}
         >
-          <div className={styles.formRow}>
+          <div className={classes.formRow}>
             <div
               style={{
-                width: "50%",
-                marginLeft: "20px",
+                width: "100%",
+                marginLeft: "5px",
+                display: "flex",
               }}
             >
               <CustomSwitch
@@ -257,7 +291,12 @@ const ActionForm = ({ props }: IActionForm) => {
                 <MenuItem value="Y">Yes</MenuItem>
               </Select>
             </FormControl> */}
-            <FormControl variant="outlined" className={classes.formControl}>
+            <FormControl
+              variant="outlined"
+              className={[classes.formControl, classes.responsiveFontSize].join(
+                " "
+              )}
+            >
               <InputLabel>State</InputLabel>
               <Select
                 value={data.sta_id}
@@ -276,7 +315,7 @@ const ActionForm = ({ props }: IActionForm) => {
               </Select>
             </FormControl>
           </div>
-          <div className={styles.formRow}>
+          <div className={[classes.formRow, classes.noMarginRight].join(" ")}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel>Request type</InputLabel>
               <Select
@@ -299,7 +338,10 @@ const ActionForm = ({ props }: IActionForm) => {
                 Leave null to apply to all request types
               </FormHelperText> */}
             </FormControl>
-            <FormControl variant="outlined" className={classes.formControl}>
+            <FormControl
+              variant="outlined"
+              className={[classes.formControl, classes.noMarginRight].join(" ")}
+            >
               <InputLabel>Action Type</InputLabel>
               <Select
                 value={data.action_type}

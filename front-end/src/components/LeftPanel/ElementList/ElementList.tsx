@@ -7,7 +7,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { EModalTypes, IModal } from "../../Modal/Modal";
 import { actionTypes } from "../../../store/actionTypes";
 import { useDispatch } from "react-redux";
-import styles from "./ElementList.module.css";
 import MailIcon from "@material-ui/icons/Mail";
 import TrendingFlatIcon from "@material-ui/icons/TrendingFlat";
 import NewReleasesIcon from "@material-ui/icons/NewReleases";
@@ -22,6 +21,25 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: "10px",
       //   backgroundColor: theme.palette.background.paper,
       borderRadius: "2%",
+    },
+    customListItem: {
+      justifyContent: "center",
+    },
+    element: {
+      boxShadow: "0px 10px 13px -7px #000000, 5px 5px 15px 5px rgb(0 0 0 / 0%)",
+      margin: "10px",
+      borderRadius: "5%",
+      backgroundColor: "white",
+    },
+
+    elementFontSize: {
+      textAlign: "center",
+      [theme.breakpoints.down("md")]: {
+        fontSize: "small",
+      },
+    },
+    actionElement: {
+      backgroundColor: "#96b16d",
     },
   })
 );
@@ -100,36 +118,40 @@ export default function ElementList() {
   return (
     <div className={classes.root}>
       <List component="nav">
-        <div onClick={handleClickPhase} className={styles.element}>
+        <div onClick={handleClickPhase} className={classes.element}>
           <ListItem button>
-            <ListItemText primary="Phase" className={styles.elementFontSize} />
+            <ListItemText
+              primary="Phase"
+              className={classes.elementFontSize}
+              disableTypography
+            />
           </ListItem>
         </div>
-        <div onClick={handleClickState} className={styles.element}>
+        <div onClick={handleClickState} className={classes.element}>
           <ListItem button>
-            <ListItemText primary="State" className={styles.elementFontSize} />
+            <ListItemText
+              primary="State"
+              className={classes.elementFontSize}
+              disableTypography
+            />
           </ListItem>
         </div>
         <List component="div" disablePadding>
           {actionElements.map((el: actionElement) => (
             <div
               onClick={() => handleClickAction(el.actionType)}
-              className={[styles.element, styles.actionElement].join(" ")}
+              className={[classes.element, classes.actionElement].join(" ")}
               key={el.label}
             >
-              <ListItem button classes={styles.customListItem}>
+              <ListItem button className={classes.customListItem}>
                 <ListItemIcon
+                  className={classes.customListItem}
                   style={{
                     minWidth: "fit-content",
-                    marginRight: "5px",
                   }}
                 >
                   {el.icon}
                 </ListItemIcon>
-                {/* <ListItemText
-                  primary={el.label}
-                  className={styles.elementFontSize}
-                /> */}
               </ListItem>
             </div>
           ))}

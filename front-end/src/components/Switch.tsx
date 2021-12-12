@@ -1,58 +1,70 @@
-import React from 'react'
-import { withStyles, Theme, createStyles } from '@material-ui/core/styles'
-import { purple } from '@material-ui/core/colors'
-import FormGroup from '@material-ui/core/FormGroup'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Switch, { SwitchClassKey, SwitchProps } from '@material-ui/core/Switch'
-import { ESwitch } from '../types/types'
+import React from "react";
+import { withStyles, Theme, createStyles } from "@material-ui/core/styles";
+import { purple } from "@material-ui/core/colors";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch, { SwitchClassKey, SwitchProps } from "@material-ui/core/Switch";
+import { ESwitch } from "../types/types";
 
 interface Styles extends Partial<Record<SwitchClassKey, string>> {
-  focusVisible?: string
+  focusVisible?: string;
 }
 
 interface Props extends SwitchProps {
-  classes: Styles
+  classes: Styles;
 }
 
 const IOSSwitch = withStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: 42,
-      height: 26,
+      [theme.breakpoints.down("md")]: {
+        width: 36,
+        height: 20,
+      },
+      [theme.breakpoints.up("md")]: {
+        width: 42,
+        height: 26,
+      },
       padding: 0,
       margin: theme.spacing(1),
-      overflow: 'initial',
+      overflow: "initial",
     },
     switchBase: {
       padding: 1,
-      '&$checked': {
-        transform: 'translateX(16px)',
+      "&$checked": {
+        transform: "translateX(16px)",
         color: theme.palette.common.white,
-        '& + $track': {
-          backgroundColor: '#52d869',
+        "& + $track": {
+          backgroundColor: "#52d869",
           opacity: 1,
-          border: 'none',
+          border: "none",
         },
       },
-      '&$focusVisible $thumb': {
-        color: '#52d869',
-        border: '6px solid #fff',
+      "&$focusVisible $thumb": {
+        color: "#52d869",
+        border: "6px solid #fff",
       },
     },
     thumb: {
-      width: 24,
-      height: 24,
+      [theme.breakpoints.down("md")]: {
+        width: 18,
+        height: 18,
+      },
+      [theme.breakpoints.up("md")]: {
+        width: 24,
+        height: 24,
+      },
     },
     track: {
       borderRadius: 26 / 2,
       border: `1px solid ${theme.palette.grey[400]}`,
       backgroundColor: theme.palette.grey[50],
       opacity: 1,
-      transition: theme.transitions.create(['background-color', 'border']),
+      transition: theme.transitions.create(["background-color", "border"]),
     },
     checked: {},
     focusVisible: {},
-  }),
+  })
 )(({ classes, ...props }: Props) => {
   return (
     <Switch
@@ -67,19 +79,19 @@ const IOSSwitch = withStyles((theme: Theme) =>
       }}
       {...props}
     />
-  )
-})
+  );
+});
 
 interface ICustomSwitchProps {
-  active: ESwitch
-  label: string
-  onChange: () => void
+  active: ESwitch;
+  label: string;
+  onChange: () => void;
 }
 
 const CustomSwitch = (props: ICustomSwitchProps) => {
   const handleChange = () => {
-    props.onChange()
-  }
+    props.onChange();
+  };
 
   return (
     <FormGroup>
@@ -93,7 +105,7 @@ const CustomSwitch = (props: ICustomSwitchProps) => {
         label={props.label}
       />
     </FormGroup>
-  )
-}
+  );
+};
 
-export default CustomSwitch
+export default CustomSwitch;
