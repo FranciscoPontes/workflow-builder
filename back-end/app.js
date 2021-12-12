@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const bodyParser = require("body-parser");
+const _ = require("lodash");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -221,6 +222,14 @@ const getNextID = (dataArray) => {
   return Math.max(...IDArray) + 1;
 };
 
+const indexOfObject = (objectID, objectType) => {
+  return _.findIndex(appMetadata[objectType], (value) => value.id === objectID);
+};
+
+const objectExists = (objectID, objectType) => {
+  return indexOfObject(objectID, objectType) !== -1;
+};
+
 const handleAppDataChange = (metadata, changeType) => {
   console.log(`Change type received ${changeType}`);
   console.log(metadata);
@@ -232,6 +241,16 @@ const handleAppDataChange = (metadata, changeType) => {
           ...appMetadata,
           phases: metadata.phases,
         };
+        return;
+      } else if (objectExists(metadata.phases[0].id, "phases")) {
+        appMetadata.phases.splice(
+          indexOfObject(metadata.phases[0].id, "phases"),
+          1
+        ),
+          (appMetadata = {
+            ...appMetadata,
+            phases: appMetadata.phases.concat(metadata.phases[0]),
+          });
         return;
       }
 
@@ -253,6 +272,16 @@ const handleAppDataChange = (metadata, changeType) => {
           states: metadata.states,
         };
         return;
+      } else if (objectExists(metadata.states[0].id, "states")) {
+        appMetadata.states.splice(
+          indexOfObject(metadata.states[0].id, "states"),
+          1
+        ),
+          (appMetadata = {
+            ...appMetadata,
+            states: appMetadata.states.concat(metadata.states[0]),
+          });
+        return;
       }
 
       const state = {
@@ -272,6 +301,16 @@ const handleAppDataChange = (metadata, changeType) => {
           ...appMetadata,
           actions: metadata.actions,
         };
+        return;
+      } else if (objectExists(metadata.actions[0].id, "actions")) {
+        appMetadata.actions.splice(
+          indexOfObject(metadata.actions[0].id, "actions"),
+          1
+        ),
+          (appMetadata = {
+            ...appMetadata,
+            actions: appMetadata.actions.concat(metadata.actions[0]),
+          });
         return;
       }
 
