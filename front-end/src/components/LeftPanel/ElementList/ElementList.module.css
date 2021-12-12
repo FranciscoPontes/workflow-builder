@@ -4,3 +4,14 @@
   border-radius: 5%;
   background-color: white;
 }
+
+.elementFontSize span {
+  font-size: small;
+}
+.actionElement {
+  background-color: #96b16d;
+}
+
+.customListItem {
+  justify-content: center;
+}
