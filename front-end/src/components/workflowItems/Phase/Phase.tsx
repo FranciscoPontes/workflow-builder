@@ -1,8 +1,6 @@
 import React from "react";
-import styles from "./Phase.module.css";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { EModalMetadataTypes, EModalTypes, IModal } from "../../Modal/Modal";
-import { useState } from "react";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +12,7 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { ESwitch, TStore } from "../../../types/types";
 import Typography from "@mui/material/Typography";
+import { Box } from "@mui/material";
 
 export interface phaseDefinition {
   id: number;
@@ -22,6 +21,18 @@ export interface phaseDefinition {
   sort_order: number;
   active_yn: ESwitch;
 }
+
+const styles = {
+  phase: {
+    color: "black",
+    fontWeight: "bold",
+    textAlign: "center",
+    p: "5px",
+    m: "10px",
+    display: "flex",
+    justifyContent: "space-between",
+  },
+};
 
 const Phase = (props: phaseDefinition) => {
   const workflowData = useSelector((state: TStore) => state.workflowData);
@@ -118,56 +129,56 @@ const Phase = (props: phaseDefinition) => {
   };
 
   return (
-    <div className={styles.phase}>
-      <div style={{ display: "flex" }}>
-        <div
+    <Box sx={{ ...styles.phase }}>
+      <Box sx={{ display: "flex" }}>
+        <Box
           onClick={() =>
             dispatch({
               type: actionTypes.showModal,
               data: phaseModalData,
             })
           }
-          style={{ cursor: "pointer" }}
+          sx={{ cursor: "pointer" }}
         >
           <SettingsIcon fontSize="small" />
-        </div>
+        </Box>
         {stateCount() !== 0 ? (
-          <div
+          <Box
             onClick={() =>
               dispatch({
                 type: actionTypes.setCollapsedPhases,
                 data: handlePhaseCollapse(),
               })
             }
-            style={{ cursor: "pointer" }}
+            sx={{ cursor: "pointer" }}
           >
             {collapsedPhases.includes(props.id) ? (
               <ArrowDropDownIcon />
             ) : (
               <ArrowDropUpIcon />
             )}
-          </div>
+          </Box>
         ) : null}
-      </div>
+      </Box>
       <Typography
         variant="body1"
         onClick={changeSelectedPhase}
-        style={{ cursor: "pointer" }}
+        sx={{ cursor: "pointer" }}
       >
         {props.code}
       </Typography>
-      <div style={{ display: "flex" }}>
-        <div
+      <Box sx={{ display: "flex" }}>
+        <Box
           onClick={changePhaseOrderDown}
-          style={{ cursor: indexOfThisPhase !== 0 ? "pointer" : "default" }}
+          sx={{ cursor: indexOfThisPhase !== 0 ? "pointer" : "default" }}
         >
           <ArrowUpwardIcon
             color={indexOfThisPhase !== 0 ? "inherit" : "disabled"}
           />
-        </div>
-        <div
+        </Box>
+        <Box
           onClick={changePhaseOrderUp}
-          style={{
+          sx={{
             cursor:
               indexOfThisPhase + 1 !== phasesLenght ? "pointer" : "default",
           }}
@@ -177,9 +188,9 @@ const Phase = (props: phaseDefinition) => {
               indexOfThisPhase + 1 !== phasesLenght ? "inherit" : "disabled"
             }
           />
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

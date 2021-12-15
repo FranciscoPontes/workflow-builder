@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import styles from "./Action.module.css";
 import MailIcon from "@mui/icons-material/Mail";
 import TrendingFlatIcon from "@mui/icons-material/TrendingFlat";
 import NewReleasesIcon from "@mui/icons-material/NewReleases";
@@ -14,6 +13,7 @@ import { DBService } from "../../../services/db_communication";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { ESwitch } from "../../../types/types";
+import { Box, Typography } from "@mui/material";
 
 export interface IActionSetting {
   id: number;
@@ -44,6 +44,27 @@ export interface IAction {
 interface IActionProps {
   props: IAction;
 }
+
+const styles = {
+  action: {
+    display: "flex",
+    p: "10px",
+    m: "10px",
+    border: "1px solid black",
+    boxShadow: "0px 10px 13px -7px #000000, 5px 5px 15px 5px rgb(0 0 0 / 0%)",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: 1,
+  },
+
+  UIAction: {
+    backgroundColor: "#96b16d",
+  },
+
+  automaticAction: {
+    backgroundColor: "#a29a9a",
+  },
+};
 
 const Action = ({ props }: IActionProps) => {
   const dispatch = useDispatch();
@@ -141,13 +162,13 @@ const Action = ({ props }: IActionProps) => {
     );
 
   const actionSettingInfo = (
-    <div
+    <Box
       style={{
         display: "flex",
         flexFlow: "column",
       }}
     >
-      <span>
+      <Typography variant="body2">
         {props.action_type === EActionTypes.mail
           ? `Mail code: ${getCorrectActionSetting[0].string_value || ""}`
           : props.action_type === EActionTypes.plsql
@@ -157,48 +178,48 @@ const Action = ({ props }: IActionProps) => {
               getCorrectActionSetting[0].string_value || ""
             }`
           : ""}
-      </span>
-      <span>
+      </Typography>
+      <Typography variant="body2">
         {`Request type: ${
           props.reqt_id
             ? requestTypes.filter((reqt) => reqt.id === props.reqt_id)[0].code
             : "All"
         }`}
-      </span>
-    </div>
+      </Typography>
+    </Box>
   );
 
   return (
-    <div style={{ display: "flex", width: "80%" }}>
-      <div
-        style={{ cursor: "pointer", height: "fit-content" }}
+    <Box sx={{ display: "flex", width: "80%" }}>
+      <Box
+        sx={{ cursor: "pointer", height: "fit-content" }}
         onClick={() =>
           dispatch({ type: actionTypes.showModal, data: modalData })
         }
       >
         <SettingsIcon fontSize="small" />
-      </div>
-      <div
-        className={[
-          styles.action,
-          props.user_action_yn === "Y"
+      </Box>
+      <Box
+        sx={{
+          ...styles.action,
+          ...(props.user_action_yn === "Y"
             ? styles.UIAction
-            : styles.automaticAction,
-        ].join(" ")}
+            : styles.automaticAction),
+        }}
       >
-        <div
-          style={{
+        <Box
+          sx={{
             display: "flex",
             flexFlow: "column",
           }}
         >
-          <h4>
+          <Typography variant="body1">
             {`${props.label} - ${
               props.user_action_yn !== "Y" ? "Automatic action" : "User Action"
             }`}
-          </h4>
-          <span>{actionSettingInfo}</span>
-        </div>
+          </Typography>
+          {actionSettingInfo}
+        </Box>
         {props.action_type === EActionTypes.mail ? (
           <MailIcon />
         ) : props.action_type === EActionTypes.stateChange ? (
@@ -206,11 +227,11 @@ const Action = ({ props }: IActionProps) => {
         ) : (
           <NewReleasesIcon />
         )}
-      </div>
-      <div style={{ display: "flex" }}>
-        <div
+      </Box>
+      <Box sx={{ display: "flex" }}>
+        <Box
           onClick={changeActionOrderDown}
-          style={{
+          sx={{
             cursor: indexOfThisAction !== 0 ? "pointer" : "default",
             height: "fit-content",
           }}
@@ -218,10 +239,10 @@ const Action = ({ props }: IActionProps) => {
           <ArrowUpwardIcon
             color={indexOfThisAction !== 0 ? "inherit" : "disabled"}
           />
-        </div>
-        <div
+        </Box>
+        <Box
           onClick={changeActionOrderUp}
-          style={{
+          sx={{
             cursor:
               indexOfThisAction + 1 !== actionsLenght ? "pointer" : "default",
             height: "fit-content",
@@ -231,11 +252,10 @@ const Action = ({ props }: IActionProps) => {
             color={
               indexOfThisAction + 1 !== actionsLenght ? "inherit" : "disabled"
             }
-            size="inherit"
           />
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
