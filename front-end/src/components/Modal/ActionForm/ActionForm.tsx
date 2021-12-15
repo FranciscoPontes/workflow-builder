@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import Button from "@mui/material/Button";
@@ -26,42 +26,42 @@ import { formatCode, formatLabel } from "../../../utils/inputFormatter";
 import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
 import { ESwitch, TStore } from "../../../types/types";
 import CustomSwitch from "../../Switch";
+import Box from "@mui/material/Box";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = {
   root: {
     "& > *": {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: "100%",
-      backgroundColor: theme.palette.background.paper,
+      mt: 1,
+      mb: 1,
+      mr: 1,
+      width: 1,
     },
   },
   formControl: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: "100%",
+    mt: 1,
+    mb: 1,
+    mr: 1,
+    width: 1,
   },
   noMarginRight: {
-    marginRight: "none",
+    mr: 0,
   },
   selectEmpty: {
-    marginTop: theme.spacing(2),
+    mt: 2,
   },
   actionForm: {
     display: "flex",
     flexFlow: "column",
     alignItems: "center",
-    width: "65%",
-    margin: "auto",
+    width: 0.65,
+    m: "auto",
   },
 
   formRow: {
     display: "flex",
     justifyContent: "center",
   },
-}));
+};
 
 interface IActionForm {
   props: IAction;
@@ -71,7 +71,7 @@ const ActionForm = ({ props }: IActionForm) => {
   const dispatch = useDispatch();
   const workflowData = useSelector((state: TStore) => state.workflowData);
   const appID = useSelector((state: TStore) => state.appData.appID);
-  const classes = useStyles();
+  const classes = useStyles;
   const selectedState = useSelector((state: TStore) => state.selectedState);
 
   const validActionTypes: Array<EActionTypes> = [
@@ -243,11 +243,11 @@ const ActionForm = ({ props }: IActionForm) => {
           onSubmit={handleSubmit}
           className={[classes.root, classes.actionForm].join(" ")}
         >
-          <div className={classes.formRow}>
-            <div
-              style={{
-                width: "100%",
-                marginLeft: "5px",
+          <Box sx={{ ...classes.formRow }}>
+            <Box
+              sx={{
+                width: 1,
+                ml: 5,
                 display: "flex",
               }}
             >
@@ -262,25 +262,8 @@ const ActionForm = ({ props }: IActionForm) => {
                   })
                 }
               />
-            </div>
-            {/* <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel>User Action</InputLabel>
-              <Select
-                value={data.user_action_yn}
-                onChange={(e) =>
-                  setData({ ...data, user_action_yn: e.target.value })
-                }
-                label="User Action"
-                required
-              >
-                <MenuItem value="N">No</MenuItem>
-                <MenuItem value="Y">Yes</MenuItem>
-              </Select>
-            </FormControl> */}
-            <FormControl
-              variant="outlined"
-              className={[classes.formControl].join(" ")}
-            >
+            </Box>
+            <FormControl variant="outlined" sx={{ ...classes.formControl }}>
               <InputLabel>State</InputLabel>
               <Select
                 value={data.sta_id}
@@ -298,9 +281,9 @@ const ActionForm = ({ props }: IActionForm) => {
                 ))}
               </Select>
             </FormControl>
-          </div>
-          <div className={[classes.formRow, classes.noMarginRight].join(" ")}>
-            <FormControl variant="outlined" className={classes.formControl}>
+          </Box>
+          <Box sx={{ ...classes.formRow, ...classes.noMarginRight }}>
+            <FormControl variant="outlined" sx={{ ...classes.formControl }}>
               <InputLabel>Request type</InputLabel>
               <Select
                 value={data.reqt_id}
@@ -324,7 +307,7 @@ const ActionForm = ({ props }: IActionForm) => {
             </FormControl>
             <FormControl
               variant="outlined"
-              className={[classes.formControl, classes.noMarginRight].join(" ")}
+              sx={{ ...classes.formControl, ...classes.noMarginRight }}
             >
               <InputLabel>Action Type</InputLabel>
               <Select
@@ -345,7 +328,7 @@ const ActionForm = ({ props }: IActionForm) => {
                 ))}
               </Select>
             </FormControl>
-          </div>
+          </Box>
           <TextField
             autoFocus
             label="Code"
@@ -370,7 +353,7 @@ const ActionForm = ({ props }: IActionForm) => {
 
           {data.id ? (
             data.action_type === EActionTypes.stateChange ? (
-              <FormControl variant="outlined" className={classes.formControl}>
+              <FormControl variant="outlined" sx={{ ...classes.formControl }}>
                 <InputLabel>Next state code</InputLabel>
                 <Select
                   value={actionSettingValue}
@@ -400,7 +383,7 @@ const ActionForm = ({ props }: IActionForm) => {
                 </Select>
               </FormControl>
             ) : data.action_type === EActionTypes.mail ? (
-              <FormControl variant="outlined" className={classes.formControl}>
+              <FormControl variant="outlined" sx={{ ...classes.formControl }}>
                 <InputLabel>Mail Template code</InputLabel>
                 <Select
                   value={actionSettingValue}
@@ -432,7 +415,7 @@ const ActionForm = ({ props }: IActionForm) => {
                 label={actionTypeActionSettingLabelMapping[data.action_type]}
                 variant="outlined"
                 value={actionSettingValue}
-                className={classes.formControl}
+                sx={{ ...classes.formControl }}
                 onChange={(e) =>
                   setData({
                     ...data,
@@ -447,11 +430,11 @@ const ActionForm = ({ props }: IActionForm) => {
               />
             )
           ) : null}
-          <div
-            style={{
+          <Box
+            sx={{
               display: "flex",
               justifyContent: data?.id ? "space-between" : "right",
-              margin: "20px",
+              m: 20,
             }}
           >
             {data?.id ? (
@@ -473,7 +456,7 @@ const ActionForm = ({ props }: IActionForm) => {
             >
               Save
             </Button>
-          </div>
+          </Box>
         </form>
       )}
     </Formik>

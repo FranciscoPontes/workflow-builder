@@ -1,5 +1,4 @@
 import React, { Fragment, useState } from "react";
-import styles from "./Layout.module.css";
 import {
   TMailTemplates,
   TRequestTypes,
@@ -19,6 +18,7 @@ import LeftPanel from "./LeftPanel/LeftPanel";
 import { TStore } from "../types/types";
 import { phaseDefinition } from "./workflowItems/Phase/Phase";
 import { stateDefinition } from "./workflowItems/State/State";
+import { Box } from "@mui/material";
 
 enum EDBTiers {
   DEV = "DEV",
@@ -35,6 +35,19 @@ type TLayout = {
 export interface ILayout {
   props: TLayout;
 }
+
+const styles = {
+  layout: {
+    display: "flex",
+    height: "90vh",
+  },
+
+  objectList: {
+    display: "flex",
+    flexFlow: "column",
+    mt: "20px",
+  },
+};
 
 // objet panel in the left + workflow box
 const Layout = ({ props }: ILayout) => {
@@ -184,7 +197,7 @@ const Layout = ({ props }: ILayout) => {
   }, [refresh]);
 
   return (
-    <div className={styles.layout}>
+    <Box sx={{ ...styles.layout }}>
       {workflowData ? (
         <Fragment>
           <LeftPanel />
@@ -204,7 +217,7 @@ const Layout = ({ props }: ILayout) => {
       ) : (
         <CustomSnackbar />
       )}
-    </div>
+    </Box>
   );
 };
 

@@ -1,5 +1,4 @@
 import React from "react";
-import { makeStyles } from "@mui/styles";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import Button from "@mui/material/Button";
@@ -7,24 +6,28 @@ import { Formik } from "formik";
 import { DBService } from "../../../services/db_communication";
 import { useDispatch, useSelector } from "react-redux";
 import DeleteIcon from "@mui/icons-material/Delete";
-import styles from "./PhaseForm.module.css";
 import { actionTypes } from "../../../store/actionTypes";
 import { IConfirmationData } from "../../UIConfirmation/UIConfirmation";
 import { useEffect } from "react";
 import { DBActionTypes } from "../../../services/dbActionTypes";
-import { useRef } from "react";
-import { formatCode, formatLabel } from "../../../utils/inputFormatter";
 import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
 import { phaseDefinition } from "../../workflowItems/Phase/Phase";
+import { Box } from "@mui/material";
+import { formatCode, formatLabel } from "../../../utils/inputFormatter";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = {
   root: {
     "& > *": {
-      margin: theme.spacing(1),
+      m: 1,
       width: "65%",
     },
   },
-}));
+  form: {
+    display: "flex",
+    flexFlow: "column",
+    alignFtems: "center",
+  },
+};
 
 interface IPhaseForm {
   props: phaseDefinition;
@@ -34,7 +37,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
   const dispatch = useDispatch();
   const workflowData = useSelector((state) => state.workflowData);
   const appID = useSelector((state) => state.appData.appID);
-  const classes = useStyles();
+  const classes = useStyles;
 
   const getNewSortOrder = (): number => {
     if (!workflowData.phases) return 1;
@@ -155,7 +158,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
       {({ handleSubmit, isSubmitting }) => (
         <form
           onSubmit={handleSubmit}
-          className={[classes.root, styles.form].join(" ")}
+          className={[classes.root, classes.form].join(" ")}
         >
           <TextField
             autoFocus
@@ -180,11 +183,11 @@ const PhaseForm = ({ props }: IPhaseForm) => {
             onChange={(e) => setData({ ...data, label: e.target.value })}
             required
           />
-          <div
-            style={{
+          <Box
+            sx={{
               display: "flex",
               justifyContent: "space-between",
-              margin: "20px",
+              m: 20,
             }}
           >
             {props?.id ? (
@@ -207,7 +210,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
             >
               Save
             </Button>
-          </div>
+          </Box>
         </form>
       )}
     </Formik>

@@ -1,14 +1,9 @@
 import React from "react";
-import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import { useDispatch, useSelector } from "react-redux";
 import { actionTypes } from "../../store/actionTypes";
 import { TStore } from "../../types/types";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-
-function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import Alert from "@mui/material/Alert";
 
 export enum EseverityTypes {
   success = "success",
@@ -38,7 +33,7 @@ export default function CustomSnackbar() {
       autoHideDuration={
         snackbarData.severity === EseverityTypes.success ? 2000 : null
       }
-      onClose={handleClose}
+      onClose={() => handleClose()}
       anchorOrigin={{
         vertical: "bottom",
         horizontal: "left",

@@ -1,7 +1,5 @@
 import React from "react";
 import Layout, { ILayout } from "./components/Layout";
-import Typography from "@mui/material/Typography";
-import { StylesProvider } from "@mui/styles";
 
 import {
   responsiveFontSizes,
@@ -108,7 +106,6 @@ const App = ({ props }: ILayout) => {
       {/* <StylesProvider generateClassName={generateClassName}> */}
       <ThemeProvider theme={theme}>
         <Layout props={props} />
-        <Typography>Test</Typography>
       </ThemeProvider>
       {/* </StylesProvider> */}
     </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import Button from "@mui/material/Button";
@@ -10,31 +10,36 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import { stateDefinition } from "../../State/State";
-import { actionTypes } from "../../../store/actionTypes";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IConfirmationData } from "../../UIConfirmation/UIConfirmation";
 import { useEffect } from "react";
 import { DBActionTypes } from "../../../services/dbActionTypes";
-import styles from "./StateForm.module.css";
 import { formatCode, formatLabel } from "../../../utils/inputFormatter";
 import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
+import { Box } from "@mui/material";
+import { stateDefinition } from "../../workflowItems/State/State";
+import { actionTypes } from "../../../store/actionTypes";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = {
   root: {
     "& > *": {
-      margin: theme.spacing(1),
-      width: "65%",
+      m: 1,
+      width: 0.65,
     },
   },
   formControl: {
-    margin: theme.spacing(1),
+    m: 1,
     minWidth: 240,
   },
   selectEmpty: {
-    marginTop: theme.spacing(2),
+    mt: 2,
   },
-}));
+  stateForm: {
+    display: "flex",
+    flexFlow: "column",
+    alignItems: "center",
+  },
+};
 
 interface IStateForm {
   props: stateDefinition;
@@ -44,7 +49,7 @@ const StateForm = ({ props }: IStateForm) => {
   const dispatch = useDispatch();
   const workflowData = useSelector((state) => state.workflowData);
   const appID = useSelector((state) => state.appData.appID);
-  const classes = useStyles();
+  const classes = useStyles;
   const selectedPhase = useSelector((state) => state.selectedPhase);
 
   const [data, setData] = useState<stateDefinition>({
@@ -188,9 +193,9 @@ const StateForm = ({ props }: IStateForm) => {
       {({ handleSubmit, isSubmitting }) => (
         <form
           onSubmit={handleSubmit}
-          className={[classes.root, styles.stateForm].join(" ")}
+          className={[classes.root, classes.stateForm].join(" ")}
         >
-          <FormControl variant="outlined" className={classes.formControl}>
+          <FormControl variant="outlined" sx={{ ...classes.formControl }}>
             <InputLabel>Phase</InputLabel>
             <Select
               value={data.pha_id}
@@ -229,11 +234,11 @@ const StateForm = ({ props }: IStateForm) => {
             onChange={(e) => setData({ ...data, label: e.target.value })}
             required
           />
-          <div
-            style={{
+          <Box
+            sx={{
               display: "flex",
               justifyContent: "space-between",
-              margin: "20px",
+              m: 20,
             }}
           >
             {data?.id ? (
@@ -255,7 +260,7 @@ const StateForm = ({ props }: IStateForm) => {
             >
               Save
             </Button>
-          </div>
+          </Box>
         </form>
       )}
     </Formik>

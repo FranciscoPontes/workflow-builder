@@ -1,5 +1,5 @@
 import React from "react";
-import { createStyles, Theme, makeStyles } from "@mui/styles";
+import { createStyles, Theme, makeStyles } from "@mui/material/styles";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -11,41 +11,42 @@ import MailIcon from "@mui/icons-material/Mail";
 import TrendingFlatIcon from "@mui/icons-material/TrendingFlat";
 import NewReleasesIcon from "@mui/icons-material/NewReleases";
 import { EActionTypes } from "../../workflowItems/Action/Action";
+import { Box } from "@mui/material";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: "80%",
-      //   maxWidth: 360,
-      margin: "auto",
-      marginTop: "10px",
-      //   backgroundColor: theme.palette.background.paper,
-      borderRadius: "2%",
+const useStyles = {
+  root: {
+    width: 0.9,
+    //   maxWidth: 360,
+    margin: "auto",
+    marginTop: "10px",
+    //   backgroundColor: theme.palette.background.paper,
+    borderRadius: "2%",
+  },
+  element: {
+    boxShadow: "0px 10px 13px -7px #000000, 5px 5px 15px 5px rgb(0 0 0 / 0%)",
+    my: "10px",
+    borderRadius: "5%",
+    backgroundColor: "white",
+  },
+
+  elementFontSize: {
+    "& .MuiTypography-root": {
+      textAlign: "center",
+      fontSize: { sm: "small", xs: "small" },
     },
-    customListItem: {
+  },
+  actionElement: {
+    backgroundColor: "#96b16d",
+    mr: "0px",
+    width: { lg: 0.25 },
+    "& .MuiListItem-root": {
       justifyContent: "center",
     },
-    element: {
-      boxShadow: "0px 10px 13px -7px #000000, 5px 5px 15px 5px rgb(0 0 0 / 0%)",
-      margin: "10px",
-      borderRadius: "5%",
-      backgroundColor: "white",
-    },
-
-    elementFontSize: {
-      textAlign: "center",
-      [theme.breakpoints.down("md")]: {
-        fontSize: "small",
-      },
-    },
-    actionElement: {
-      backgroundColor: "#96b16d",
-    },
-  })
-);
+  },
+};
 
 export default function ElementList() {
-  const classes = useStyles();
+  const classes = useStyles;
   const dispatch = useDispatch();
 
   const phaseModalData = {
@@ -116,47 +117,43 @@ export default function ElementList() {
   ];
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ ...classes.root }}>
       <List component="nav">
-        <div onClick={handleClickPhase} className={classes.element}>
+        <Box onClick={handleClickPhase} sx={{ ...classes.element }}>
           <ListItem button>
-            <ListItemText
-              primary="Phase"
-              className={classes.elementFontSize}
-              disableTypography
-            />
+            <ListItemText primary="Phase" sx={{ ...classes.elementFontSize }} />
           </ListItem>
-        </div>
-        <div onClick={handleClickState} className={classes.element}>
+        </Box>
+        <Box onClick={handleClickState} sx={{ ...classes.element }}>
           <ListItem button>
-            <ListItemText
-              primary="State"
-              className={classes.elementFontSize}
-              disableTypography
-            />
+            <ListItemText primary="State" sx={{ ...classes.elementFontSize }} />
           </ListItem>
-        </div>
-        <List component="div" disablePadding>
+        </Box>
+        <List
+          component="div"
+          disablePadding
+          sx={{
+            display: "flex",
+            flexFlow: { lg: "row", md: "column", sm: "column", xs: "column" },
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           {actionElements.map((el: actionElement) => (
-            <div
+            <Box
               onClick={() => handleClickAction(el.actionType)}
-              className={[classes.element, classes.actionElement].join(" ")}
+              sx={{ ...classes.element, ...classes.actionElement }}
               key={el.label}
             >
-              <ListItem button className={classes.customListItem}>
-                <ListItemIcon
-                  className={classes.customListItem}
-                  style={{
-                    minWidth: "fit-content",
-                  }}
-                >
+              <ListItem button>
+                <ListItemIcon sx={{ minWidth: "fit-content" }}>
                   {el.icon}
                 </ListItemIcon>
               </ListItem>
-            </div>
+            </Box>
           ))}
         </List>
       </List>
-    </div>
+    </Box>
   );
 }

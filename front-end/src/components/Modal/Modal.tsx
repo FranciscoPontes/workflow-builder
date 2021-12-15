@@ -1,26 +1,13 @@
 import React from "react";
 import Modal from "@mui/material/Modal";
-import styles from "./Modal.module.css";
-import { makeStyles } from "@mui/styles";
-import { useState } from "react";
 import PhaseForm from "./PhaseForm/PhaseForm";
-import { useEffect } from "react";
 import StateForm from "./StateForm/StateForm";
-import { phaseDefinition } from "../Phase/Phase";
-import { stateDefinition } from "../State/State";
 import { useDispatch, useSelector } from "react-redux";
 import { actionTypes } from "../../store/actionTypes";
 import ActionForm from "./ActionForm/ActionForm";
 import { IAction } from "../workflowItems/Action/Action";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& > *": {
-      margin: theme.spacing(1),
-      width: "25ch",
-    },
-  },
-}));
+import { phaseDefinition } from "../workflowItems/Phase/Phase";
+import { stateDefinition } from "../workflowItems/State/State";
 
 export enum EModalTypes {
   phase = "PHASE",
@@ -43,12 +30,24 @@ export type IModal = {
 };
 
 export const SimpleModal = (props: IModal) => {
-  const classes = useStyles();
   const dispatch = useDispatch();
-  const modalData = useSelector((state) => state.modalData);
 
   const body = (
-    <div className={styles.paper}>
+    <div
+      style={{
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        width: "50vw",
+        margin: "auto",
+        border: "2px solid #000",
+        backgroundColor: "white",
+        borderRadius: "2%",
+        padding: "10px",
+        textAlign: "center",
+        transform: "translate(-50%, -50%)",
+      }}
+    >
       <h2>{props.title}</h2>
       <p>{props.description}</p>
       {props.type === EModalTypes.phase ? (
