@@ -39,7 +39,9 @@ export default function CustomSnackbar() {
         horizontal: "left",
       }}
     >
-      <Alert severity={snackbarData.severity}>{snackbarData.content}</Alert>
+      <Alert severity={snackbarData.severity} variant="filled">
+        {snackbarData.content}
+      </Alert>
     </Snackbar>
   ) : null;
 }

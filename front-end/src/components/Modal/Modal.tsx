@@ -8,6 +8,7 @@ import ActionForm from "./ActionForm/ActionForm";
 import { IAction } from "../workflowItems/Action/Action";
 import { phaseDefinition } from "../workflowItems/Phase/Phase";
 import { stateDefinition } from "../workflowItems/State/State";
+import { Box, Typography } from "@mui/material";
 
 export enum EModalTypes {
   phase = "PHASE",
@@ -33,23 +34,28 @@ export const SimpleModal = (props: IModal) => {
   const dispatch = useDispatch();
 
   const body = (
-    <div
-      style={{
+    <Box
+      sx={{
         position: "absolute",
         left: "50%",
         top: "50%",
-        width: "50vw",
+        width: "30vw",
         margin: "auto",
         border: "2px solid #000",
-        backgroundColor: "white",
+        bgcolor: "background.default",
         borderRadius: "2%",
         padding: "10px",
         textAlign: "center",
         transform: "translate(-50%, -50%)",
+        height: "fit-content",
+        maxHeight: "70vh",
+        overflow: "auto",
       }}
     >
-      <h2>{props.title}</h2>
-      <p>{props.description}</p>
+      <Typography variant="h6" sx={{ mb: 2 }}>
+        {props.title}
+      </Typography>
+      <Typography variant="body2">{props.description}</Typography>
       {props.type === EModalTypes.phase ? (
         <PhaseForm props={props?.metadata?.phaseMetadata} />
       ) : props.type === EModalTypes.state ? (
@@ -57,11 +63,11 @@ export const SimpleModal = (props: IModal) => {
       ) : (
         <ActionForm props={props?.metadata?.actionMetadata} />
       )}
-    </div>
+    </Box>
   );
 
   return (
-    <div>
+    <Box>
       <Modal
         open={props.isOpen}
         onClose={() =>
@@ -72,6 +78,6 @@ export const SimpleModal = (props: IModal) => {
       >
         {body}
       </Modal>
-    </div>
+    </Box>
   );
 };

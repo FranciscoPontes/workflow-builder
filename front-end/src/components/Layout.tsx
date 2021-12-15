@@ -197,7 +197,7 @@ const Layout = ({ props }: ILayout) => {
   }, [refresh]);
 
   return (
-    <Box sx={{ ...styles.layout }}>
+    <Box sx={{ ...styles.layout, bgcolor: "background.default" }}>
       {workflowData ? (
         <Fragment>
           <LeftPanel />

@@ -31,20 +31,11 @@ import Box from "@mui/material/Box";
 const useStyles = {
   root: {
     "& > *": {
-      mt: 1,
-      mb: 1,
-      mr: 1,
       width: 1,
     },
   },
   formControl: {
-    mt: 1,
-    mb: 1,
-    mr: 1,
     width: 1,
-  },
-  noMarginRight: {
-    mr: 0,
   },
   selectEmpty: {
     mt: 2,
@@ -239,16 +230,16 @@ const ActionForm = ({ props }: IActionForm) => {
       }
     >
       {({ handleSubmit, isSubmitting }) => (
-        <form
-          onSubmit={handleSubmit}
-          className={[classes.root, classes.actionForm].join(" ")}
-        >
+        <Box sx={{ ...classes.root, ...classes.actionForm }}>
           <Box sx={{ ...classes.formRow }}>
             <Box
               sx={{
                 width: 1,
-                ml: 5,
+                ml: "5px",
                 display: "flex",
+                "& .MuiFormGroup-root": {
+                  justifyContent: "center",
+                },
               }}
             >
               <CustomSwitch
@@ -283,14 +274,17 @@ const ActionForm = ({ props }: IActionForm) => {
             </FormControl>
           </Box>
           <Box sx={{ ...classes.formRow, ...classes.noMarginRight }}>
-            <FormControl variant="outlined" sx={{ ...classes.formControl }}>
+            <FormControl
+              variant="outlined"
+              sx={{ ...classes.formControl, mr: 1 }}
+            >
               <InputLabel>Request type</InputLabel>
               <Select
                 value={data.reqt_id}
                 onChange={(e) =>
                   setData({ ...data, reqt_id: parseInt(e.target.value) })
                 }
-                label="State"
+                label="Request Type"
               >
                 <MenuItem value={""}>
                   <em>None</em>
@@ -434,7 +428,7 @@ const ActionForm = ({ props }: IActionForm) => {
             sx={{
               display: "flex",
               justifyContent: data?.id ? "space-between" : "right",
-              m: 20,
+              m: "20px",
             }}
           >
             {data?.id ? (
@@ -452,12 +446,14 @@ const ActionForm = ({ props }: IActionForm) => {
               variant="contained"
               color="primary"
               disabled={isSubmitting}
+              onClick={handleSubmit}
               type="submit"
+              size="small"
             >
               Save
             </Button>
           </Box>
-        </form>
+        </Box>
       )}
     </Formik>
   );

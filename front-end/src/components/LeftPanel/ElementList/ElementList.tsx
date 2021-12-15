@@ -24,9 +24,11 @@ const useStyles = {
   },
   element: {
     boxShadow: "0px 10px 13px -7px #000000, 5px 5px 15px 5px rgb(0 0 0 / 0%)",
+    m: "auto",
     my: "10px",
     borderRadius: "5%",
     backgroundColor: "white",
+    width: 0.9,
   },
 
   elementFontSize: {
@@ -37,8 +39,8 @@ const useStyles = {
   },
   actionElement: {
     backgroundColor: "#96b16d",
-    mr: "0px",
-    width: { lg: 0.25 },
+    px: "10px",
+    width: 0.9 / 3,
     "& .MuiListItem-root": {
       justifyContent: "center",
     },
@@ -134,9 +136,10 @@ export default function ElementList() {
           disablePadding
           sx={{
             display: "flex",
-            flexFlow: { lg: "row", md: "column", sm: "column", xs: "column" },
-            justifyContent: "space-between",
-            alignItems: "center",
+            // flexFlow: { lg: "row", md: "column", sm: "column", xs: "column" },
+            flexFlow: "row",
+            justifyContent: "center",
+            flexWrap: "wrap",
           }}
         >
           {actionElements.map((el: actionElement) => (

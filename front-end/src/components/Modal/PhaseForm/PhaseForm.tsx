@@ -18,14 +18,15 @@ import { formatCode, formatLabel } from "../../../utils/inputFormatter";
 const useStyles = {
   root: {
     "& > *": {
-      m: 1,
+      // m: 1,
       width: "65%",
     },
   },
   form: {
     display: "flex",
+    m: "auto",
     flexFlow: "column",
-    alignFtems: "center",
+    alignItems: "center",
   },
 };
 
@@ -156,9 +157,11 @@ const PhaseForm = ({ props }: IPhaseForm) => {
       }
     >
       {({ handleSubmit, isSubmitting }) => (
-        <form
-          onSubmit={handleSubmit}
-          className={[classes.root, classes.form].join(" ")}
+        <Box
+          sx={{
+            ...classes.root,
+            ...classes.form,
+          }}
         >
           <TextField
             autoFocus
@@ -186,8 +189,8 @@ const PhaseForm = ({ props }: IPhaseForm) => {
           <Box
             sx={{
               display: "flex",
-              justifyContent: "space-between",
-              m: 20,
+              justifyContent: props?.id ? "space-between" : "right",
+              m: "20px",
             }}
           >
             {props?.id ? (
@@ -207,11 +210,12 @@ const PhaseForm = ({ props }: IPhaseForm) => {
               disabled={isSubmitting}
               type="submit"
               size="small"
+              onClick={handleSubmit}
             >
               Save
             </Button>
           </Box>
-        </form>
+        </Box>
       )}
     </Formik>
   );

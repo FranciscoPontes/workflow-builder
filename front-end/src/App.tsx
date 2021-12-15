@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo, useContext, createContext } from "react";
 import Layout, { ILayout } from "./components/Layout";
 
 import {
@@ -6,6 +6,11 @@ import {
   createTheme,
   ThemeProvider,
 } from "@mui/material/styles";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+import IconButton from "@mui/material/IconButton";
+
+const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 // const generateClassName = createGenerateClassName({
 //   disableGlobal: true,
@@ -31,7 +36,7 @@ let theme = createTheme({
 theme = createTheme(theme, {
   palette: {
     primary: { main: "#FF5027" },
-    secondary: { main: "#9B9593" },
+    secondary: { main: "#d32f2f", dark: "#9B9593" },
   },
   components: {
     MuiSelect: {
@@ -77,7 +82,7 @@ theme = createTheme(theme, {
             fontSize: "inherit",
           },
           [theme.breakpoints.up("md")]: {
-            fontSize: "large",
+            fontSize: "medium",
           },
         },
       },
@@ -94,6 +99,13 @@ theme = createTheme(theme, {
         },
       },
     },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          margin: "10px 0",
+        },
+      },
+    },
   },
 });
 
@@ -101,13 +113,44 @@ theme = createTheme(theme, {
 theme = responsiveFontSizes(theme);
 
 const App = ({ props }: ILayout) => {
+  const [mode, setMode] = useState("light");
+  const colorMode = useMemo(
+    () => ({
+      toggleColorMode: () => {
+        setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+      },
+    }),
+    []
+  );
+
+  const updatedTheme = useMemo(
+    () =>
+      createTheme({
+        ...theme,
+        palette: {
+          // ...theme.palette,
+          mode: mode,
+        },
+      }),
+    [mode]
+  );
+
   return (
     <div>
-      {/* <StylesProvider generateClassName={generateClassName}> */}
-      <ThemeProvider theme={theme}>
-        <Layout props={props} />
-      </ThemeProvider>
-      {/* </StylesProvider> */}
+      <ColorModeContext.Provider value={colorMode}>
+        {/* <StylesProvider generateClassName={generateClassName}> */}
+        <ThemeProvider theme={updatedTheme}>
+          <Layout props={props} />
+          <IconButton
+            sx={{ ml: 1 }}
+            onClick={colorMode.toggleColorMode}
+            color="inherit"
+          >
+            {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
+        </ThemeProvider>
+        {/* </StylesProvider> */}
+      </ColorModeContext.Provider>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import { Box, Typography } from "@mui/material";
 
 const useStyles = {
   leftPanel: {
-    backgroundColor: "#d6d6d6",
+    backgroundColor: "divider",
     width: "10vw",
     mr: 2,
     overflow: "auto",

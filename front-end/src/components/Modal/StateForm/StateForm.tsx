@@ -23,13 +23,9 @@ import { actionTypes } from "../../../store/actionTypes";
 const useStyles = {
   root: {
     "& > *": {
-      m: 1,
+      // m: 1,
       width: 0.65,
     },
-  },
-  formControl: {
-    m: 1,
-    minWidth: 240,
   },
   selectEmpty: {
     mt: 2,
@@ -191,11 +187,8 @@ const StateForm = ({ props }: IStateForm) => {
       }
     >
       {({ handleSubmit, isSubmitting }) => (
-        <form
-          onSubmit={handleSubmit}
-          className={[classes.root, classes.stateForm].join(" ")}
-        >
-          <FormControl variant="outlined" sx={{ ...classes.formControl }}>
+        <Box sx={{ ...classes.root, ...classes.stateForm }}>
+          <FormControl variant="outlined">
             <InputLabel>Phase</InputLabel>
             <Select
               value={data.pha_id}
@@ -237,8 +230,8 @@ const StateForm = ({ props }: IStateForm) => {
           <Box
             sx={{
               display: "flex",
-              justifyContent: "space-between",
-              m: 20,
+              justifyContent: data?.id ? "space-between" : "right",
+              m: "20px",
             }}
           >
             {data?.id ? (
@@ -257,11 +250,13 @@ const StateForm = ({ props }: IStateForm) => {
               color="primary"
               disabled={isSubmitting}
               type="submit"
+              onClick={handleSubmit}
+              size="small"
             >
               Save
             </Button>
           </Box>
-        </form>
+        </Box>
       )}
     </Formik>
   );

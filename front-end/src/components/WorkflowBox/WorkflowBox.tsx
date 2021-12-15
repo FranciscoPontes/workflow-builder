@@ -33,7 +33,7 @@ const styles = {
   box: {
     width: 0.9,
     justifyContent: "center",
-    backgroundColor: "#f1f0ee",
+    backgroundColor: "action.disabled",
     overflow: "auto",
   },
 
