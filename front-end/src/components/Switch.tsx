@@ -1,9 +1,9 @@
 import React from "react";
-import { withStyles, Theme, createStyles } from "@material-ui/core/styles";
-import { purple } from "@material-ui/core/colors";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch, { SwitchClassKey, SwitchProps } from "@material-ui/core/Switch";
+import { withStyles, Theme, createStyles, makeStyles } from "@mui/styles";
+import { purple } from "@mui/material/colors";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch, { SwitchClassKey, SwitchProps } from "@mui/material/Switch";
 import { ESwitch } from "../types/types";
 
 interface Styles extends Partial<Record<SwitchClassKey, string>> {
@@ -14,12 +14,29 @@ interface Props extends SwitchProps {
   classes: Styles;
 }
 
+const wrapperClasses = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      [theme.breakpoints.down("md")]: {
+        width: 36,
+        height: 20,
+        fontSize: "x-small",
+      },
+      [theme.breakpoints.up("md")]: {
+        width: 42,
+        height: 26,
+      },
+    },
+  })
+);
+
 const IOSSwitch = withStyles((theme: Theme) =>
   createStyles({
     root: {
       [theme.breakpoints.down("md")]: {
         width: 36,
         height: 20,
+        fontSize: "x-small",
       },
       [theme.breakpoints.up("md")]: {
         width: 42,
@@ -93,6 +110,8 @@ const CustomSwitch = (props: ICustomSwitchProps) => {
     props.onChange();
   };
 
+  const classWrapper = wrapperClasses();
+
   return (
     <FormGroup>
       <FormControlLabel
@@ -103,6 +122,7 @@ const CustomSwitch = (props: ICustomSwitchProps) => {
           />
         }
         label={props.label}
+        // className={classWrapper.root}
       />
     </FormGroup>
   );

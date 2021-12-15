@@ -1,104 +1,104 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import TextField from '@material-ui/core/TextField'
-import { useState } from 'react'
-import Button from '@material-ui/core/Button'
-import { Formik } from 'formik'
-import { DBService } from '../../../services/db_communication'
-import { useDispatch, useSelector } from 'react-redux'
-import DeleteIcon from '@material-ui/icons/Delete'
-import styles from './PhaseForm.module.css'
-import { actionTypes } from '../../../store/actionTypes'
-import { IConfirmationData } from '../../UIConfirmation/UIConfirmation'
-import { useEffect } from 'react'
-import { DBActionTypes } from '../../../services/dbActionTypes'
-import { useRef } from 'react'
-import { formatCode, formatLabel } from '../../../utils/inputFormatter'
-import { EseverityTypes, ISnackbarData } from '../../SnackBar/SnackBar'
-import { phaseDefinition } from '../../workflowItems/Phase/Phase'
+import React from "react";
+import { makeStyles } from "@mui/styles";
+import TextField from "@mui/material/TextField";
+import { useState } from "react";
+import Button from "@mui/material/Button";
+import { Formik } from "formik";
+import { DBService } from "../../../services/db_communication";
+import { useDispatch, useSelector } from "react-redux";
+import DeleteIcon from "@mui/icons-material/Delete";
+import styles from "./PhaseForm.module.css";
+import { actionTypes } from "../../../store/actionTypes";
+import { IConfirmationData } from "../../UIConfirmation/UIConfirmation";
+import { useEffect } from "react";
+import { DBActionTypes } from "../../../services/dbActionTypes";
+import { useRef } from "react";
+import { formatCode, formatLabel } from "../../../utils/inputFormatter";
+import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
+import { phaseDefinition } from "../../workflowItems/Phase/Phase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    '& > *': {
+    "& > *": {
       margin: theme.spacing(1),
-      width: '65%',
+      width: "65%",
     },
   },
-}))
+}));
 
 interface IPhaseForm {
-  props: phaseDefinition
+  props: phaseDefinition;
 }
 
 const PhaseForm = ({ props }: IPhaseForm) => {
-  const dispatch = useDispatch()
-  const workflowData = useSelector((state) => state.workflowData)
-  const appID = useSelector((state) => state.appData.appID)
-  const classes = useStyles()
+  const dispatch = useDispatch();
+  const workflowData = useSelector((state) => state.workflowData);
+  const appID = useSelector((state) => state.appData.appID);
+  const classes = useStyles();
 
   const getNewSortOrder = (): number => {
-    if (!workflowData.phases) return 1
+    if (!workflowData.phases) return 1;
     const sortOrderArray: Array<number> = workflowData.phases?.map(
-      (pha) => pha.sort_order,
-    )
-    return Math.max(...sortOrderArray) + 1
-  }
+      (pha) => pha.sort_order
+    );
+    return Math.max(...sortOrderArray) + 1;
+  };
 
   const [data, setData] = useState<phaseDefinition>({
-    code: props?.code || '',
-    label: props?.label || '',
+    code: props?.code || "",
+    label: props?.label || "",
     sort_order: props?.sort_order || getNewSortOrder(),
     id: props?.id || null,
     active_yn: props?.active_yn || null,
-  })
+  });
 
   const snackbarData: ISnackbarData = {
-    content: `Phase ${!data.id ? 'created' : 'updated'}!`,
+    content: `Phase ${!data.id ? "created" : "updated"}!`,
     severity: EseverityTypes.success,
     show: true,
-  }
+  };
 
   const saveData = async (formikData, setSubmitting) => {
     const phaseData = {
       ...data,
       app_id: appID,
-    }
+    };
 
     const preparedDBData = {
       phases: [phaseData],
       change_type: DBActionTypes.updatePhases,
-    }
+    };
 
     await DBService.changeData(preparedDBData)
       .then(() => {
-        dispatch({ type: actionTypes.updateSnackbar, data: snackbarData })
-        dispatch({ type: actionTypes.refresh })
+        dispatch({ type: actionTypes.updateSnackbar, data: snackbarData });
+        dispatch({ type: actionTypes.refresh });
       })
       .catch((err) => {
-        console.error(err.message)
+        console.error(err.message);
         dispatch({
           type: actionTypes.updateSnackbar,
           data: {
             ...snackbarData,
             severity: EseverityTypes.error,
-            content: `Error ${!data.id ? 'creating' : 'updating'} phase! ${
+            content: `Error ${!data.id ? "creating" : "updating"} phase! ${
               err.message
             }`,
           },
-        })
-      })
+        });
+      });
 
-    setSubmitting(false)
-    if (data.id) dispatch({ type: actionTypes.hideModal })
-  }
+    setSubmitting(false);
+    if (data.id) dispatch({ type: actionTypes.hideModal });
+  };
 
   const deletePhase = async () => {
     console.log(
       JSON.stringify({
         change_type: DBActionTypes.removePhase,
         id: data.id,
-      }),
-    )
+      })
+    );
     await DBService.changeData({
       change_type: DBActionTypes.removePhase,
       id: data.id,
@@ -106,13 +106,13 @@ const PhaseForm = ({ props }: IPhaseForm) => {
       .then(() => {
         dispatch({
           type: actionTypes.updateSnackbar,
-          data: { ...snackbarData, content: 'Phase deleted!' },
-        })
-        dispatch({ type: actionTypes.refresh })
-        dispatch({ type: actionTypes.hideModal })
+          data: { ...snackbarData, content: "Phase deleted!" },
+        });
+        dispatch({ type: actionTypes.refresh });
+        dispatch({ type: actionTypes.hideModal });
       })
       .catch((err) => {
-        console.error(err.message)
+        console.error(err.message);
         dispatch({
           type: actionTypes.updateSnackbar,
           data: {
@@ -120,20 +120,20 @@ const PhaseForm = ({ props }: IPhaseForm) => {
             severity: EseverityTypes.error,
             content: `Error deleting action! ${err.message}`,
           },
-        })
-      })
-  }
+        });
+      });
+  };
 
   const confirmData: IConfirmationData = {
-    title: 'Delete Phase?',
+    title: "Delete Phase?",
     description:
-      'This action will delete all associated states and dependencies (actions, permissions..)',
+      "This action will delete all associated states and dependencies (actions, permissions..)",
     callback: deletePhase,
-  }
+  };
 
   const tryDelete = () => {
-    dispatch({ type: actionTypes.showConfirmation, data: confirmData })
-  }
+    dispatch({ type: actionTypes.showConfirmation, data: confirmData });
+  };
 
   // when adding new phases, keep increasing new sort order for quick batch insert
   useEffect(() => {
@@ -141,9 +141,9 @@ const PhaseForm = ({ props }: IPhaseForm) => {
       setData({
         ...data,
         sort_order: getNewSortOrder(),
-      })
+      });
     }
-  }, [workflowData])
+  }, [workflowData]);
 
   return (
     <Formik
@@ -155,7 +155,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
       {({ handleSubmit, isSubmitting }) => (
         <form
           onSubmit={handleSubmit}
-          className={[classes.root, styles.form].join(' ')}
+          className={[classes.root, styles.form].join(" ")}
         >
           <TextField
             autoFocus
@@ -182,9 +182,9 @@ const PhaseForm = ({ props }: IPhaseForm) => {
           />
           <div
             style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              margin: '20px',
+              display: "flex",
+              justifyContent: "space-between",
+              margin: "20px",
             }}
           >
             {props?.id ? (
@@ -211,7 +211,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
         </form>
       )}
     </Formik>
-  )
-}
+  );
+};
 
-export default PhaseForm
+export default PhaseForm;

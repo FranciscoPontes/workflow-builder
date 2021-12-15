@@ -1,15 +1,15 @@
 import React from "react";
-import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
+import { createStyles, Theme, makeStyles } from "@mui/styles";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import { EModalTypes, IModal } from "../../Modal/Modal";
 import { actionTypes } from "../../../store/actionTypes";
 import { useDispatch } from "react-redux";
-import MailIcon from "@material-ui/icons/Mail";
-import TrendingFlatIcon from "@material-ui/icons/TrendingFlat";
-import NewReleasesIcon from "@material-ui/icons/NewReleases";
+import MailIcon from "@mui/icons-material/Mail";
+import TrendingFlatIcon from "@mui/icons-material/TrendingFlat";
+import NewReleasesIcon from "@mui/icons-material/NewReleases";
 import { EActionTypes } from "../../workflowItems/Action/Action";
 
 const useStyles = makeStyles((theme: Theme) =>

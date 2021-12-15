@@ -1,19 +1,19 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import SpeedDial from '@material-ui/lab/SpeedDial'
-import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon'
-import SpeedDialAction from '@material-ui/lab/SpeedDialAction'
-import { EModalTypes, IModal } from '../Modal/Modal'
-import { useDispatch } from 'react-redux'
-import { actionTypes } from '../../store/actionTypes'
+import React from "react";
+import { makeStyles } from "@mui/styles";
+import SpeedDial from "@material-ui/lab/SpeedDial";
+import SpeedDialIcon from "@material-ui/lab/SpeedDialIcon";
+import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
+import { EModalTypes, IModal } from "../Modal/Modal";
+import { useDispatch } from "react-redux";
+import { actionTypes } from "../../store/actionTypes";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    transform: 'translateZ(0px)',
+    transform: "translateZ(0px)",
     flexGrow: 1,
   },
   exampleWrapper: {
-    position: 'relative',
+    position: "relative",
     marginTop: theme.spacing(3),
     height: 380,
   },
@@ -21,62 +21,62 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1, 0),
   },
   speedDial: {
-    position: 'absolute',
-    '&.MuiSpeedDial-directionUp, &.MuiSpeedDial-directionLeft': {
+    position: "absolute",
+    "&.MuiSpeedDial-directionUp, &.MuiSpeedDial-directionLeft": {
       bottom: theme.spacing(2),
       right: theme.spacing(2),
     },
-    '&.MuiSpeedDial-directionDown, &.MuiSpeedDial-directionRight': {
+    "&.MuiSpeedDial-directionDown, &.MuiSpeedDial-directionRight": {
       top: theme.spacing(2),
       left: theme.spacing(2),
     },
   },
-}))
+}));
 
 type TPhaseSelect = {
-  pha_id: number
-  code: string
-}
+  pha_id: number;
+  code: string;
+};
 
-export type TPhaseList = Array<TPhaseSelect>
+export type TPhaseList = Array<TPhaseSelect>;
 
 const NewItemsSpeedDial = () => {
-  const classes = useStyles()
-  const [open, setOpen] = React.useState(false)
-  const dispatch = useDispatch()
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const dispatch = useDispatch();
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const handleOpen = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const PhaseModalData: IModal = {
     type: EModalTypes.phase,
-    title: 'Phase settings',
-    description: '',
-  }
+    title: "Phase settings",
+    description: "",
+  };
 
   const StateModalData: IModal = {
     type: EModalTypes.state,
-    title: 'State settings',
-    description: '',
-  }
+    title: "State settings",
+    description: "",
+  };
 
   const actions = [
     {
-      icon: <span style={{ fontSize: 'smaller' }}>Phase</span>,
-      name: 'Phase',
+      icon: <span style={{ fontSize: "smaller" }}>Phase</span>,
+      name: "Phase",
       modalData: PhaseModalData,
     },
     {
-      icon: <span style={{ fontSize: 'smaller' }}>State</span>,
-      name: 'State',
+      icon: <span style={{ fontSize: "smaller" }}>State</span>,
+      name: "State",
       modalData: StateModalData,
     },
-  ]
+  ];
 
   return (
     <div className={classes.root}>
@@ -106,7 +106,7 @@ const NewItemsSpeedDial = () => {
         </SpeedDial>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default NewItemsSpeedDial
+export default NewItemsSpeedDial;

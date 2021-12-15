@@ -1,28 +1,27 @@
 import React, { Fragment } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
+import { makeStyles } from "@mui/styles";
+import TextField from "@mui/material/TextField";
 import { useState } from "react";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import { Formik } from "formik";
 import { DBService } from "../../../services/db_communication";
 import { useDispatch, useSelector } from "react-redux";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
 import { actionTypes } from "../../../store/actionTypes";
-import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { IConfirmationData } from "../../UIConfirmation/UIConfirmation";
 import { useEffect } from "react";
 import { DBActionTypes } from "../../../services/dbActionTypes";
-import styles from "./ActionForm.module.css";
 import {
   EActionTypes,
   IAction,
   IActionSetting,
 } from "../../workflowItems/Action/Action";
 import { stateDefinition } from "../../workflowItems/State/State";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import FormHelperText from "@mui/material/FormHelperText";
 import { formatCode, formatLabel } from "../../../utils/inputFormatter";
 import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
 import { ESwitch, TStore } from "../../../types/types";
@@ -34,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1),
       marginRight: theme.spacing(1),
-      width: "65%",
+      width: "100%",
       backgroundColor: theme.palette.background.paper,
     },
   },
@@ -43,12 +42,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(1),
     marginRight: theme.spacing(1),
     width: "100%",
-    // [theme.breakpoints.up("md")]: {
-    //   minWidth: 240,
-    // },
-    // [theme.breakpoints.down("md")]: {
-    //   minWidth: 120,
-    // },
   },
   noMarginRight: {
     marginRight: "none",
@@ -56,23 +49,16 @@ const useStyles = makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
-  responsiveFontSize: {
-    // [theme.breakpoints.up("md")]: {
-    //   minWidth: 240,
-    // },
-    [theme.breakpoints.down("md")]: {
-      fontSize: "smaller",
-    },
-  },
   actionForm: {
     display: "flex",
     flexFlow: "column",
     alignItems: "center",
+    width: "65%",
+    margin: "auto",
   },
 
   formRow: {
     display: "flex",
-    // width: "100%",
     justifyContent: "center",
   },
 }));
@@ -293,9 +279,7 @@ const ActionForm = ({ props }: IActionForm) => {
             </FormControl> */}
             <FormControl
               variant="outlined"
-              className={[classes.formControl, classes.responsiveFontSize].join(
-                " "
-              )}
+              className={[classes.formControl].join(" ")}
             >
               <InputLabel>State</InputLabel>
               <Select
@@ -448,6 +432,7 @@ const ActionForm = ({ props }: IActionForm) => {
                 label={actionTypeActionSettingLabelMapping[data.action_type]}
                 variant="outlined"
                 value={actionSettingValue}
+                className={classes.formControl}
                 onChange={(e) =>
                   setData({
                     ...data,
@@ -465,7 +450,7 @@ const ActionForm = ({ props }: IActionForm) => {
           <div
             style={{
               display: "flex",
-              justifyContent: data?.id ? "space-between" : "center",
+              justifyContent: data?.id ? "space-between" : "right",
               margin: "20px",
             }}
           >

@@ -1,18 +1,18 @@
 import React, { Fragment, useEffect } from "react";
 import styles from "./State.module.css";
-import SettingsIcon from "@material-ui/icons/Settings";
+import SettingsIcon from "@mui/icons-material/Settings";
 import { useDispatch, useSelector } from "react-redux";
 import { actionTypes } from "../../../store/actionTypes";
 import { EModalTypes, IModal } from "../../Modal/Modal";
 import { DBActionTypes } from "../../../services/dbActionTypes";
 import { DBService } from "../../../services/db_communication";
 import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import Badge from "@material-ui/core/Badge";
-import Typography from "@material-ui/core/Typography";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import Badge from "@mui/material/Badge";
+import Typography from "@mui/material/Typography";
 import Action, { IAction } from "../Action/Action";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { ESwitch } from "../../../types/types";
 
 export interface stateDefinition {
