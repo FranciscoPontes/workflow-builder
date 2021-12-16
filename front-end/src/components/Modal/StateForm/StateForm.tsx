@@ -1,119 +1,120 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import TextField from '@material-ui/core/TextField'
-import { useState } from 'react'
-import Button from '@material-ui/core/Button'
-import { Formik } from 'formik'
-import { DBService } from '../../../services/db_communication'
-import { useDispatch, useSelector } from 'react-redux'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import { stateDefinition } from '../../State/State'
-import { actionTypes } from '../../../store/actionTypes'
-import DeleteIcon from '@material-ui/icons/Delete'
-import { IConfirmationData } from '../../UIConfirmation/UIConfirmation'
-import { useEffect } from 'react'
-import { DBActionTypes } from '../../../services/dbActionTypes'
-import styles from './StateForm.module.css'
-import { formatCode, formatLabel } from '../../../utils/inputFormatter'
-import { EseverityTypes, ISnackbarData } from '../../SnackBar/SnackBar'
+import React from "react";
+import { makeStyles } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
+import { useState } from "react";
+import Button from "@mui/material/Button";
+import { Formik } from "formik";
+import { DBService } from "../../../services/db_communication";
+import { useDispatch, useSelector } from "react-redux";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { IConfirmationData } from "../../UIConfirmation/UIConfirmation";
+import { useEffect } from "react";
+import { DBActionTypes } from "../../../services/dbActionTypes";
+import { formatCode, formatLabel } from "../../../utils/inputFormatter";
+import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
+import { Box } from "@mui/material";
+import { stateDefinition } from "../../workflowItems/State/State";
+import { actionTypes } from "../../../store/actionTypes";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = {
   root: {
-    '& > *': {
-      margin: theme.spacing(1),
-      width: '65%',
+    "& > *": {
+      // m: 1,
+      width: 0.65,
     },
   },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 240,
-  },
   selectEmpty: {
-    marginTop: theme.spacing(2),
+    mt: 2,
   },
-}))
+  stateForm: {
+    display: "flex",
+    flexFlow: "column",
+    alignItems: "center",
+  },
+};
 
 interface IStateForm {
-  props: stateDefinition
+  props: stateDefinition;
 }
 
 const StateForm = ({ props }: IStateForm) => {
-  const dispatch = useDispatch()
-  const workflowData = useSelector((state) => state.workflowData)
-  const appID = useSelector((state) => state.appData.appID)
-  const classes = useStyles()
-  const selectedPhase = useSelector((state) => state.selectedPhase)
+  const dispatch = useDispatch();
+  const workflowData = useSelector((state) => state.workflowData);
+  const appID = useSelector((state) => state.appData.appID);
+  const classes = useStyles;
+  const selectedPhase = useSelector((state) => state.selectedPhase);
 
   const [data, setData] = useState<stateDefinition>({
-    code: props?.code || '',
-    label: props?.label || '',
+    code: props?.code || "",
+    label: props?.label || "",
     sort_order: props?.sort_order,
-    pha_id: props?.pha_id || selectedPhase || '',
+    pha_id: props?.pha_id || selectedPhase || "",
     id: props?.id || null,
-  })
+  });
 
   const snackbarData: ISnackbarData = {
-    content: `State ${!data.id ? 'created' : 'updated'}!`,
+    content: `State ${!data.id ? "created" : "updated"}!`,
     severity: EseverityTypes.success,
     show: true,
-  }
+  };
 
   const getNewSortOrder = (): number => {
-    if (!workflowData.states) return 1
+    if (!workflowData.states) return 1;
 
     const sortOrderArray: Array<number> = workflowData.states
       .filter((sta) => sta.pha_id === data.pha_id)
-      .map((sta) => sta.sort_order)
+      .map((sta) => sta.sort_order);
 
-    if (sortOrderArray.length === 0) return 1
-    return Math.max(...sortOrderArray) + 1
-  }
+    if (sortOrderArray.length === 0) return 1;
+    return Math.max(...sortOrderArray) + 1;
+  };
 
   const phaseArray = () =>
-    workflowData.phases?.map((pha) => ({ pha_id: pha.id, code: pha.code }))
+    workflowData.phases?.map((pha) => ({ pha_id: pha.id, code: pha.code }));
 
   const saveData = async (formikData, setSubmitting) => {
     const stateData = {
-      pha_id: data.pha_id !== '' ? data.pha_id : null,
+      pha_id: data.pha_id !== "" ? data.pha_id : null,
       app_id: appID,
       code: data.code,
       label: data.label,
       sort_order: data.sort_order,
       id: data.id,
-    }
+    };
     console.log(
       JSON.stringify({
         states: [stateData],
         change_type: DBActionTypes.updateStates,
-      }),
-    )
+      })
+    );
     await DBService.changeData({
       states: [stateData],
       change_type: DBActionTypes.updateStates,
     })
       .then(() => {
-        dispatch({ type: actionTypes.updateSnackbar, data: snackbarData })
-        dispatch({ type: actionTypes.refresh })
+        dispatch({ type: actionTypes.updateSnackbar, data: snackbarData });
+        dispatch({ type: actionTypes.refresh });
       })
       .catch((err) => {
-        console.error(err.message)
+        console.error(err.message);
         dispatch({
           type: actionTypes.updateSnackbar,
           data: {
             ...snackbarData,
             severity: EseverityTypes.error,
-            content: `Error ${!data.id ? 'creating' : 'updating'} state! ${
+            content: `Error ${!data.id ? "creating" : "updating"} state! ${
               err.message
             }`,
           },
-        })
-      })
-    setSubmitting(false)
-    if (data.id) dispatch({ type: actionTypes.hideModal })
-  }
+        });
+      });
+    setSubmitting(false);
+    if (data.id) dispatch({ type: actionTypes.hideModal });
+  };
 
   const deleteState = async () => {
     await DBService.changeData({
@@ -121,15 +122,15 @@ const StateForm = ({ props }: IStateForm) => {
       id: props.id,
     })
       .then(() => {
-        dispatch({ type: actionTypes.refresh })
+        dispatch({ type: actionTypes.refresh });
         dispatch({
           type: actionTypes.updateSnackbar,
-          data: { ...snackbarData, content: 'State deleted!' },
-        })
-        dispatch({ type: actionTypes.hideModal })
+          data: { ...snackbarData, content: "State deleted!" },
+        });
+        dispatch({ type: actionTypes.hideModal });
       })
       .catch((err) => {
-        console.error(err.message)
+        console.error(err.message);
         dispatch({
           type: actionTypes.updateSnackbar,
           data: {
@@ -137,20 +138,20 @@ const StateForm = ({ props }: IStateForm) => {
             severity: EseverityTypes.error,
             content: `Error deleting action! ${err.message}`,
           },
-        })
-      })
-  }
+        });
+      });
+  };
 
   const confirmData: IConfirmationData = {
-    title: 'Delete State?',
+    title: "Delete State?",
     description:
-      'This action will delete all associated dependencies (actions, permissions..)',
+      "This action will delete all associated dependencies (actions, permissions..)",
     callback: deleteState,
-  }
+  };
 
   const tryDelete = () => {
-    dispatch({ type: actionTypes.showConfirmation, data: confirmData })
-  }
+    dispatch({ type: actionTypes.showConfirmation, data: confirmData });
+  };
 
   // when adding new states, keep increasing new sort order for quick batch insert
   useEffect(() => {
@@ -158,9 +159,9 @@ const StateForm = ({ props }: IStateForm) => {
       setData({
         ...data,
         sort_order: getNewSortOrder(),
-      })
+      });
     }
-  }, [data])
+  }, [data]);
 
   // update new sort order when selected phase changes
   useEffect(() => {
@@ -168,15 +169,15 @@ const StateForm = ({ props }: IStateForm) => {
       setData({
         ...data,
         sort_order: props.sort_order,
-      })
-      return
+      });
+      return;
     }
-    console.log('Changing sort order due to phase change..')
+    console.log("Changing sort order due to phase change..");
     setData({
       ...data,
       sort_order: getNewSortOrder(),
-    })
-  }, [data.pha_id])
+    });
+  }, [data.pha_id]);
 
   return (
     <Formik
@@ -186,11 +187,8 @@ const StateForm = ({ props }: IStateForm) => {
       }
     >
       {({ handleSubmit, isSubmitting }) => (
-        <form
-          onSubmit={handleSubmit}
-          className={[classes.root, styles.stateForm].join(' ')}
-        >
-          <FormControl variant="outlined" className={classes.formControl}>
+        <Box sx={{ ...classes.root, ...classes.stateForm }}>
+          <FormControl variant="outlined">
             <InputLabel>Phase</InputLabel>
             <Select
               value={data.pha_id}
@@ -198,7 +196,7 @@ const StateForm = ({ props }: IStateForm) => {
               label="Phase"
               required
             >
-              <MenuItem value={''}>
+              <MenuItem value={""}>
                 <em>None</em>
               </MenuItem>
               {phaseArray().map((pha) => (
@@ -229,11 +227,11 @@ const StateForm = ({ props }: IStateForm) => {
             onChange={(e) => setData({ ...data, label: e.target.value })}
             required
           />
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              margin: '20px',
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: data?.id ? "space-between" : "right",
+              m: "20px",
             }}
           >
             {data?.id ? (
@@ -252,14 +250,16 @@ const StateForm = ({ props }: IStateForm) => {
               color="primary"
               disabled={isSubmitting}
               type="submit"
+              onClick={handleSubmit}
+              size="small"
             >
               Save
             </Button>
-          </div>
-        </form>
+          </Box>
+        </Box>
       )}
     </Formik>
-  )
-}
+  );
+};
 
-export default StateForm
+export default StateForm;

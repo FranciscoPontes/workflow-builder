@@ -1,19 +1,17 @@
 import React, { Fragment, useEffect } from "react";
-import styles from "./State.module.css";
-import SettingsIcon from "@material-ui/icons/Settings";
+import SettingsIcon from "@mui/icons-material/Settings";
 import { useDispatch, useSelector } from "react-redux";
 import { actionTypes } from "../../../store/actionTypes";
 import { EModalTypes, IModal } from "../../Modal/Modal";
 import { DBActionTypes } from "../../../services/dbActionTypes";
 import { DBService } from "../../../services/db_communication";
 import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import Badge from "@material-ui/core/Badge";
-import Typography from "@material-ui/core/Typography";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import Typography from "@mui/material/Typography";
 import Action, { IAction } from "../Action/Action";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { ESwitch } from "../../../types/types";
+import { Box } from "@mui/material";
 
 export interface stateDefinition {
   id: number;
@@ -29,15 +27,79 @@ interface IStateProps {
   actions: Array<IAction>;
 }
 
+const styles = {
+  stateContainer: {
+    display: "flex",
+    mb: "10px",
+    my: "3px",
+    mt: 0,
+    justifyContent: "center",
+  },
+
+  state: {
+    bgcolor: "action.hover",
+    border: "1px solid black",
+    boxShadow: "0px 10px 13px -7px #000000, 5px 5px 15px 5px rgb(0 0 0 / 0%)",
+    width: 0.8,
+    minHeight: "20vh",
+    padding: "10px",
+    m: "10px",
+    mt: "5px",
+    display: "flex",
+    flexFlow: "column",
+  },
+
+  selected: {
+    border: 4,
+    borderColor: "borderSelection.main",
+  },
+
+  stateDependencies: {
+    textAlign: "left",
+    width: 1,
+  },
+
+  // stateDependencies p,
+  // .stateDependencies span {
+  //   font-size: small !important,
+  // }
+
+  /* arrows */
+  arrowContainer: {
+    display: "flex",
+    flexFlow: "column",
+    fontSize: "smaller",
+    justifyContent: "center",
+  },
+
+  arrow: {
+    m: "3px 0",
+  },
+
+  /* gear icon */
+  gear: {
+    cursor: "pointer",
+    height: "fit-content",
+  },
+
+  actionSequence: {
+    display: "flex",
+    flexFlow: "column",
+    m: "auto",
+    alignItems: "center",
+  },
+
+  icon: {
+    cursor: "pointer",
+    color: "text.primary",
+  },
+};
+
 export const State = ({ props, actions }: IStateProps) => {
   const states = useSelector((state) =>
     state.workflowData.states.filter((sta) => sta.pha_id === props.pha_id)
   );
   const selectedState = useSelector((state) => state.selectedState);
-  const classes: Array<string> = [
-    styles.state,
-    selectedState === props.id ? styles.selected : "",
-  ];
 
   const dispatch = useDispatch();
 
@@ -116,56 +178,75 @@ export const State = ({ props, actions }: IStateProps) => {
   };
 
   return (
-    <div className={styles.stateContainer}>
-      <div
-        className={styles.gear}
+    <Box
+      sx={{
+        ...styles.stateContainer,
+      }}
+    >
+      <Box
+        sx={{ ...styles.gear }}
         onClick={() =>
           dispatch({ type: actionTypes.showModal, data: modalData })
         }
       >
-        <SettingsIcon fontSize="small" />
-      </div>
-      <div className={classes.join(" ")}>
-        <span style={{ cursor: "pointer" }} onClick={setSelectedState}>
+        <SettingsIcon fontSize="small" sx={{ ...styles.icon }} />
+      </Box>
+      <Box
+        sx={{
+          ...styles.state,
+          ...(selectedState === props.id && styles.selected),
+        }}
+      >
+        <Typography
+          sx={{ ...styles.icon }}
+          onClick={setSelectedState}
+          align="center"
+        >
           {props.code}
-        </span>
-        {/* State dependencies - actions */}
-        <div className={styles.stateDependencies}>
-          {/* Action sequence */}
-          <div className={styles.actionSequence}>
+        </Typography>
+        <Box sx={{ ...styles.stateDependencies }}>
+          <Box sx={{ ...styles.actionSequence }}>
             {actions?.map((act) => (
               <Action props={act} key={act.id} />
             ))}
-          </div>
-        </div>
-      </div>
-      <div style={{ display: "flex" }}>
-        <div
+          </Box>
+        </Box>
+      </Box>
+      <Box sx={{ display: "flex" }}>
+        <Box
           onClick={changeStateOrderDown}
-          style={{
-            cursor: indexOfThisState !== 0 ? "pointer" : "default",
+          sx={{
             height: "fit-content",
           }}
         >
           <ArrowUpwardIcon
-            color={indexOfThisState !== 0 ? "inherit" : "disabled"}
+            sx={{
+              ...styles.icon,
+              cursor: indexOfThisState !== 0 ? "pointer" : "default",
+              color:
+                indexOfThisState !== 0 ? "text.primary" : "action.disabled",
+            }}
           />
-        </div>
-        <div
+        </Box>
+        <Box
           onClick={changeStateOrderUp}
-          style={{
-            cursor:
-              indexOfThisState + 1 !== statesLenght ? "pointer" : "default",
+          sx={{
             height: "fit-content",
           }}
         >
           <ArrowDownwardIcon
-            color={
-              indexOfThisState + 1 !== statesLenght ? "inherit" : "disabled"
-            }
+            sx={{
+              ...styles.icon,
+              cursor:
+                indexOfThisState + 1 !== statesLenght ? "pointer" : "default",
+              color:
+                indexOfThisState + 1 !== statesLenght
+                  ? "text.primary"
+                  : "action.disabled",
+            }}
           />
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 };

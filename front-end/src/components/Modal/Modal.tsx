@@ -1,56 +1,67 @@
-import React from 'react'
-import Modal from '@material-ui/core/Modal'
-import styles from './Modal.module.css'
-import { makeStyles } from '@material-ui/core/styles'
-import { useState } from 'react'
-import PhaseForm from './PhaseForm/PhaseForm'
-import { useEffect } from 'react'
-import StateForm from './StateForm/StateForm'
-import { phaseDefinition } from '../Phase/Phase'
-import { stateDefinition } from '../State/State'
-import { useDispatch, useSelector } from 'react-redux'
-import { actionTypes } from '../../store/actionTypes'
-import ActionForm from './ActionForm/ActionForm'
-import { IAction } from '../workflowItems/Action/Action'
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    '& > *': {
-      margin: theme.spacing(1),
-      width: '25ch',
-    },
-  },
-}))
+import React from "react";
+import Modal from "@mui/material/Modal";
+import PhaseForm from "./PhaseForm/PhaseForm";
+import StateForm from "./StateForm/StateForm";
+import { useDispatch, useSelector } from "react-redux";
+import { actionTypes } from "../../store/actionTypes";
+import ActionForm from "./ActionForm/ActionForm";
+import { IAction } from "../workflowItems/Action/Action";
+import { phaseDefinition } from "../workflowItems/Phase/Phase";
+import { stateDefinition } from "../workflowItems/State/State";
+import { Box, Typography } from "@mui/material";
 
 export enum EModalTypes {
-  phase = 'PHASE',
-  state = 'STATE',
-  action = 'ACTION',
+  phase = "PHASE",
+  state = "STATE",
+  action = "ACTION",
 }
 
 export interface EModalMetadataTypes {
-  phaseMetadata?: phaseDefinition
-  stateMetadata?: stateDefinition
-  actionMetadata?: IAction
+  phaseMetadata?: phaseDefinition;
+  stateMetadata?: stateDefinition;
+  actionMetadata?: IAction;
 }
 
 export type IModal = {
-  isOpen?: boolean
-  title: string
-  description: string
-  type: EModalTypes
-  metadata?: EModalMetadataTypes
-}
+  isOpen?: boolean;
+  title: string;
+  description: string;
+  type: EModalTypes;
+  metadata?: EModalMetadataTypes;
+};
 
 export const SimpleModal = (props: IModal) => {
-  const classes = useStyles()
-  const dispatch = useDispatch()
-  const modalData = useSelector((state) => state.modalData)
+  const dispatch = useDispatch();
 
   const body = (
-    <div className={styles.paper}>
-      <h2>{props.title}</h2>
-      <p>{props.description}</p>
+    <Box
+      sx={{
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        width: "30vw",
+        margin: "auto",
+        border: "2px solid #000",
+        bgcolor: "background.default",
+        borderRadius: "2%",
+        padding: "10px",
+        textAlign: "center",
+        transform: "translate(-50%, -50%)",
+        height: "fit-content",
+        maxHeight: "70vh",
+        overflow: "auto",
+      }}
+    >
+      <Typography
+        variant="h6"
+        sx={{ mb: 2 }}
+        sx={{ color: "text.primary", mb: 2 }}
+      >
+        {props.title}
+      </Typography>
+      <Typography variant="body2" sx={{ color: "text.primary" }}>
+        {props.description}
+      </Typography>
       {props.type === EModalTypes.phase ? (
         <PhaseForm props={props?.metadata?.phaseMetadata} />
       ) : props.type === EModalTypes.state ? (
@@ -58,11 +69,11 @@ export const SimpleModal = (props: IModal) => {
       ) : (
         <ActionForm props={props?.metadata?.actionMetadata} />
       )}
-    </div>
-  )
+    </Box>
+  );
 
   return (
-    <div>
+    <Box>
       <Modal
         open={props.isOpen}
         onClose={() =>
@@ -73,6 +84,6 @@ export const SimpleModal = (props: IModal) => {
       >
         {body}
       </Modal>
-    </div>
-  )
-}
+    </Box>
+  );
+};

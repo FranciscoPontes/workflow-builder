@@ -1,48 +1,58 @@
 import React, { Fragment } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
+import { makeStyles } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
 import { useState } from "react";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import { Formik } from "formik";
 import { DBService } from "../../../services/db_communication";
 import { useDispatch, useSelector } from "react-redux";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
 import { actionTypes } from "../../../store/actionTypes";
-import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { IConfirmationData } from "../../UIConfirmation/UIConfirmation";
 import { useEffect } from "react";
 import { DBActionTypes } from "../../../services/dbActionTypes";
-import styles from "./ActionForm.module.css";
 import {
   EActionTypes,
   IAction,
   IActionSetting,
 } from "../../workflowItems/Action/Action";
 import { stateDefinition } from "../../workflowItems/State/State";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import FormHelperText from "@mui/material/FormHelperText";
 import { formatCode, formatLabel } from "../../../utils/inputFormatter";
 import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
 import { ESwitch, TStore } from "../../../types/types";
 import CustomSwitch from "../../Switch";
+import Box from "@mui/material/Box";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = {
   root: {
     "& > *": {
-      margin: theme.spacing(1),
-      width: "65%",
+      width: 1,
     },
   },
   formControl: {
-    margin: theme.spacing(1),
-    minWidth: 240,
+    width: 1,
   },
   selectEmpty: {
-    marginTop: theme.spacing(2),
+    mt: 2,
   },
-}));
+  actionForm: {
+    display: "flex",
+    flexFlow: "column",
+    alignItems: "center",
+    width: 0.65,
+    m: "auto",
+  },
+
+  formRow: {
+    display: "flex",
+    justifyContent: "center",
+  },
+};
 
 interface IActionForm {
   props: IAction;
@@ -52,7 +62,7 @@ const ActionForm = ({ props }: IActionForm) => {
   const dispatch = useDispatch();
   const workflowData = useSelector((state: TStore) => state.workflowData);
   const appID = useSelector((state: TStore) => state.appData.appID);
-  const classes = useStyles();
+  const classes = useStyles;
   const selectedState = useSelector((state: TStore) => state.selectedState);
 
   const validActionTypes: Array<EActionTypes> = [
@@ -220,15 +230,16 @@ const ActionForm = ({ props }: IActionForm) => {
       }
     >
       {({ handleSubmit, isSubmitting }) => (
-        <form
-          onSubmit={handleSubmit}
-          className={[classes.root, styles.actionForm].join(" ")}
-        >
-          <div className={styles.formRow}>
-            <div
-              style={{
-                width: "50%",
-                marginLeft: "20px",
+        <Box sx={{ ...classes.root, ...classes.actionForm }}>
+          <Box sx={{ ...classes.formRow }}>
+            <Box
+              sx={{
+                width: 1,
+                ml: "5px",
+                display: "flex",
+                "& .MuiFormGroup-root": {
+                  justifyContent: "center",
+                },
               }}
             >
               <CustomSwitch
@@ -242,22 +253,8 @@ const ActionForm = ({ props }: IActionForm) => {
                   })
                 }
               />
-            </div>
-            {/* <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel>User Action</InputLabel>
-              <Select
-                value={data.user_action_yn}
-                onChange={(e) =>
-                  setData({ ...data, user_action_yn: e.target.value })
-                }
-                label="User Action"
-                required
-              >
-                <MenuItem value="N">No</MenuItem>
-                <MenuItem value="Y">Yes</MenuItem>
-              </Select>
-            </FormControl> */}
-            <FormControl variant="outlined" className={classes.formControl}>
+            </Box>
+            <FormControl variant="outlined" sx={{ ...classes.formControl }}>
               <InputLabel>State</InputLabel>
               <Select
                 value={data.sta_id}
@@ -275,16 +272,19 @@ const ActionForm = ({ props }: IActionForm) => {
                 ))}
               </Select>
             </FormControl>
-          </div>
-          <div className={styles.formRow}>
-            <FormControl variant="outlined" className={classes.formControl}>
+          </Box>
+          <Box sx={{ ...classes.formRow, ...classes.noMarginRight }}>
+            <FormControl
+              variant="outlined"
+              sx={{ ...classes.formControl, mr: 1 }}
+            >
               <InputLabel>Request type</InputLabel>
               <Select
                 value={data.reqt_id}
                 onChange={(e) =>
                   setData({ ...data, reqt_id: parseInt(e.target.value) })
                 }
-                label="State"
+                label="Request Type"
               >
                 <MenuItem value={""}>
                   <em>None</em>
@@ -299,7 +299,10 @@ const ActionForm = ({ props }: IActionForm) => {
                 Leave null to apply to all request types
               </FormHelperText> */}
             </FormControl>
-            <FormControl variant="outlined" className={classes.formControl}>
+            <FormControl
+              variant="outlined"
+              sx={{ ...classes.formControl, ...classes.noMarginRight }}
+            >
               <InputLabel>Action Type</InputLabel>
               <Select
                 value={data.action_type}
@@ -319,7 +322,7 @@ const ActionForm = ({ props }: IActionForm) => {
                 ))}
               </Select>
             </FormControl>
-          </div>
+          </Box>
           <TextField
             autoFocus
             label="Code"
@@ -344,7 +347,7 @@ const ActionForm = ({ props }: IActionForm) => {
 
           {data.id ? (
             data.action_type === EActionTypes.stateChange ? (
-              <FormControl variant="outlined" className={classes.formControl}>
+              <FormControl variant="outlined" sx={{ ...classes.formControl }}>
                 <InputLabel>Next state code</InputLabel>
                 <Select
                   value={actionSettingValue}
@@ -374,7 +377,7 @@ const ActionForm = ({ props }: IActionForm) => {
                 </Select>
               </FormControl>
             ) : data.action_type === EActionTypes.mail ? (
-              <FormControl variant="outlined" className={classes.formControl}>
+              <FormControl variant="outlined" sx={{ ...classes.formControl }}>
                 <InputLabel>Mail Template code</InputLabel>
                 <Select
                   value={actionSettingValue}
@@ -406,6 +409,7 @@ const ActionForm = ({ props }: IActionForm) => {
                 label={actionTypeActionSettingLabelMapping[data.action_type]}
                 variant="outlined"
                 value={actionSettingValue}
+                sx={{ ...classes.formControl }}
                 onChange={(e) =>
                   setData({
                     ...data,
@@ -420,11 +424,11 @@ const ActionForm = ({ props }: IActionForm) => {
               />
             )
           ) : null}
-          <div
-            style={{
+          <Box
+            sx={{
               display: "flex",
-              justifyContent: data?.id ? "space-between" : "center",
-              margin: "20px",
+              justifyContent: data?.id ? "space-between" : "right",
+              m: "20px",
             }}
           >
             {data?.id ? (
@@ -442,12 +446,14 @@ const ActionForm = ({ props }: IActionForm) => {
               variant="contained"
               color="primary"
               disabled={isSubmitting}
+              onClick={handleSubmit}
               type="submit"
+              size="small"
             >
               Save
             </Button>
-          </div>
-        </form>
+          </Box>
+        </Box>
       )}
     </Formik>
   );
