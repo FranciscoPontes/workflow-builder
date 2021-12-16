@@ -37,7 +37,7 @@ const styles = {
   },
 
   state: {
-    backgroundColor: "#dee2e2",
+    bgcolor: "action.hover",
     border: "1px solid black",
     boxShadow: "0px 10px 13px -7px #000000, 5px 5px 15px 5px rgb(0 0 0 / 0%)",
     width: 0.8,
@@ -50,7 +50,8 @@ const styles = {
   },
 
   selected: {
-    border: "4px solid #363533",
+    border: 4,
+    borderColor: "borderSelection.main",
   },
 
   stateDependencies: {
@@ -72,7 +73,6 @@ const styles = {
   },
 
   arrow: {
-    cursor: "pointer",
     m: "3px 0",
   },
 
@@ -87,6 +87,11 @@ const styles = {
     flexFlow: "column",
     m: "auto",
     alignItems: "center",
+  },
+
+  icon: {
+    cursor: "pointer",
+    color: "text.primary",
   },
 };
 
@@ -184,7 +189,7 @@ export const State = ({ props, actions }: IStateProps) => {
           dispatch({ type: actionTypes.showModal, data: modalData })
         }
       >
-        <SettingsIcon fontSize="small" />
+        <SettingsIcon fontSize="small" sx={{ ...styles.icon }} />
       </Box>
       <Box
         sx={{
@@ -193,7 +198,7 @@ export const State = ({ props, actions }: IStateProps) => {
         }}
       >
         <Typography
-          sx={{ cursor: "pointer" }}
+          sx={{ ...styles.icon }}
           onClick={setSelectedState}
           align="center"
         >
@@ -211,26 +216,34 @@ export const State = ({ props, actions }: IStateProps) => {
         <Box
           onClick={changeStateOrderDown}
           sx={{
-            cursor: indexOfThisState !== 0 ? "pointer" : "default",
             height: "fit-content",
           }}
         >
           <ArrowUpwardIcon
-            color={indexOfThisState !== 0 ? "inherit" : "disabled"}
+            sx={{
+              ...styles.icon,
+              cursor: indexOfThisState !== 0 ? "pointer" : "default",
+              color:
+                indexOfThisState !== 0 ? "text.primary" : "action.disabled",
+            }}
           />
         </Box>
         <Box
           onClick={changeStateOrderUp}
           sx={{
-            cursor:
-              indexOfThisState + 1 !== statesLenght ? "pointer" : "default",
             height: "fit-content",
           }}
         >
           <ArrowDownwardIcon
-            color={
-              indexOfThisState + 1 !== statesLenght ? "inherit" : "disabled"
-            }
+            sx={{
+              ...styles.icon,
+              cursor:
+                indexOfThisState + 1 !== statesLenght ? "pointer" : "default",
+              color:
+                indexOfThisState + 1 !== statesLenght
+                  ? "text.primary"
+                  : "action.disabled",
+            }}
           />
         </Box>
       </Box>

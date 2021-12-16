@@ -27,7 +27,8 @@ const useStyles = {
     m: "auto",
     my: "10px",
     borderRadius: "5%",
-    backgroundColor: "white",
+    bgcolor: "action.hover",
+    color: "text.primary",
     width: 0.9,
   },
 

@@ -32,6 +32,10 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
   },
+  icon: {
+    color: "text.primary",
+    cursor: "pointer",
+  },
 };
 
 const Phase = (props: phaseDefinition) => {
@@ -138,9 +142,8 @@ const Phase = (props: phaseDefinition) => {
               data: phaseModalData,
             })
           }
-          sx={{ cursor: "pointer" }}
         >
-          <SettingsIcon fontSize="small" />
+          <SettingsIcon fontSize="small" sx={{ ...styles.icon }} />
         </Box>
         {stateCount() !== 0 ? (
           <Box
@@ -150,12 +153,11 @@ const Phase = (props: phaseDefinition) => {
                 data: handlePhaseCollapse(),
               })
             }
-            sx={{ cursor: "pointer" }}
           >
             {collapsedPhases.includes(props.id) ? (
-              <ArrowDropDownIcon />
+              <ArrowDropDownIcon sx={{ ...styles.icon }} />
             ) : (
-              <ArrowDropUpIcon />
+              <ArrowDropUpIcon sx={{ ...styles.icon }} />
             )}
           </Box>
         ) : null}
@@ -163,30 +165,32 @@ const Phase = (props: phaseDefinition) => {
       <Typography
         variant="body1"
         onClick={changeSelectedPhase}
-        sx={{ cursor: "pointer" }}
+        sx={{ ...styles.icon }}
       >
         {props.code}
       </Typography>
       <Box sx={{ display: "flex" }}>
-        <Box
-          onClick={changePhaseOrderDown}
-          sx={{ cursor: indexOfThisPhase !== 0 ? "pointer" : "default" }}
-        >
+        <Box onClick={changePhaseOrderDown}>
           <ArrowUpwardIcon
-            color={indexOfThisPhase !== 0 ? "inherit" : "disabled"}
+            sx={{
+              ...styles.icon,
+              cursor: indexOfThisPhase !== 0 ? "pointer" : "default",
+              color:
+                indexOfThisPhase !== 0 ? "text.primary" : "action.disabled",
+            }}
           />
         </Box>
-        <Box
-          onClick={changePhaseOrderUp}
-          sx={{
-            cursor:
-              indexOfThisPhase + 1 !== phasesLenght ? "pointer" : "default",
-          }}
-        >
+        <Box onClick={changePhaseOrderUp}>
           <ArrowDownwardIcon
-            color={
-              indexOfThisPhase + 1 !== phasesLenght ? "inherit" : "disabled"
-            }
+            sx={{
+              ...styles.icon,
+              cursor:
+                indexOfThisPhase + 1 !== phasesLenght ? "pointer" : "default",
+              color:
+                indexOfThisPhase + 1 !== phasesLenght
+                  ? "text.primary"
+                  : "action.disabled",
+            }}
           />
         </Box>
       </Box>

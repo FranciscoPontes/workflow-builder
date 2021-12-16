@@ -87,6 +87,11 @@ const CustomSwitch = (props: ICustomSwitchProps) => {
           />
         }
         label={props.label}
+        sx={{
+          "&.MuiFormControlLabel-root": {
+            color: "text.primary",
+          },
+        }}
       />
     </FormGroup>
   );

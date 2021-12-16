@@ -33,7 +33,7 @@ const styles = {
   box: {
     width: 0.9,
     justifyContent: "center",
-    backgroundColor: "action.disabled",
+    bgcolor: "background.default",
     overflow: "auto",
   },
 
@@ -49,7 +49,8 @@ const styles = {
   },
 
   selected: {
-    border: "4px solid #363533",
+    border: 4,
+    borderColor: "borderSelection.main",
   },
 
   states: {

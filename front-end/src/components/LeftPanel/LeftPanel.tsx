@@ -4,7 +4,7 @@ import { Box, Typography } from "@mui/material";
 
 const useStyles = {
   leftPanel: {
-    backgroundColor: "divider",
+    bgcolor: "background.paper",
     width: "10vw",
     mr: 2,
     overflow: "auto",
@@ -18,7 +18,7 @@ const LeftPanel = () => {
 
   return (
     <Box sx={{ ...classes.leftPanel }}>
-      <Typography variant="h6" align="center">
+      <Typography variant="h6" align="center" sx={{ color: "text.primary" }}>
         Elements
       </Typography>
       <ElementList />

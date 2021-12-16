@@ -52,10 +52,16 @@ export const SimpleModal = (props: IModal) => {
         overflow: "auto",
       }}
     >
-      <Typography variant="h6" sx={{ mb: 2 }}>
+      <Typography
+        variant="h6"
+        sx={{ mb: 2 }}
+        sx={{ color: "text.primary", mb: 2 }}
+      >
         {props.title}
       </Typography>
-      <Typography variant="body2">{props.description}</Typography>
+      <Typography variant="body2" sx={{ color: "text.primary" }}>
+        {props.description}
+      </Typography>
       {props.type === EModalTypes.phase ? (
         <PhaseForm props={props?.metadata?.phaseMetadata} />
       ) : props.type === EModalTypes.state ? (

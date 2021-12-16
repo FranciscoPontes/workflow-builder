@@ -64,6 +64,13 @@ const styles = {
   automaticAction: {
     backgroundColor: "#a29a9a",
   },
+
+  icon: {
+    cursor: "pointer",
+  },
+  themeColor: {
+    color: "text.primary",
+  },
 };
 
 const Action = ({ props }: IActionProps) => {
@@ -168,7 +175,7 @@ const Action = ({ props }: IActionProps) => {
         flexFlow: "column",
       }}
     >
-      <Typography variant="body2">
+      <Typography variant="body2" sx={{ ...styles.themeColor }}>
         {props.action_type === EActionTypes.mail
           ? `Mail code: ${getCorrectActionSetting[0].string_value || ""}`
           : props.action_type === EActionTypes.plsql
@@ -179,7 +186,7 @@ const Action = ({ props }: IActionProps) => {
             }`
           : ""}
       </Typography>
-      <Typography variant="body2">
+      <Typography variant="body2" sx={{ ...styles.themeColor }}>
         {`Request type: ${
           props.reqt_id
             ? requestTypes.filter((reqt) => reqt.id === props.reqt_id)[0].code
@@ -192,12 +199,15 @@ const Action = ({ props }: IActionProps) => {
   return (
     <Box sx={{ display: "flex", width: "80%" }}>
       <Box
-        sx={{ cursor: "pointer", height: "fit-content" }}
+        sx={{ height: "fit-content" }}
         onClick={() =>
           dispatch({ type: actionTypes.showModal, data: modalData })
         }
       >
-        <SettingsIcon fontSize="small" />
+        <SettingsIcon
+          fontSize="small"
+          sx={{ ...styles.themeColor, ...styles.icon }}
+        />
       </Box>
       <Box
         sx={{
@@ -213,7 +223,7 @@ const Action = ({ props }: IActionProps) => {
             flexFlow: "column",
           }}
         >
-          <Typography variant="body1">
+          <Typography variant="body1" sx={{ ...styles.themeColor }}>
             {`${props.label} - ${
               props.user_action_yn !== "Y" ? "Automatic action" : "User Action"
             }`}
@@ -221,37 +231,45 @@ const Action = ({ props }: IActionProps) => {
           {actionSettingInfo}
         </Box>
         {props.action_type === EActionTypes.mail ? (
-          <MailIcon />
+          <MailIcon sx={{ ...styles.themeColor }} />
         ) : props.action_type === EActionTypes.stateChange ? (
-          <TrendingFlatIcon />
+          <TrendingFlatIcon sx={{ ...styles.themeColor }} />
         ) : (
-          <NewReleasesIcon />
+          <NewReleasesIcon sx={{ ...styles.themeColor }} />
         )}
       </Box>
       <Box sx={{ display: "flex" }}>
         <Box
           onClick={changeActionOrderDown}
           sx={{
-            cursor: indexOfThisAction !== 0 ? "pointer" : "default",
             height: "fit-content",
           }}
         >
           <ArrowUpwardIcon
-            color={indexOfThisAction !== 0 ? "inherit" : "disabled"}
+            sx={{
+              ...styles.themeColor,
+              color:
+                indexOfThisAction !== 0 ? "text.primary" : "action.disabled",
+              cursor: indexOfThisAction !== 0 ? "pointer" : "default",
+            }}
           />
         </Box>
         <Box
           onClick={changeActionOrderUp}
           sx={{
-            cursor:
-              indexOfThisAction + 1 !== actionsLenght ? "pointer" : "default",
             height: "fit-content",
           }}
         >
           <ArrowDownwardIcon
-            color={
-              indexOfThisAction + 1 !== actionsLenght ? "inherit" : "disabled"
-            }
+            sx={{
+              ...styles.themeColor,
+              color:
+                indexOfThisAction + 1 !== actionsLenght
+                  ? "text.primary"
+                  : "action.disabled",
+              cursor:
+                indexOfThisAction + 1 !== actionsLenght ? "pointer" : "default",
+            }}
           />
         </Box>
       </Box>

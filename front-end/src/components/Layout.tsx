@@ -40,6 +40,8 @@ const styles = {
   layout: {
     display: "flex",
     height: "90vh",
+    p: 2,
+    width: "100%",
   },
 
   objectList: {
@@ -197,7 +199,7 @@ const Layout = ({ props }: ILayout) => {
   }, [refresh]);
 
   return (
-    <Box sx={{ ...styles.layout, bgcolor: "background.default" }}>
+    <Box sx={{ ...styles.layout, bgcolor: "rgba(0, 0, 0, 0.12)" }}>
       {workflowData ? (
         <Fragment>
           <LeftPanel />

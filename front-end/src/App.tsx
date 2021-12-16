@@ -9,6 +9,8 @@ import {
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import IconButton from "@mui/material/IconButton";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { Box } from "@mui/material";
 
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -34,10 +36,6 @@ let theme = createTheme({
 });
 
 theme = createTheme(theme, {
-  palette: {
-    primary: { main: "#FF5027" },
-    secondary: { main: "#d32f2f", dark: "#9B9593" },
-  },
   components: {
     MuiSelect: {
       styleOverrides: {
@@ -113,7 +111,10 @@ theme = createTheme(theme, {
 theme = responsiveFontSizes(theme);
 
 const App = ({ props }: ILayout) => {
-  const [mode, setMode] = useState("light");
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const [mode, setMode] = useState(prefersDarkMode ? "dark" : "light");
+
   const colorMode = useMemo(
     () => ({
       toggleColorMode: () => {
@@ -128,30 +129,42 @@ const App = ({ props }: ILayout) => {
       createTheme({
         ...theme,
         palette: {
-          // ...theme.palette,
-          mode: mode,
+          mode,
+          ...(mode === "light"
+            ? {
+                primary: { main: "#FF5027" },
+                secondary: { main: "#d32f2f", dark: "#9B9593" },
+                borderSelection: { main: "rgb(178, 56, 27)" },
+              }
+            : {
+                primary: { main: "#FF5027" },
+                secondary: { main: "#d32f2f", dark: "#9B9593" },
+                background: { default: "#444343", paper: "#444343" },
+                borderSelection: { main: "rgb(178, 56, 27)" },
+              }),
         },
       }),
     [mode]
   );
 
   return (
-    <div>
+    <Box sx={{ display: "flex" }}>
       <ColorModeContext.Provider value={colorMode}>
         {/* <StylesProvider generateClassName={generateClassName}> */}
         <ThemeProvider theme={updatedTheme}>
           <Layout props={props} />
           <IconButton
-            sx={{ ml: 1 }}
+            sx={{ ml: 1, alignSelf: "baseline" }}
             onClick={colorMode.toggleColorMode}
             color="inherit"
+            size="large"
           >
             {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
         </ThemeProvider>
         {/* </StylesProvider> */}
       </ColorModeContext.Provider>
-    </div>
+    </Box>
   );
 };
 
