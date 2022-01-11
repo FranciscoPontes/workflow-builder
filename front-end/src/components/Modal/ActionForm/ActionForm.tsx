@@ -165,7 +165,7 @@ const ActionForm = ({ props }: IActionForm) => {
 
   const tryDelete = useDeleteElement({
     dataToPost: {
-      change_type: DBActionTypes.removeState,
+      change_type: DBActionTypes.removeAction,
       id: props?.id,
     },
     customErrorMessage: "Error deleting action!",
