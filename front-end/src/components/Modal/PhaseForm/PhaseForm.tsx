@@ -2,7 +2,7 @@ import React from "react";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import Button from "@mui/material/Button";
-import { Formik } from "formik";
+import { ErrorMessage, Formik } from "formik";
 import { DBService } from "../../../services/db_communication";
 import { useDispatch, useSelector } from "react-redux";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -20,6 +20,7 @@ import {
   useDeleteElement,
   useUploadFormData,
 } from "../formHooks";
+import * as Yup from "yup";
 
 const useStyles = {
   root: {
@@ -115,14 +116,20 @@ const PhaseForm = ({ props }: IPhaseForm) => {
     }
   }, [workflowData]);
 
+  const validationSchema = Yup.object().shape({
+    code: Yup.string().required("Phase code required!"),
+    label: Yup.string().required("Phase label required!"),
+  });
+
   return (
     <Formik
       initialValues={data}
       onSubmit={(formikData, { setSubmitting }) =>
         saveData(formikData, setSubmitting)
       }
+      validationSchema={validationSchema}
     >
-      {({ handleSubmit, isSubmitting }) => (
+      {({ handleSubmit, isSubmitting, errors, touched }) => (
         <Box
           sx={{
             ...classes.root,
@@ -132,6 +139,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
           <TextField
             autoFocus
             id="phase-code"
+            name="code"
             label="Code"
             variant="outlined"
             value={data.code}
@@ -144,14 +152,17 @@ const PhaseForm = ({ props }: IPhaseForm) => {
             }
             required
           />
+          {touched.code && errors.code && <div>{errors.code}</div>}
           <TextField
             id="phase-label"
             label="Label"
+            name="label"
             variant="outlined"
             value={data.label}
             onChange={(e) => setData({ ...data, label: e.target.value })}
             required
           />
+          {touched.label && errors.label && <div>{errors.label}</div>}
           <ButtonRegion
             handleSubmit={handleSubmit}
             id={props?.id}
