@@ -53,6 +53,8 @@ const StateForm = ({ props }: IStateForm) => {
   const classes = useStyles;
   const selectedPhase = useSelector((state) => state.selectedPhase);
 
+  const [closeFormAfterwards, setCloseFormAfterwards] = useState(true);
+
   const [data, setData] = useState<stateDefinition>({
     code: props?.code || "",
     label: props?.label || "",
@@ -102,7 +104,7 @@ const StateForm = ({ props }: IStateForm) => {
   const uploadData = useUploadFormData({
     dataToPost,
     customErrorMessage,
-    hideModalAfterwards: data.id !== null,
+    hideModalAfterwards: data.id !== null || (!data.id && closeFormAfterwards),
     snackbarData,
   });
 
@@ -195,6 +197,7 @@ const StateForm = ({ props }: IStateForm) => {
             required
           />
           <ButtonRegion
+            closeFormAfterwards={(value) => setCloseFormAfterwards(value)}
             handleSubmit={handleSubmit}
             id={data?.id}
             isSubmitting={isSubmitting}

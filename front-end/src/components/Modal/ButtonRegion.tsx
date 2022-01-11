@@ -7,6 +7,7 @@ interface IButtonRegionProps {
   tryDelete: () => void;
   handleSubmit: () => void;
   isSubmitting: boolean;
+  closeFormAfterwards: (value: boolean) => void;
 }
 
 const ButtonRegion = ({
@@ -14,6 +15,7 @@ const ButtonRegion = ({
   tryDelete,
   handleSubmit,
   isSubmitting,
+  closeFormAfterwards,
 }: IButtonRegionProps) => {
   return (
     <Box
@@ -34,15 +36,36 @@ const ButtonRegion = ({
           delete
         </Button>
       ) : null}
+      {!id && (
+        <Button
+          variant="contained"
+          color="success"
+          disabled={isSubmitting}
+          type="submit"
+          onClick={() => {
+            closeFormAfterwards(false);
+            handleSubmit();
+          }}
+          size="small"
+        >
+          Create & create another
+        </Button>
+      )}
       <Button
         variant="contained"
         color="primary"
         disabled={isSubmitting}
         type="submit"
-        onClick={handleSubmit}
+        onClick={() => {
+          closeFormAfterwards(true);
+          handleSubmit();
+        }}
         size="small"
+        sx={{
+          ml: 2,
+        }}
       >
-        Save
+        {`${!id ? "Create" : "Save"} & close`}
       </Button>
     </Box>
   );

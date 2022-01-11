@@ -71,6 +71,8 @@ const ActionForm = ({ props }: IActionForm) => {
   const classes = useStyles;
   const selectedState = useSelector((state: TStore) => state.selectedState);
 
+  const [closeFormAfterwards, setCloseFormAfterwards] = useState(true);
+
   const validActionTypes: Array<EActionTypes> = [
     EActionTypes.mail,
     EActionTypes.plsql,
@@ -97,7 +99,7 @@ const ActionForm = ({ props }: IActionForm) => {
   const [data, setData] = useState<IAction>({
     action_type: props?.action_type || "",
     code: props?.code || "",
-    id: props?.id,
+    id: props?.id || null,
     label: props?.label || "",
     sta_id: props?.sta_id || selectedState || "",
     user_action_yn: props?.user_action_yn || ESwitch.y,
@@ -148,7 +150,7 @@ const ActionForm = ({ props }: IActionForm) => {
   const uploadData = useUploadFormData({
     dataToPost,
     customErrorMessage,
-    hideModalAfterwards: data.id !== null,
+    hideModalAfterwards: data.id !== null || (!data.id && closeFormAfterwards),
     snackbarData,
   });
 
@@ -396,6 +398,7 @@ const ActionForm = ({ props }: IActionForm) => {
             )
           ) : null}
           <ButtonRegion
+            closeFormAfterwards={(value) => setCloseFormAfterwards(value)}
             handleSubmit={handleSubmit}
             id={data?.id}
             isSubmitting={isSubmitting}

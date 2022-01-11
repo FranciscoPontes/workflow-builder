@@ -48,6 +48,8 @@ const PhaseForm = ({ props }: IPhaseForm) => {
 
   const getNewSortOrder = useCalculateNewSortOrder(workflowData.phases);
 
+  const [closeFormAfterwards, setCloseFormAfterwards] = useState(true);
+
   const [data, setData] = useState<phaseDefinition>({
     code: props?.code || "",
     label: props?.label || "",
@@ -79,7 +81,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
   const uploadData = useUploadFormData({
     dataToPost,
     customErrorMessage,
-    hideModalAfterwards: data.id !== null,
+    hideModalAfterwards: data.id !== null || (!data.id && closeFormAfterwards),
     snackbarData,
   });
 
@@ -153,6 +155,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
             required
           />
           <ButtonRegion
+            closeFormAfterwards={(value) => setCloseFormAfterwards(value)}
             handleSubmit={handleSubmit}
             id={props?.id}
             isSubmitting={isSubmitting}
