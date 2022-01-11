@@ -27,6 +27,12 @@ import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
 import { ESwitch, TStore } from "../../../types/types";
 import CustomSwitch from "../../Switch";
 import Box from "@mui/material/Box";
+import ButtonRegion from "../ButtonRegion";
+import {
+  useCalculateNewSortOrder,
+  useDeleteElement,
+  useUploadFormData,
+} from "../formHooks";
 
 const useStyles = {
   root: {
@@ -109,16 +115,9 @@ const ActionForm = ({ props }: IActionForm) => {
   const actionSettingValue: string =
     data.action_settings[0]?.string_value || "";
 
-  const getNewSortOrder = (): number => {
-    if (!workflowData.actions) return 1;
-
-    const sortOrderArray: Array<number> = workflowData.actions
-      ?.filter((act) => act.sta_id === data.sta_id)
-      .map((act) => act.sort_order);
-
-    if (sortOrderArray.length === 0) return 1;
-    return Math.max(...sortOrderArray) + 1;
-  };
+  const getNewSortOrder = useCalculateNewSortOrder(
+    workflowData.actions?.filter((act) => act.sta_id === data.sta_id)
+  );
 
   const stateArray = (): Array<{ id: number; label: string }> =>
     workflowData.states?.map((sta: stateDefinition) => ({
@@ -130,76 +129,50 @@ const ActionForm = ({ props }: IActionForm) => {
 
   const requestTypes = () => workflowData.request_types?.map((reqt) => reqt);
 
+  const actionData = {
+    ...data,
+    app_id: appID,
+    reqt_id: data.reqt_id !== "" ? data.reqt_id : null,
+    sta_id: data.sta_id !== "" ? data.sta_id : null,
+  };
+
+  const dataToPost = {
+    actions: [actionData],
+    change_type: DBActionTypes.updateActions,
+  };
+
+  const customErrorMessage = `Error ${
+    !data.id ? "creating" : "updating"
+  } action!`;
+
+  const uploadData = useUploadFormData({
+    dataToPost,
+    customErrorMessage,
+    hideModalAfterwards: data.id !== null,
+    snackbarData,
+  });
+
   const saveData = async (formikData, setSubmitting) => {
-    const actionData = {
-      ...data,
-      app_id: appID,
-      reqt_id: data.reqt_id !== "" ? data.reqt_id : null,
-      sta_id: data.sta_id !== "" ? data.sta_id : null,
-    };
-    console.log(JSON.stringify(actionData));
-
-    await DBService.changeData({
-      actions: [actionData],
-      change_type: DBActionTypes.updateActions,
-    })
-      .then(() => {
-        dispatch({ type: actionTypes.updateSnackbar, data: snackbarData });
-        dispatch({ type: actionTypes.refresh });
-      })
-      .catch((err) => {
-        console.error(err.message);
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: {
-            ...snackbarData,
-            severity: EseverityTypes.error,
-            content: `Error ${!data.id ? "creating" : "updating"} action! ${
-              err.message
-            }`,
-          },
-        });
-      });
-    setSubmitting(false);
-    if (data.id) dispatch({ type: actionTypes.hideModal });
+    uploadData(setSubmitting);
   };
 
-  const deleteAction = async () => {
-    await DBService.changeData({
-      change_type: DBActionTypes.removeAction,
-      id: props.id,
-    })
-      .then(() => {
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: { ...snackbarData, content: "Action deleted!" },
-        });
-        dispatch({ type: actionTypes.refresh });
-        dispatch({ type: actionTypes.hideModal });
-      })
-      .catch((err) => {
-        console.error(err.message);
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: {
-            ...snackbarData,
-            severity: EseverityTypes.error,
-            content: `Error deleting action! ${err.message}`,
-          },
-        });
-      });
-  };
-
-  const confirmData: IConfirmationData = {
+  const confirmDeleteDialogMetadata: IConfirmationData = {
     title: "Delete Action?",
     description:
       "This action will delete all associated dependencies (action settings)",
-    callback: deleteAction,
+    callback: null,
   };
 
-  const tryDelete = () => {
-    dispatch({ type: actionTypes.showConfirmation, data: confirmData });
-  };
+  const tryDelete = useDeleteElement({
+    dataToPost: {
+      change_type: DBActionTypes.removeState,
+      id: props?.id,
+    },
+    customErrorMessage: "Error deleting action!",
+    customSuccessMessage: "Action deleted!",
+    snackbarData,
+    confirmDeleteDialogMetadata,
+  });
 
   // when adding new states, keep increasing new sort order for quick batch insert
   useEffect(() => {
@@ -214,8 +187,6 @@ const ActionForm = ({ props }: IActionForm) => {
   // update new sort order when selected phase changes
   useEffect(() => {
     if (data.id) return;
-    console.log("Changing sort order due to state change..");
-    console.log(getNewSortOrder());
     setData({
       ...data,
       sort_order: getNewSortOrder(),
@@ -424,35 +395,12 @@ const ActionForm = ({ props }: IActionForm) => {
               />
             )
           ) : null}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: data?.id ? "space-between" : "right",
-              m: "20px",
-            }}
-          >
-            {data?.id ? (
-              <Button
-                variant="contained"
-                color="secondary"
-                startIcon={<DeleteIcon />}
-                onClick={tryDelete}
-                size="small"
-              >
-                delete
-              </Button>
-            ) : null}
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={isSubmitting}
-              onClick={handleSubmit}
-              type="submit"
-              size="small"
-            >
-              Save
-            </Button>
-          </Box>
+          <ButtonRegion
+            handleSubmit={handleSubmit}
+            id={data?.id}
+            isSubmitting={isSubmitting}
+            tryDelete={tryDelete}
+          />
         </Box>
       )}
     </Formik>

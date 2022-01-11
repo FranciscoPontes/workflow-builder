@@ -14,6 +14,12 @@ import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
 import { phaseDefinition } from "../../workflowItems/Phase/Phase";
 import { Box } from "@mui/material";
 import { formatCode, formatLabel } from "../../../utils/inputFormatter";
+import ButtonRegion from "../ButtonRegion";
+import {
+  useCalculateNewSortOrder,
+  useDeleteElement,
+  useUploadFormData,
+} from "../formHooks";
 
 const useStyles = {
   root: {
@@ -40,13 +46,7 @@ const PhaseForm = ({ props }: IPhaseForm) => {
   const appID = useSelector((state) => state.appData.appID);
   const classes = useStyles;
 
-  const getNewSortOrder = (): number => {
-    if (!workflowData.phases) return 1;
-    const sortOrderArray: Array<number> = workflowData.phases?.map(
-      (pha) => pha.sort_order
-    );
-    return Math.max(...sortOrderArray) + 1;
-  };
+  const getNewSortOrder = useCalculateNewSortOrder(workflowData.phases);
 
   const [data, setData] = useState<phaseDefinition>({
     code: props?.code || "",
@@ -62,82 +62,48 @@ const PhaseForm = ({ props }: IPhaseForm) => {
     show: true,
   };
 
+  const phaseData = {
+    ...data,
+    app_id: appID,
+  };
+
+  const dataToPost = {
+    phases: [phaseData],
+    change_type: DBActionTypes.updatePhases,
+  };
+
+  const customErrorMessage = `Error ${
+    !data.id ? "creating" : "updating"
+  } phase!`;
+
+  const uploadData = useUploadFormData({
+    dataToPost,
+    customErrorMessage,
+    hideModalAfterwards: data.id !== null,
+    snackbarData,
+  });
+
   const saveData = async (formikData, setSubmitting) => {
-    const phaseData = {
-      ...data,
-      app_id: appID,
-    };
-
-    const preparedDBData = {
-      phases: [phaseData],
-      change_type: DBActionTypes.updatePhases,
-    };
-
-    await DBService.changeData(preparedDBData)
-      .then(() => {
-        dispatch({ type: actionTypes.updateSnackbar, data: snackbarData });
-        dispatch({ type: actionTypes.refresh });
-      })
-      .catch((err) => {
-        console.error(err.message);
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: {
-            ...snackbarData,
-            severity: EseverityTypes.error,
-            content: `Error ${!data.id ? "creating" : "updating"} phase! ${
-              err.message
-            }`,
-          },
-        });
-      });
-
-    setSubmitting(false);
-    if (data.id) dispatch({ type: actionTypes.hideModal });
+    uploadData(setSubmitting);
   };
 
-  const deletePhase = async () => {
-    console.log(
-      JSON.stringify({
-        change_type: DBActionTypes.removePhase,
-        id: data.id,
-      })
-    );
-    await DBService.changeData({
-      change_type: DBActionTypes.removePhase,
-      id: data.id,
-    })
-      .then(() => {
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: { ...snackbarData, content: "Phase deleted!" },
-        });
-        dispatch({ type: actionTypes.refresh });
-        dispatch({ type: actionTypes.hideModal });
-      })
-      .catch((err) => {
-        console.error(err.message);
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: {
-            ...snackbarData,
-            severity: EseverityTypes.error,
-            content: `Error deleting action! ${err.message}`,
-          },
-        });
-      });
-  };
-
-  const confirmData: IConfirmationData = {
+  const confirmDeleteDialogMetadata: IConfirmationData = {
     title: "Delete Phase?",
     description:
       "This action will delete all associated states and dependencies (actions, permissions..)",
-    callback: deletePhase,
+    callback: null,
   };
 
-  const tryDelete = () => {
-    dispatch({ type: actionTypes.showConfirmation, data: confirmData });
-  };
+  const tryDelete = useDeleteElement({
+    dataToPost: {
+      change_type: DBActionTypes.removePhase,
+      id: data?.id,
+    },
+    customErrorMessage: "Error deleting phase!",
+    customSuccessMessage: "Phase deleted!",
+    snackbarData,
+    confirmDeleteDialogMetadata,
+  });
 
   // when adding new phases, keep increasing new sort order for quick batch insert
   useEffect(() => {
@@ -186,35 +152,12 @@ const PhaseForm = ({ props }: IPhaseForm) => {
             onChange={(e) => setData({ ...data, label: e.target.value })}
             required
           />
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: props?.id ? "space-between" : "right",
-              m: "20px",
-            }}
-          >
-            {props?.id ? (
-              <Button
-                variant="contained"
-                color="secondary"
-                startIcon={<DeleteIcon />}
-                onClick={tryDelete}
-                size="small"
-              >
-                delete
-              </Button>
-            ) : null}
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={isSubmitting}
-              type="submit"
-              size="small"
-              onClick={handleSubmit}
-            >
-              Save
-            </Button>
-          </Box>
+          <ButtonRegion
+            handleSubmit={handleSubmit}
+            id={props?.id}
+            isSubmitting={isSubmitting}
+            tryDelete={tryDelete}
+          />
         </Box>
       )}
     </Formik>

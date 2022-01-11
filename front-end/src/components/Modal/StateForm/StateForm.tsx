@@ -19,6 +19,12 @@ import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
 import { Box } from "@mui/material";
 import { stateDefinition } from "../../workflowItems/State/State";
 import { actionTypes } from "../../../store/actionTypes";
+import ButtonRegion from "../ButtonRegion";
+import {
+  useCalculateNewSortOrder,
+  useDeleteElement,
+  useUploadFormData,
+} from "../formHooks";
 
 const useStyles = {
   root: {
@@ -42,7 +48,6 @@ interface IStateForm {
 }
 
 const StateForm = ({ props }: IStateForm) => {
-  const dispatch = useDispatch();
   const workflowData = useSelector((state) => state.workflowData);
   const appID = useSelector((state) => state.appData.appID);
   const classes = useStyles;
@@ -62,96 +67,59 @@ const StateForm = ({ props }: IStateForm) => {
     show: true,
   };
 
-  const getNewSortOrder = (): number => {
-    if (!workflowData.states) return 1;
-
-    const sortOrderArray: Array<number> = workflowData.states
-      .filter((sta) => sta.pha_id === data.pha_id)
-      .map((sta) => sta.sort_order);
-
-    if (sortOrderArray.length === 0) return 1;
-    return Math.max(...sortOrderArray) + 1;
-  };
+  const getNewSortOrder = useCalculateNewSortOrder(
+    workflowData.states.filter((sta) => sta.pha_id === data.pha_id)
+  );
 
   const phaseArray = () =>
     workflowData.phases?.map((pha) => ({ pha_id: pha.id, code: pha.code }));
 
-  const saveData = async (formikData, setSubmitting) => {
-    const stateData = {
-      pha_id: data.pha_id !== "" ? data.pha_id : null,
-      app_id: appID,
-      code: data.code,
-      label: data.label,
-      sort_order: data.sort_order,
-      id: data.id,
-    };
-    console.log(
-      JSON.stringify({
-        states: [stateData],
-        change_type: DBActionTypes.updateStates,
-      })
-    );
-    await DBService.changeData({
-      states: [stateData],
-      change_type: DBActionTypes.updateStates,
-    })
-      .then(() => {
-        dispatch({ type: actionTypes.updateSnackbar, data: snackbarData });
-        dispatch({ type: actionTypes.refresh });
-      })
-      .catch((err) => {
-        console.error(err.message);
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: {
-            ...snackbarData,
-            severity: EseverityTypes.error,
-            content: `Error ${!data.id ? "creating" : "updating"} state! ${
-              err.message
-            }`,
-          },
-        });
-      });
-    setSubmitting(false);
-    if (data.id) dispatch({ type: actionTypes.hideModal });
+  const stateData = {
+    pha_id: data.pha_id !== "" ? data.pha_id : null,
+    app_id: appID,
+    code: data.code,
+    label: data.label,
+    sort_order: data.sort_order,
+    id: data.id,
   };
 
-  const deleteState = async () => {
-    await DBService.changeData({
-      change_type: DBActionTypes.removeState,
-      id: props.id,
-    })
-      .then(() => {
-        dispatch({ type: actionTypes.refresh });
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: { ...snackbarData, content: "State deleted!" },
-        });
-        dispatch({ type: actionTypes.hideModal });
-      })
-      .catch((err) => {
-        console.error(err.message);
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: {
-            ...snackbarData,
-            severity: EseverityTypes.error,
-            content: `Error deleting action! ${err.message}`,
-          },
-        });
-      });
+  const dataToPost = {
+    states: [stateData],
+    change_type: DBActionTypes.updateStates,
   };
 
-  const confirmData: IConfirmationData = {
+  const customErrorMessage = `Error ${
+    !data.id ? "creating" : "updating"
+  } state!`;
+
+  const confirmDeleteDialogMetadata: IConfirmationData = {
     title: "Delete State?",
     description:
       "This action will delete all associated dependencies (actions, permissions..)",
-    callback: deleteState,
+    callback: null,
   };
 
-  const tryDelete = () => {
-    dispatch({ type: actionTypes.showConfirmation, data: confirmData });
+  const uploadData = useUploadFormData({
+    dataToPost,
+    customErrorMessage,
+    hideModalAfterwards: data.id !== null,
+    snackbarData,
+  });
+
+  const saveData = async (formikData, setSubmitting) => {
+    uploadData(setSubmitting);
   };
+
+  const tryDelete = useDeleteElement({
+    dataToPost: {
+      change_type: DBActionTypes.removeState,
+      id: props?.id,
+    },
+    customErrorMessage: "Error deleting state!",
+    customSuccessMessage: "State deleted!",
+    snackbarData,
+    confirmDeleteDialogMetadata,
+  });
 
   // when adding new states, keep increasing new sort order for quick batch insert
   useEffect(() => {
@@ -172,7 +140,6 @@ const StateForm = ({ props }: IStateForm) => {
       });
       return;
     }
-    console.log("Changing sort order due to phase change..");
     setData({
       ...data,
       sort_order: getNewSortOrder(),
@@ -227,35 +194,12 @@ const StateForm = ({ props }: IStateForm) => {
             onChange={(e) => setData({ ...data, label: e.target.value })}
             required
           />
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: data?.id ? "space-between" : "right",
-              m: "20px",
-            }}
-          >
-            {data?.id ? (
-              <Button
-                variant="contained"
-                color="secondary"
-                startIcon={<DeleteIcon />}
-                onClick={tryDelete}
-                size="small"
-              >
-                delete
-              </Button>
-            ) : null}
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={isSubmitting}
-              type="submit"
-              onClick={handleSubmit}
-              size="small"
-            >
-              Save
-            </Button>
-          </Box>
+          <ButtonRegion
+            handleSubmit={handleSubmit}
+            id={data?.id}
+            isSubmitting={isSubmitting}
+            tryDelete={tryDelete}
+          />
         </Box>
       )}
     </Formik>
