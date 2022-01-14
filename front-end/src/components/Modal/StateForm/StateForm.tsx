@@ -1,16 +1,12 @@
 import React from "react";
-import { makeStyles } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
-import Button from "@mui/material/Button";
 import { Formik } from "formik";
-import { DBService } from "../../../services/db_communication";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { IConfirmationData } from "../../UIConfirmation/UIConfirmation";
 import { useEffect } from "react";
 import { DBActionTypes } from "../../../services/dbActionTypes";
@@ -18,7 +14,6 @@ import { formatCode, formatLabel } from "../../../utils/inputFormatter";
 import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
 import { Box } from "@mui/material";
 import { stateDefinition } from "../../workflowItems/State/State";
-import { actionTypes } from "../../../store/actionTypes";
 import ButtonRegion from "../ButtonRegion";
 import {
   useCalculateNewSortOrder,
@@ -101,12 +96,25 @@ const StateForm = ({ props }: IStateForm) => {
     callback: null,
   };
 
-  const uploadData = useUploadFormData({
+  const [cleanModal, setCleanModal, uploadData] = useUploadFormData({
     dataToPost,
     customErrorMessage,
     hideModalAfterwards: data.id !== null || (!data.id && closeFormAfterwards),
     snackbarData,
   });
+
+  useEffect(() => {
+    if (cleanModal) {
+      setData({
+        ...data,
+        id: null,
+        code: "",
+        label: "",
+        sort_order: null,
+      });
+      setCleanModal(false);
+    }
+  }, [cleanModal]);
 
   const saveData = async (formikData, setSubmitting) => {
     uploadData(setSubmitting);

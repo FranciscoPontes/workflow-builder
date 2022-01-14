@@ -23,6 +23,8 @@ const useUploadFormData = ({
 }: IUploadFormDataProps) => {
   const dispatch = useDispatch();
 
+  const [cleanModal, setCleanModal] = useState(true);
+
   const saveData = async (
     callBackLoadingIndicator: (isLoading: boolean) => void
   ) => {
@@ -44,9 +46,12 @@ const useUploadFormData = ({
       });
     callBackLoadingIndicator(false);
     if (hideModalAfterwards) dispatch({ type: actionTypes.hideModal });
+    else {
+      setCleanModal(true);
+    }
   };
 
-  return saveData;
+  return [cleanModal, setCleanModal, saveData];
 };
 
 interface IDeleteElementProps {

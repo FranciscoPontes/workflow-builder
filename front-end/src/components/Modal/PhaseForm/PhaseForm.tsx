@@ -1,12 +1,8 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
-import Button from "@mui/material/Button";
 import { Formik } from "formik";
-import { DBService } from "../../../services/db_communication";
-import { useDispatch, useSelector } from "react-redux";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { actionTypes } from "../../../store/actionTypes";
+import { useSelector } from "react-redux";
 import { IConfirmationData } from "../../UIConfirmation/UIConfirmation";
 import { useEffect } from "react";
 import { DBActionTypes } from "../../../services/dbActionTypes";
@@ -41,7 +37,6 @@ interface IPhaseForm {
 }
 
 const PhaseForm = ({ props }: IPhaseForm) => {
-  const dispatch = useDispatch();
   const workflowData = useSelector((state) => state.workflowData);
   const appID = useSelector((state) => state.appData.appID);
   const classes = useStyles;
@@ -78,12 +73,25 @@ const PhaseForm = ({ props }: IPhaseForm) => {
     !data.id ? "creating" : "updating"
   } phase!`;
 
-  const uploadData = useUploadFormData({
+  const [cleanModal, setCleanModal, uploadData] = useUploadFormData({
     dataToPost,
     customErrorMessage,
     hideModalAfterwards: data.id !== null || (!data.id && closeFormAfterwards),
     snackbarData,
   });
+
+  useEffect(() => {
+    if (cleanModal) {
+      setData({
+        ...data,
+        code: "",
+        label: "",
+        sort_order: getNewSortOrder(),
+        id: null,
+      });
+      setCleanModal(false);
+    }
+  }, [cleanModal]);
 
   const saveData = async (formikData, setSubmitting) => {
     uploadData(setSubmitting);

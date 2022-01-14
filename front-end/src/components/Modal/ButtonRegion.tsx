@@ -48,7 +48,7 @@ const ButtonRegion = ({
           }}
           size="small"
         >
-          Create & create another
+          Create more
         </Button>
       )}
       <Button
