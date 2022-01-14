@@ -1,17 +1,12 @@
-import React, { Fragment } from "react";
-import { makeStyles } from "@mui/material/styles";
+import React from "react";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
-import Button from "@mui/material/Button";
 import { Formik } from "formik";
-import { DBService } from "../../../services/db_communication";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import { actionTypes } from "../../../store/actionTypes";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { IConfirmationData } from "../../UIConfirmation/UIConfirmation";
 import { useEffect } from "react";
 import { DBActionTypes } from "../../../services/dbActionTypes";
@@ -21,12 +16,17 @@ import {
   IActionSetting,
 } from "../../workflowItems/Action/Action";
 import { stateDefinition } from "../../workflowItems/State/State";
-import FormHelperText from "@mui/material/FormHelperText";
 import { formatCode, formatLabel } from "../../../utils/inputFormatter";
 import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
 import { ESwitch, TStore } from "../../../types/types";
 import CustomSwitch from "../../Switch";
 import Box from "@mui/material/Box";
+import ButtonRegion from "../ButtonRegion";
+import {
+  useCalculateNewSortOrder,
+  useDeleteElement,
+  useUploadFormData,
+} from "../formHooks";
 
 const useStyles = {
   root: {
@@ -59,11 +59,12 @@ interface IActionForm {
 }
 
 const ActionForm = ({ props }: IActionForm) => {
-  const dispatch = useDispatch();
   const workflowData = useSelector((state: TStore) => state.workflowData);
   const appID = useSelector((state: TStore) => state.appData.appID);
   const classes = useStyles;
   const selectedState = useSelector((state: TStore) => state.selectedState);
+
+  const [closeFormAfterwards, setCloseFormAfterwards] = useState(true);
 
   const validActionTypes: Array<EActionTypes> = [
     EActionTypes.mail,
@@ -91,7 +92,7 @@ const ActionForm = ({ props }: IActionForm) => {
   const [data, setData] = useState<IAction>({
     action_type: props?.action_type || "",
     code: props?.code || "",
-    id: props?.id,
+    id: props?.id || null,
     label: props?.label || "",
     sta_id: props?.sta_id || selectedState || "",
     user_action_yn: props?.user_action_yn || ESwitch.y,
@@ -109,16 +110,9 @@ const ActionForm = ({ props }: IActionForm) => {
   const actionSettingValue: string =
     data.action_settings[0]?.string_value || "";
 
-  const getNewSortOrder = (): number => {
-    if (!workflowData.actions) return 1;
-
-    const sortOrderArray: Array<number> = workflowData.actions
-      ?.filter((act) => act.sta_id === data.sta_id)
-      .map((act) => act.sort_order);
-
-    if (sortOrderArray.length === 0) return 1;
-    return Math.max(...sortOrderArray) + 1;
-  };
+  const getNewSortOrder = useCalculateNewSortOrder(
+    workflowData.actions?.filter((act) => act.sta_id === data.sta_id)
+  );
 
   const stateArray = (): Array<{ id: number; label: string }> =>
     workflowData.states?.map((sta: stateDefinition) => ({
@@ -130,76 +124,63 @@ const ActionForm = ({ props }: IActionForm) => {
 
   const requestTypes = () => workflowData.request_types?.map((reqt) => reqt);
 
+  const actionData = {
+    ...data,
+    app_id: appID,
+    reqt_id: data.reqt_id !== "" ? data.reqt_id : null,
+    sta_id: data.sta_id !== "" ? data.sta_id : null,
+  };
+
+  const dataToPost = {
+    actions: [actionData],
+    change_type: DBActionTypes.updateActions,
+  };
+
+  const customErrorMessage = `Error ${
+    !data.id ? "creating" : "updating"
+  } action!`;
+
+  const [cleanModal, setCleanModal, uploadData] = useUploadFormData({
+    dataToPost,
+    customErrorMessage,
+    hideModalAfterwards: data.id !== null || (!data.id && closeFormAfterwards),
+    snackbarData,
+  });
+
+  useEffect(() => {
+    if (cleanModal) {
+      setData({
+        ...data,
+        id: null,
+        code: "",
+        label: "",
+        sort_order: null,
+      });
+      setCleanModal(false);
+    }
+  }, [cleanModal]);
+
   const saveData = async (formikData, setSubmitting) => {
-    const actionData = {
-      ...data,
-      app_id: appID,
-      reqt_id: data.reqt_id !== "" ? data.reqt_id : null,
-      sta_id: data.sta_id !== "" ? data.sta_id : null,
-    };
-    console.log(JSON.stringify(actionData));
-
-    await DBService.changeData({
-      actions: [actionData],
-      change_type: DBActionTypes.updateActions,
-    })
-      .then(() => {
-        dispatch({ type: actionTypes.updateSnackbar, data: snackbarData });
-        dispatch({ type: actionTypes.refresh });
-      })
-      .catch((err) => {
-        console.error(err.message);
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: {
-            ...snackbarData,
-            severity: EseverityTypes.error,
-            content: `Error ${!data.id ? "creating" : "updating"} action! ${
-              err.message
-            }`,
-          },
-        });
-      });
-    setSubmitting(false);
-    if (data.id) dispatch({ type: actionTypes.hideModal });
+    uploadData(setSubmitting);
   };
 
-  const deleteAction = async () => {
-    await DBService.changeData({
-      change_type: DBActionTypes.removeAction,
-      id: props.id,
-    })
-      .then(() => {
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: { ...snackbarData, content: "Action deleted!" },
-        });
-        dispatch({ type: actionTypes.refresh });
-        dispatch({ type: actionTypes.hideModal });
-      })
-      .catch((err) => {
-        console.error(err.message);
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: {
-            ...snackbarData,
-            severity: EseverityTypes.error,
-            content: `Error deleting action! ${err.message}`,
-          },
-        });
-      });
-  };
-
-  const confirmData: IConfirmationData = {
+  const confirmDeleteDialogMetadata: IConfirmationData = {
     title: "Delete Action?",
     description:
       "This action will delete all associated dependencies (action settings)",
-    callback: deleteAction,
+    callback: null,
   };
 
-  const tryDelete = () => {
-    dispatch({ type: actionTypes.showConfirmation, data: confirmData });
-  };
+  const tryDelete = useDeleteElement({
+    dataToPost: {
+      change_type: DBActionTypes.removeAction,
+      id: props?.id,
+    },
+    customErrorMessage: "Error deleting action!",
+    customSuccessMessage: "Action deleted!",
+    snackbarData,
+    confirmDeleteDialogMetadata,
+  });
 
   // when adding new states, keep increasing new sort order for quick batch insert
   useEffect(() => {
@@ -214,8 +195,6 @@ const ActionForm = ({ props }: IActionForm) => {
   // update new sort order when selected phase changes
   useEffect(() => {
     if (data.id) return;
-    console.log("Changing sort order due to state change..");
-    console.log(getNewSortOrder());
     setData({
       ...data,
       sort_order: getNewSortOrder(),
@@ -424,35 +403,13 @@ const ActionForm = ({ props }: IActionForm) => {
               />
             )
           ) : null}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: data?.id ? "space-between" : "right",
-              m: "20px",
-            }}
-          >
-            {data?.id ? (
-              <Button
-                variant="contained"
-                color="secondary"
-                startIcon={<DeleteIcon />}
-                onClick={tryDelete}
-                size="small"
-              >
-                delete
-              </Button>
-            ) : null}
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={isSubmitting}
-              onClick={handleSubmit}
-              type="submit"
-              size="small"
-            >
-              Save
-            </Button>
-          </Box>
+          <ButtonRegion
+            closeFormAfterwards={(value) => setCloseFormAfterwards(value)}
+            handleSubmit={handleSubmit}
+            id={data?.id}
+            isSubmitting={isSubmitting}
+            tryDelete={tryDelete}
+          />
         </Box>
       )}
     </Formik>
