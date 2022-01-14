@@ -1,10 +1,10 @@
-import React, { Fragment, useEffect } from "react";
+import React from "react";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { useDispatch, useSelector } from "react-redux";
 import { actionTypes } from "../../../store/actionTypes";
 import { EModalTypes, IModal } from "../../Modal/Modal";
 import { DBActionTypes } from "../../../services/dbActionTypes";
-import { DBService } from "../../../services/db_communication";
+import useBECommunication from "../../../services/useBECommunication";
 import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
@@ -124,30 +124,17 @@ export const State = ({ props, actions }: IStateProps) => {
     show: true,
   };
 
+  const [_, changeData] = useBECommunication();
+
   const triggerDataChange = async (data) => {
-    console.log({
-      states: data,
-      change_type: DBActionTypes.updateStates,
-    });
-    await DBService.changeData({
-      states: data,
-      change_type: DBActionTypes.updateStates,
-    })
-      .then(() => {
-        dispatch({ type: actionTypes.updateSnackbar, data: snackbarData });
-        dispatch({ type: actionTypes.refresh });
-      })
-      .catch((err) => {
-        console.error(`Catched error ${err}`);
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: {
-            ...snackbarData,
-            severity: EseverityTypes.error,
-            content: `Error updating state order! ${err.message}`,
-          },
-        });
-      });
+    await changeData(
+      {
+        phases: data,
+        change_type: DBActionTypes.updateStates,
+      },
+      snackbarData,
+      "Error updating state order!"
+    );
   };
 
   const changeStateOrder = async (increment) => {

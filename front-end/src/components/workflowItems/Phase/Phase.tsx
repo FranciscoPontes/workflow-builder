@@ -1,10 +1,10 @@
 import React from "react";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { EModalMetadataTypes, EModalTypes, IModal } from "../../Modal/Modal";
+import { EModalTypes } from "../../Modal/Modal";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { useDispatch, useSelector } from "react-redux";
-import { DBService } from "../../../services/db_communication";
+import useBECommunication from "../../../services/useBECommunication";
 import { actionTypes } from "../../../store/actionTypes";
 import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
 import { DBActionTypes } from "../../../services/dbActionTypes";
@@ -56,26 +56,17 @@ const Phase = (props: phaseDefinition) => {
     show: true,
   };
 
+  const [_, changeData] = useBECommunication();
+
   const triggerDataChange = async (data) => {
-    await DBService.changeData({
-      phases: data,
-      change_type: DBActionTypes.updatePhases,
-    })
-      .then(() => {
-        dispatch({ type: actionTypes.updateSnackbar, data: snackbarData });
-        dispatch({ type: actionTypes.refresh });
-      })
-      .catch((err) => {
-        console.error(err.message);
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: {
-            ...snackbarData,
-            severity: EseverityTypes.error,
-            content: `Error updating phase order! ${err.message}`,
-          },
-        });
-      });
+    await changeData(
+      {
+        phases: data,
+        change_type: DBActionTypes.updatePhases,
+      },
+      snackbarData,
+      "Error updating phase order!"
+    );
   };
 
   const changePhaseOrder = async (increment) => {
@@ -105,12 +96,6 @@ const Phase = (props: phaseDefinition) => {
     description: null,
     type: EModalTypes.phase,
     metadata: { phaseMetadata: props },
-  };
-
-  const metadata: EModalMetadataTypes = {
-    stateMetadata: {
-      pha_id: props.id,
-    },
   };
 
   const changeSelectedPhase = () => {

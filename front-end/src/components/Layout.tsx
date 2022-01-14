@@ -19,6 +19,7 @@ import { TStore } from "../types/types";
 import { phaseDefinition } from "./workflowItems/Phase/Phase";
 import { stateDefinition } from "./workflowItems/State/State";
 import { Box } from "@mui/material";
+import useBECommunication from "../services/useBECommunication";
 
 enum EDBTiers {
   DEV = "DEV",
@@ -148,40 +149,17 @@ const Layout = ({ props }: ILayout) => {
     request_types: prepareRequestTypes(data),
   });
 
+  const [getApplicationData] = useBECommunication();
+
   /**
    * Refresh application data from ORDS endpoint
    */
   const refreshData = async () => {
-    await DBService.getApplicationData({
-      appCode: props.appCode,
-      DBTier: props.DBTier,
-    })
-      .then((appData) => {
-        // console.group("App metadata received");
-        // console.log(appData);
-        // console.groupEnd();
-        dispatch({
-          type: actionTypes.updateData,
-          data: arrangedTemplateData(appData),
-        });
-      })
-      .catch((err) => {
-        console.error(`Error fetching app data. ${err.message}`);
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: {
-            show: true,
-            severity: EseverityTypes.error,
-            content: `Error fetching app data. ${err.message}`,
-          },
-        });
-      })
-      .finally(() => {
-        // console.group("These are the props passed to get app metadata");
-        // console.log(props.DBTier);
-        // console.log(props.appCode);
-        // console.groupEnd();
-      });
+    await getApplicationData({
+      appMetadata: props,
+      customErrorMessage: "Error fetching app data.",
+      onTreatDataCallback: arrangedTemplateData,
+    });
   };
 
   // set app data
