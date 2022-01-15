@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import MailIcon from "@mui/icons-material/Mail";
 import TrendingFlatIcon from "@mui/icons-material/TrendingFlat";
 import NewReleasesIcon from "@mui/icons-material/NewReleases";
@@ -6,10 +6,9 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { useDispatch, useSelector } from "react-redux";
 import { actionTypes } from "../../../store/actionTypes";
 import { EModalTypes, IModal } from "../../Modal/Modal";
-import { useEffect } from "react";
 import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
 import { DBActionTypes } from "../../../services/dbActionTypes";
-import { DBService } from "../../../services/db_communication";
+import useBECommunication from "../../../services/useBECommunication";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { ESwitch } from "../../../types/types";
@@ -111,32 +110,17 @@ const Action = ({ props }: IActionProps) => {
     show: true,
   };
 
+  const [_, changeData] = useBECommunication();
+
   const triggerDataChange = async (data) => {
-    console.log(
-      JSON.stringify({
+    await changeData(
+      {
         actions: data,
         change_type: DBActionTypes.updateActions,
-      })
+      },
+      snackbarData,
+      "Error updating action order!"
     );
-    await DBService.changeData({
-      actions: data,
-      change_type: DBActionTypes.updateActions,
-    })
-      .then(() => {
-        dispatch({ type: actionTypes.updateSnackbar, data: snackbarData });
-        dispatch({ type: actionTypes.refresh });
-      })
-      .catch((err) => {
-        console.error(err.message);
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: {
-            ...snackbarData,
-            severity: EseverityTypes.error,
-            content: `Error updating action order! ${err.message}`,
-          },
-        });
-      });
   };
 
   const changeActionOrder = async (increment) => {

@@ -11,30 +11,25 @@
 
   <body>
     <div id="root"></div>
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
+    <noscript> You need to enable JavaScript to run this app. </noscript>
     <script>
       const appData = {
-        appCode: 'SB1',
-        DBTier: 'DEV',
+        appCode: "SB1",
+        DBTier: "DEV",
         appID: 21,
-      }
+      };
 
-      // const appData = {
-      //   appCode: 'OWP',
-      //   DBTier: 'DEV',
-      //   appID: 5221,
-      // }
+      const endpoints = {
+        getEndpoint: `http://localhost:3000/get-app-metadata`,
+        postEndpoint: `http://localhost:3000/change-app-data`,
+      };
 
-      window.baseURL = 'https://q-apex.ams.com/ords/appsq/req_owner/'
-      // window.baseURL = 'https://apex.ams.com/ords/appsprod/req_owner/'
-
-      document.addEventListener('readystatechange', (event) => {
-        if (event.target.readyState === 'complete') {
-          GraphicalWorkflow.start(appData, document.getElementById('root'))
+      document.addEventListener("readystatechange", (event) => {
+        if (event.target.readyState === "complete") {
+          GraphicalWorkflow.setEndpoints(endpoints);
+          GraphicalWorkflow.start(appData, document.getElementById("root"));
         }
-      })
+      });
     </script>
   </body>
 </html>

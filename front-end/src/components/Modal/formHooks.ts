@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { DBService } from "../../services/db_communication";
+import useBECommunication from "../../services/useBECommunication";
 import { actionTypes } from "../../store/actionTypes";
-import { EseverityTypes, ISnackbarData } from "../SnackBar/SnackBar";
+import { ISnackbarData } from "../SnackBar/SnackBar";
 import { IConfirmationData } from "../UIConfirmation/UIConfirmation";
-import { IAction } from "../workflowItems/Action/Action";
-import { phaseDefinition } from "../workflowItems/Phase/Phase";
-import { stateDefinition } from "../workflowItems/State/State";
 
 interface IUploadFormDataProps {
   dataToPost: object;
@@ -23,35 +20,21 @@ const useUploadFormData = ({
 }: IUploadFormDataProps) => {
   const dispatch = useDispatch();
 
-  const [cleanModal, setCleanModal] = useState(true);
+  const [cleanModal, setCleanModal] = useState(false);
+  const [_, changeData] = useBECommunication();
 
-  const saveData = async (
+  const saveModalData = async (
     callBackLoadingIndicator: (isLoading: boolean) => void
   ) => {
-    await DBService.changeData(dataToPost)
-      .then(() => {
-        dispatch({ type: actionTypes.updateSnackbar, data: snackbarData });
-        dispatch({ type: actionTypes.refresh });
-      })
-      .catch((err) => {
-        console.error(err.message);
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: {
-            ...snackbarData,
-            severity: EseverityTypes.error,
-            content: `${customErrorMessage} ${err.message}`,
-          },
-        });
-      });
-    callBackLoadingIndicator(false);
+    await changeData(dataToPost, snackbarData, customErrorMessage);
     if (hideModalAfterwards) dispatch({ type: actionTypes.hideModal });
     else {
       setCleanModal(true);
     }
+    callBackLoadingIndicator(false);
   };
 
-  return [cleanModal, setCleanModal, saveData];
+  return [cleanModal, setCleanModal, saveModalData];
 };
 
 interface IDeleteElementProps {
@@ -71,27 +54,15 @@ const useDeleteElement = ({
 }: IDeleteElementProps) => {
   const dispatch = useDispatch();
 
+  const [_, changeData] = useBECommunication();
+
   const deleteElement = async () => {
-    await DBService.changeData(dataToPost)
-      .then(() => {
-        dispatch({ type: actionTypes.refresh });
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: { ...snackbarData, content: customSuccessMessage },
-        });
-        dispatch({ type: actionTypes.hideModal });
-      })
-      .catch((err) => {
-        console.error(err.message);
-        dispatch({
-          type: actionTypes.updateSnackbar,
-          data: {
-            ...snackbarData,
-            severity: EseverityTypes.error,
-            content: `${customErrorMessage} ${err.message}`,
-          },
-        });
-      });
+    await changeData(
+      dataToPost,
+      { ...snackbarData, content: customSuccessMessage },
+      customErrorMessage
+    );
+    dispatch({ type: actionTypes.hideModal });
   };
 
   const confirmDelete = () => {

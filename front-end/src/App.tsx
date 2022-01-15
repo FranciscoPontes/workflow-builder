@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useContext, createContext } from "react";
-import Layout, { ILayout } from "./components/Layout";
+import React, { useState, useMemo, createContext } from "react";
+import Layout from "./components/Layout";
 
 import {
   responsiveFontSizes,
@@ -110,7 +110,7 @@ theme = createTheme(theme, {
 // handles typography responsiveness
 theme = responsiveFontSizes(theme);
 
-const App = ({ props }: ILayout) => {
+const App = ({ appData }) => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   const [mode, setMode] = useState(prefersDarkMode ? "dark" : "light");
@@ -152,7 +152,7 @@ const App = ({ props }: ILayout) => {
       <ColorModeContext.Provider value={colorMode}>
         {/* <StylesProvider generateClassName={generateClassName}> */}
         <ThemeProvider theme={updatedTheme}>
-          <Layout props={props} />
+          <Layout props={appData} />
           <IconButton
             sx={{ ml: 1, alignSelf: "baseline" }}
             onClick={colorMode.toggleColorMode}
