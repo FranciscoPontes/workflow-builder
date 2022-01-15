@@ -129,7 +129,7 @@ export const State = ({ props, actions }: IStateProps) => {
   const triggerDataChange = async (data) => {
     await changeData(
       {
-        phases: data,
+        states: data,
         change_type: DBActionTypes.updateStates,
       },
       snackbarData,

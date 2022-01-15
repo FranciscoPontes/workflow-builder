@@ -115,7 +115,7 @@ const Action = ({ props }: IActionProps) => {
   const triggerDataChange = async (data) => {
     await changeData(
       {
-        phases: data,
+        actions: data,
         change_type: DBActionTypes.updateActions,
       },
       snackbarData,
