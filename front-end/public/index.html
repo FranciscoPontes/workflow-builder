@@ -19,8 +19,14 @@
         appID: 21,
       };
 
+      const endpoints = {
+        getEndpoint: `http://localhost:3000/get-app-metadata`,
+        postEndpoint: `http://localhost:3000/change-app-data`,
+      };
+
       document.addEventListener("readystatechange", (event) => {
         if (event.target.readyState === "complete") {
+          GraphicalWorkflow.setEndpoints(endpoints);
           GraphicalWorkflow.start(appData, document.getElementById("root"));
         }
       });

@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { actionTypes } from "../store/actionTypes";
 import { EseverityTypes, ISnackbarData } from "../components/SnackBar/SnackBar";
+import { useEndpoints } from "..";
 
 type TAppMetadata = {
   appCode: string;
@@ -18,11 +19,13 @@ interface IGetAppData {
 const useBECommunication = () => {
   const dispatch = useDispatch();
 
+  const { getEndpoint, postEndpoint } = useEndpoints();
+
   const _getApplicationData = async (): Promise<any> =>
-    await axios.get(`http://localhost:3000/get-app-metadata`);
+    await axios.get(getEndpoint);
 
   const _changeData = async (data: object): Promise<any> =>
-    await axios.post(`http://localhost:3000/change-app-data`, data);
+    await axios.post(postEndpoint, data);
 
   const getApplicationData = async ({
     appMetadata,
