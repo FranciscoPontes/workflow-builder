@@ -14,12 +14,6 @@ import { Box } from "@mui/material";
 
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
-// const generateClassName = createGenerateClassName({
-//   disableGlobal: true,
-//   seed: "workflow-gui",
-//   productionPrefix: "workflow-gui-prod",
-// });
-
 var el = document.getElementsByTagName("html")[0];
 console.log("el", el);
 
@@ -29,10 +23,9 @@ var fontSize = parseFloat(style);
 console.log("FONT-SIZE:", fontSize);
 
 let theme = createTheme({
-  // typography: {
-  //   // Tell Material-UI what's the font-size on the html element is.
-  //   // htmlFontSize: 16 * (fontSize / 16),
-  // },
+  typography: {
+    htmlFontSize: fontSize,
+  },
 });
 
 theme = createTheme(theme, {
@@ -150,7 +143,6 @@ const App = ({ appData }) => {
   return (
     <Box sx={{ display: "flex" }}>
       <ColorModeContext.Provider value={colorMode}>
-        {/* <StylesProvider generateClassName={generateClassName}> */}
         <ThemeProvider theme={updatedTheme}>
           <Layout props={appData} />
           <IconButton
@@ -162,7 +154,6 @@ const App = ({ appData }) => {
             {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
         </ThemeProvider>
-        {/* </StylesProvider> */}
       </ColorModeContext.Provider>
     </Box>
   );
