@@ -6,12 +6,12 @@ import {
   createTheme,
   ThemeProvider,
 } from "@mui/material/styles";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
 import IconButton from "@mui/material/IconButton";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { Box } from "@mui/material";
 import MaterialUISwitch from "./components/MUISwitch";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd";
 
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -145,15 +145,17 @@ const App = ({ appData }) => {
     <Box sx={{ display: "flex" }}>
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={updatedTheme}>
-          <Layout props={appData} />
-          <IconButton
-            sx={{ ml: 1, alignSelf: "baseline" }}
-            onClick={colorMode.toggleColorMode}
-            color="inherit"
-            size="large"
-          >
-            <MaterialUISwitch />
-          </IconButton>
+          <DndProvider backend={HTML5Backend}>
+            <Layout props={appData} />
+            <IconButton
+              sx={{ ml: 1, alignSelf: "baseline" }}
+              onClick={colorMode.toggleColorMode}
+              color="inherit"
+              size="large"
+            >
+              <MaterialUISwitch />
+            </IconButton>
+          </DndProvider>
         </ThemeProvider>
       </ColorModeContext.Provider>
     </Box>
