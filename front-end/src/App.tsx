@@ -11,6 +11,7 @@ import Brightness7Icon from "@mui/icons-material/Brightness7";
 import IconButton from "@mui/material/IconButton";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { Box } from "@mui/material";
+import MaterialUISwitch from "./components/MUISwitch";
 
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -151,7 +152,7 @@ const App = ({ appData }) => {
             color="inherit"
             size="large"
           >
-            {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+            <MaterialUISwitch />
           </IconButton>
         </ThemeProvider>
       </ColorModeContext.Provider>
