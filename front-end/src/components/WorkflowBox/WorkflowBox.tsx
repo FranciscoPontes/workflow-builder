@@ -112,20 +112,18 @@ export const WorkflowBox = () => {
                   label={phase.label}
                   active_yn={phase.active_yn}
                 >
-                  {!collapsedPhases.includes(phase.id) ? (
-                    <Box sx={{ ...styles.states }}>
-                      {data.states
-                        ?.filter((sta) => sta.pha_id === phase.id)
-                        .map((sta) => (
-                          <State
-                            key={sta.code}
-                            props={sta}
-                            permissionCount={statePermissionCount(sta)}
-                            actions={stateActions(sta)}
-                          />
-                        ))}
-                    </Box>
-                  ) : null}
+                  <Box sx={{ ...styles.states }}>
+                    {data.states
+                      ?.filter((sta) => sta.pha_id === phase.id)
+                      .map((sta) => (
+                        <State
+                          key={sta.code}
+                          props={sta}
+                          permissionCount={statePermissionCount(sta)}
+                          actions={stateActions(sta)}
+                        />
+                      ))}
+                  </Box>
                 </Phase>
               </Box>
             </Box>

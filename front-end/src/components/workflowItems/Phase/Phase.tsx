@@ -101,10 +101,6 @@ const Phase = (props: phaseDefinition) => {
     }),
   }));
 
-  useEffect(() => {
-    console.log(isPhaseCollapsed);
-  }, [isPhaseCollapsed]);
-
   return (
     <Box
       ref={drop}
