@@ -6,8 +6,6 @@ import { EModalTypes, IModal } from "../../Modal/Modal";
 import { DBActionTypes } from "../../../services/dbActionTypes";
 import useBECommunication from "../../../services/useBECommunication";
 import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import Typography from "@mui/material/Typography";
 import Action, { EActionTypes, IAction } from "../Action/Action";
 import { ESwitch } from "../../../types/types";
@@ -16,6 +14,7 @@ import { useDrop } from "react-dnd";
 import { dragTypes } from "../../DragAndDrop/dragTypes";
 import { useInvokeModal } from "../../Modal/formHooks";
 import { animatedDropZoneStyles } from "../../DragAndDrop/dropzoneStyling";
+import OrderingBox from "../../OrderingBox";
 
 export interface stateDefinition {
   id: number;
@@ -106,8 +105,6 @@ export const State = ({ props, actions }: IStateProps) => {
 
   const dispatch = useDispatch();
 
-  const statesLenght = states.length;
-
   const indexOfThisState = states.indexOf(
     states.filter((sta) => sta.id === props.id)[0]
   );
@@ -138,28 +135,6 @@ export const State = ({ props, actions }: IStateProps) => {
       snackbarData,
       "Error updating state order!"
     );
-  };
-
-  const changeStateOrder = async (increment) => {
-    const sortOrderOfThisState = states[indexOfThisState].sort_order;
-    const sortOrderOfSiblingState =
-      states[indexOfThisState + increment].sort_order;
-
-    let modifiedStates = [...states];
-
-    modifiedStates[indexOfThisState].sort_order = sortOrderOfSiblingState;
-    modifiedStates[indexOfThisState + increment].sort_order =
-      sortOrderOfThisState;
-
-    await triggerDataChange(modifiedStates);
-  };
-
-  const changeStateOrderUp = async () => {
-    if (indexOfThisState + 1 !== statesLenght) changeStateOrder(1);
-  };
-
-  const changeStateOrderDown = async () => {
-    if (indexOfThisState !== 0) changeStateOrder(-1);
   };
 
   const changeSelectedState = () => {
@@ -210,41 +185,11 @@ export const State = ({ props, actions }: IStateProps) => {
           </Box>
         </Box>
       </Box>
-      <Box sx={{ display: "flex" }}>
-        <Box
-          onClick={changeStateOrderDown}
-          sx={{
-            height: "fit-content",
-          }}
-        >
-          <ArrowUpwardIcon
-            sx={{
-              ...styles.icon,
-              cursor: indexOfThisState !== 0 ? "pointer" : "default",
-              color:
-                indexOfThisState !== 0 ? "text.primary" : "action.disabled",
-            }}
-          />
-        </Box>
-        <Box
-          onClick={changeStateOrderUp}
-          sx={{
-            height: "fit-content",
-          }}
-        >
-          <ArrowDownwardIcon
-            sx={{
-              ...styles.icon,
-              cursor:
-                indexOfThisState + 1 !== statesLenght ? "pointer" : "default",
-              color:
-                indexOfThisState + 1 !== statesLenght
-                  ? "text.primary"
-                  : "action.disabled",
-            }}
-          />
-        </Box>
-      </Box>
+      <OrderingBox
+        applyChangesCallback={triggerDataChange}
+        currentElementIndex={indexOfThisState}
+        elementArray={states}
+      />
     </Box>
   );
 };

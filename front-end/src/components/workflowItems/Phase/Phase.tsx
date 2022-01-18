@@ -1,8 +1,6 @@
 import React from "react";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { EModalTypes } from "../../Modal/Modal";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { useDispatch, useSelector } from "react-redux";
 import useBECommunication from "../../../services/useBECommunication";
 import { actionTypes } from "../../../store/actionTypes";
@@ -17,6 +15,7 @@ import { useDrop } from "react-dnd";
 import { dragTypes } from "../../DragAndDrop/dragTypes";
 import { useInvokeModal } from "../../Modal/formHooks";
 import { animatedDropZoneStyles } from "../../DragAndDrop/dropzoneStyling";
+import OrderingBox from "../../OrderingBox";
 
 export interface phaseDefinition {
   id: number;
@@ -48,8 +47,6 @@ const Phase = (props: phaseDefinition) => {
   const collapsedPhases = useSelector((state: TStore) => state.collapsedPhases);
   const dispatch = useDispatch();
 
-  const phasesLenght = phases.length;
-
   const indexOfThisPhase = phases.indexOf(
     phases.filter((pha) => pha.id === props.id)[0]
   );
@@ -71,28 +68,6 @@ const Phase = (props: phaseDefinition) => {
       snackbarData,
       "Error updating phase order!"
     );
-  };
-
-  const changePhaseOrder = async (increment) => {
-    const sortOrderOfThisPhase = phases[indexOfThisPhase].sort_order;
-    const sortOrderOfSiblingPhase =
-      phases[indexOfThisPhase + increment].sort_order;
-
-    let modifiedPhases = [...phases];
-
-    modifiedPhases[indexOfThisPhase].sort_order = sortOrderOfSiblingPhase;
-    modifiedPhases[indexOfThisPhase + increment].sort_order =
-      sortOrderOfThisPhase;
-
-    await triggerDataChange(modifiedPhases);
-  };
-
-  const changePhaseOrderUp = async () => {
-    if (indexOfThisPhase + 1 !== phasesLenght) changePhaseOrder(1);
-  };
-
-  const changePhaseOrderDown = async () => {
-    if (indexOfThisPhase !== 0) changePhaseOrder(-1);
   };
 
   const phaseModalData = {
@@ -175,31 +150,11 @@ const Phase = (props: phaseDefinition) => {
           ) : null}
         </Box>
         <Typography variant="body1">{props.code}</Typography>
-        <Box sx={{ display: "flex" }}>
-          <Box onClick={changePhaseOrderDown}>
-            <ArrowUpwardIcon
-              sx={{
-                ...styles.icon,
-                cursor: indexOfThisPhase !== 0 ? "pointer" : "default",
-                color:
-                  indexOfThisPhase !== 0 ? "text.primary" : "action.disabled",
-              }}
-            />
-          </Box>
-          <Box onClick={changePhaseOrderUp}>
-            <ArrowDownwardIcon
-              sx={{
-                ...styles.icon,
-                cursor:
-                  indexOfThisPhase + 1 !== phasesLenght ? "pointer" : "default",
-                color:
-                  indexOfThisPhase + 1 !== phasesLenght
-                    ? "text.primary"
-                    : "action.disabled",
-              }}
-            />
-          </Box>
-        </Box>
+        <OrderingBox
+          applyChangesCallback={triggerDataChange}
+          currentElementIndex={indexOfThisPhase}
+          elementArray={phases}
+        />
       </Box>
       {props.children}
     </Box>

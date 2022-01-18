@@ -9,10 +9,9 @@ import { EModalTypes, IModal } from "../../Modal/Modal";
 import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
 import { DBActionTypes } from "../../../services/dbActionTypes";
 import useBECommunication from "../../../services/useBECommunication";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { ESwitch } from "../../../types/types";
 import { Box, Typography } from "@mui/material";
+import OrderingBox from "../../OrderingBox";
 
 export interface IActionSetting {
   id: number;
@@ -98,8 +97,6 @@ const Action = ({ props }: IActionProps) => {
     [EActionTypes.stateChange]: "NEXT_STATE_CODE_1",
   };
 
-  const actionsLenght = actions.length;
-
   const indexOfThisAction = actions.indexOf(
     actions.filter((act) => act.id === props.id)[0]
   );
@@ -121,28 +118,6 @@ const Action = ({ props }: IActionProps) => {
       snackbarData,
       "Error updating action order!"
     );
-  };
-
-  const changeActionOrder = async (increment) => {
-    const sortOrderOfThisState = actions[indexOfThisAction].sort_order;
-    const sortOrderOfSiblingState =
-      actions[indexOfThisAction + increment].sort_order;
-
-    let modifiedActions = [...actions];
-
-    modifiedActions[indexOfThisAction].sort_order = sortOrderOfSiblingState;
-    modifiedActions[indexOfThisAction + increment].sort_order =
-      sortOrderOfThisState;
-
-    await triggerDataChange(modifiedActions);
-  };
-
-  const changeActionOrderUp = async () => {
-    if (indexOfThisAction + 1 !== actionsLenght) changeActionOrder(1);
-  };
-
-  const changeActionOrderDown = async () => {
-    if (indexOfThisAction !== 0) changeActionOrder(-1);
   };
 
   const requestTypes = workflowData.request_types?.map((reqt) => reqt);
@@ -222,41 +197,11 @@ const Action = ({ props }: IActionProps) => {
           <NewReleasesIcon sx={{ ...styles.themeColor }} />
         )}
       </Box>
-      <Box sx={{ display: "flex" }}>
-        <Box
-          onClick={changeActionOrderDown}
-          sx={{
-            height: "fit-content",
-          }}
-        >
-          <ArrowUpwardIcon
-            sx={{
-              ...styles.themeColor,
-              color:
-                indexOfThisAction !== 0 ? "text.primary" : "action.disabled",
-              cursor: indexOfThisAction !== 0 ? "pointer" : "default",
-            }}
-          />
-        </Box>
-        <Box
-          onClick={changeActionOrderUp}
-          sx={{
-            height: "fit-content",
-          }}
-        >
-          <ArrowDownwardIcon
-            sx={{
-              ...styles.themeColor,
-              color:
-                indexOfThisAction + 1 !== actionsLenght
-                  ? "text.primary"
-                  : "action.disabled",
-              cursor:
-                indexOfThisAction + 1 !== actionsLenght ? "pointer" : "default",
-            }}
-          />
-        </Box>
-      </Box>
+      <OrderingBox
+        applyChangesCallback={triggerDataChange}
+        currentElementIndex={indexOfThisAction}
+        elementArray={actions}
+      />
     </Box>
   );
 };
