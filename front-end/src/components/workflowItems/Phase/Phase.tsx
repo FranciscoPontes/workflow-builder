@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { EModalTypes } from "../../Modal/Modal";
 import { useDispatch, useSelector } from "react-redux";
@@ -44,8 +44,9 @@ const styles = {
 const Phase = (props: phaseDefinition) => {
   const workflowData = useSelector((state: TStore) => state.workflowData);
   const phases = workflowData.phases;
-  const collapsedPhases = useSelector((state: TStore) => state.collapsedPhases);
   const dispatch = useDispatch();
+
+  const [isPhaseCollapsed, setIsPhaseCollapsed] = useState<boolean>(false);
 
   const indexOfThisPhase = phases.indexOf(
     phases.filter((pha) => pha.id === props.id)[0]
@@ -82,15 +83,6 @@ const Phase = (props: phaseDefinition) => {
     dispatch({ type: actionTypes.setSelectedState, data: null });
   };
 
-  /**
-   * Adds or removes the phase id from the store collapsed phases array
-   * @returns the modified array
-   */
-  const handlePhaseCollapse = (): Array<number> =>
-    collapsedPhases.includes(props.id)
-      ? collapsedPhases.filter((id) => id !== props.id)
-      : collapsedPhases.concat(props.id);
-
   const stateCount = () => {
     return workflowData.states.filter((state) => state.pha_id === props.id)
       .length;
@@ -108,6 +100,10 @@ const Phase = (props: phaseDefinition) => {
       isActive: monitor.canDrop() && monitor.isOver(),
     }),
   }));
+
+  useEffect(() => {
+    console.log(isPhaseCollapsed);
+  }, [isPhaseCollapsed]);
 
   return (
     <Box
@@ -133,15 +129,8 @@ const Phase = (props: phaseDefinition) => {
             <SettingsIcon fontSize="small" sx={{ ...styles.icon }} />
           </Box>
           {stateCount() !== 0 ? (
-            <Box
-              onClick={() =>
-                dispatch({
-                  type: actionTypes.setCollapsedPhases,
-                  data: handlePhaseCollapse(),
-                })
-              }
-            >
-              {collapsedPhases.includes(props.id) ? (
+            <Box onClick={() => setIsPhaseCollapsed((val) => !val)}>
+              {isPhaseCollapsed ? (
                 <ArrowDropDownIcon sx={{ ...styles.icon }} />
               ) : (
                 <ArrowDropUpIcon sx={{ ...styles.icon }} />
@@ -158,7 +147,7 @@ const Phase = (props: phaseDefinition) => {
           elementArray={phases}
         />
       </Box>
-      {props.children}
+      {!isPhaseCollapsed && props.children}
     </Box>
   );
 };
