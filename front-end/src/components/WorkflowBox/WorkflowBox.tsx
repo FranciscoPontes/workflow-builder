@@ -71,7 +71,7 @@ export const WorkflowBox = () => {
   const data: workflowData = useSelector((state: TStore) => state.workflowData);
   const collapsedPhases = useSelector((state: TStore) => state.collapsedPhases);
 
-  const invokeModalMethods = useInvokeModal();
+  const { invokePhaseModal } = useInvokeModal();
 
   const statePermissionCount = (sta: stateDefinition): number => {
     return data.permissions?.filter((per) => per.sta_id === sta.id).length;
@@ -86,7 +86,7 @@ export const WorkflowBox = () => {
   const [{ isActive }, drop] = useDrop(() => ({
     accept: dragTypes.phase,
     drop: () => {
-      invokeModalMethods.invokePhaseModal();
+      invokePhaseModal();
     },
     collect: (monitor) => ({
       isActive: monitor.canDrop() && monitor.isOver(),

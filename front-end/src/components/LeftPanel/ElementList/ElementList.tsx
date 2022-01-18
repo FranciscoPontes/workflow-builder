@@ -1,7 +1,6 @@
 import React from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import MailIcon from "@mui/icons-material/Mail";
 import TrendingFlatIcon from "@mui/icons-material/TrendingFlat";
@@ -11,6 +10,7 @@ import { Box } from "@mui/material";
 import { useDrag } from "react-dnd";
 import { dragTypes } from "../../DragAndDrop/dragTypes";
 import { useInvokeModal } from "../../Modal/formHooks";
+import ActionElement, { TActionElement } from "./ActionElement";
 
 const useStyles = {
   root: {
@@ -49,27 +49,17 @@ const useStyles = {
 
 export default function ElementList() {
   const classes = useStyles;
-  const invokeModalMethods = useInvokeModal();
+  const { invokePhaseModal, invokeStateModal } = useInvokeModal();
 
   const handleClickPhase = () => {
-    invokeModalMethods.invokePhaseModal();
+    invokePhaseModal();
   };
 
   const handleClickState = () => {
-    invokeModalMethods.invokeStateModal();
+    invokeStateModal();
   };
 
-  const handleClickAction = (actionType: EActionTypes) => {
-    invokeModalMethods.invokeActionModal(actionType);
-  };
-
-  type actionElement = {
-    label: string;
-    actionType: EActionTypes;
-    icon: any;
-  };
-
-  const actionElements: Array<actionElement> = [
+  const actionElements: Array<TActionElement> = [
     {
       label: "Mail",
       actionType: EActionTypes.mail,
@@ -127,18 +117,12 @@ export default function ElementList() {
             flexWrap: "wrap",
           }}
         >
-          {actionElements.map((el: actionElement) => (
-            <Box
-              onClick={() => handleClickAction(el.actionType)}
-              sx={{ ...classes.element, ...classes.actionElement }}
-              key={el.label}
-            >
-              <ListItem button>
-                <ListItemIcon sx={{ minWidth: "fit-content" }}>
-                  {el.icon}
-                </ListItemIcon>
-              </ListItem>
-            </Box>
+          {actionElements.map((el: TActionElement, idx: number) => (
+            <ActionElement
+              key={idx}
+              styles={{ ...classes.element, ...classes.actionElement }}
+              actionElement={el}
+            />
           ))}
         </List>
       </List>

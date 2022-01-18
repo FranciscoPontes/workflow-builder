@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { EModalTypes } from "../../Modal/Modal";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -121,13 +121,13 @@ const Phase = (props: phaseDefinition) => {
       .length;
   };
 
-  const invokeModalMethods = useInvokeModal();
+  const { invokeStateModal } = useInvokeModal();
 
   const [{ isActive }, drop] = useDrop(() => ({
     accept: dragTypes.state,
     drop: () => {
       changeSelectedPhase();
-      invokeModalMethods.invokeStateModal();
+      invokeStateModal();
     },
     collect: (monitor) => ({
       isActive: monitor.canDrop() && monitor.isOver(),
@@ -174,13 +174,7 @@ const Phase = (props: phaseDefinition) => {
             </Box>
           ) : null}
         </Box>
-        <Typography
-          variant="body1"
-          onClick={changeSelectedPhase}
-          sx={{ ...styles.icon }}
-        >
-          {props.code}
-        </Typography>
+        <Typography variant="body1">{props.code}</Typography>
         <Box sx={{ display: "flex" }}>
           <Box onClick={changePhaseOrderDown}>
             <ArrowUpwardIcon

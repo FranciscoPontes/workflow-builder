@@ -9,9 +9,13 @@ import { EseverityTypes, ISnackbarData } from "../../SnackBar/SnackBar";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import Typography from "@mui/material/Typography";
-import Action, { IAction } from "../Action/Action";
+import Action, { EActionTypes, IAction } from "../Action/Action";
 import { ESwitch } from "../../../types/types";
 import { Box } from "@mui/material";
+import { useDrop } from "react-dnd";
+import { dragTypes } from "../../DragAndDrop/dragTypes";
+import { useInvokeModal } from "../../Modal/formHooks";
+import { animatedDropZoneStyles } from "../../DragAndDrop/dropzoneStyling";
 
 export interface stateDefinition {
   id: number;
@@ -99,7 +103,6 @@ export const State = ({ props, actions }: IStateProps) => {
   const states = useSelector((state) =>
     state.workflowData.states.filter((sta) => sta.pha_id === props.pha_id)
   );
-  const selectedState = useSelector((state) => state.selectedState);
 
   const dispatch = useDispatch();
 
@@ -159,16 +162,31 @@ export const State = ({ props, actions }: IStateProps) => {
     if (indexOfThisState !== 0) changeStateOrder(-1);
   };
 
-  const setSelectedState = () => {
+  const changeSelectedState = () => {
     dispatch({ type: actionTypes.setSelectedState, data: props.id });
     dispatch({ type: actionTypes.setSelectedPhase, data: null });
   };
+
+  const { invokeActionModal } = useInvokeModal();
+
+  const [{ isActionDragActive }, actionDrop] = useDrop(() => ({
+    accept: dragTypes.action,
+    drop: (item: { actionType: EActionTypes }) => {
+      changeSelectedState();
+      invokeActionModal(item.actionType);
+    },
+    collect: (monitor) => ({
+      isActionDragActive: monitor.canDrop() && monitor.isOver(),
+    }),
+  }));
 
   return (
     <Box
       sx={{
         ...styles.stateContainer,
+        ...(isActionDragActive ? animatedDropZoneStyles.dropzoneBorder : null),
       }}
+      ref={actionDrop}
     >
       <Box
         sx={{ ...styles.gear }}
@@ -181,16 +199,9 @@ export const State = ({ props, actions }: IStateProps) => {
       <Box
         sx={{
           ...styles.state,
-          ...(selectedState === props.id && styles.selected),
         }}
       >
-        <Typography
-          sx={{ ...styles.icon }}
-          onClick={setSelectedState}
-          align="center"
-        >
-          {props.code}
-        </Typography>
+        <Typography align="center">{props.code}</Typography>
         <Box sx={{ ...styles.stateDependencies }}>
           <Box sx={{ ...styles.actionSequence }}>
             {actions?.map((act) => (
