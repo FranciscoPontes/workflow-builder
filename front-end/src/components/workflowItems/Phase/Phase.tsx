@@ -149,7 +149,9 @@ const Phase = (props: phaseDefinition) => {
             </Box>
           ) : null}
         </Box>
-        <Typography variant="body1">{props.code}</Typography>
+        <Typography variant="body1" sx={{ color: "text.primary" }}>
+          {props.code}
+        </Typography>
         <OrderingBox
           applyChangesCallback={triggerDataChange}
           currentElementIndex={indexOfThisPhase}

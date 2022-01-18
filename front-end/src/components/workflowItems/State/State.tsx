@@ -176,7 +176,9 @@ export const State = ({ props, actions }: IStateProps) => {
           ...styles.state,
         }}
       >
-        <Typography align="center">{props.code}</Typography>
+        <Typography align="center" sx={{ color: "text.primary" }}>
+          {props.code}
+        </Typography>
         <Box sx={{ ...styles.stateDependencies }}>
           <Box sx={{ ...styles.actionSequence }}>
             {actions?.map((act) => (
