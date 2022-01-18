@@ -6,6 +6,10 @@ import { IPermission } from "../workflowItems/Permission/Permission";
 import Phase, { phaseDefinition } from "../workflowItems/Phase/Phase";
 import { State, stateDefinition } from "../workflowItems/State/State";
 import { Box } from "@mui/material";
+import { useDrop } from "react-dnd";
+import { animatedDropZoneStyles } from "../DragAndDrop/dropzoneStyling";
+import { dragTypes } from "../DragAndDrop/dragTypes";
+import { useInvokeModal } from "../Modal/formHooks";
 
 type TStates = Array<stateDefinition>;
 type TPhases = Array<phaseDefinition>;
@@ -58,15 +62,16 @@ const styles = {
     m: "auto",
     display: "flex",
     flexFlow: "column",
-    mb: 1,
+    // mb: 1,
     width: 0.9,
   },
 };
 
 export const WorkflowBox = () => {
   const data: workflowData = useSelector((state: TStore) => state.workflowData);
-  const selectedPhase = useSelector((state: TStore) => state.selectedPhase);
   const collapsedPhases = useSelector((state: TStore) => state.collapsedPhases);
+
+  const { invokePhaseModal } = useInvokeModal();
 
   const statePermissionCount = (sta: stateDefinition): number => {
     return data.permissions?.filter((per) => per.sta_id === sta.id).length;
@@ -76,19 +81,26 @@ export const WorkflowBox = () => {
     return data.actions?.filter((act) => act.sta_id === sta.id);
   };
 
-  const selectedStyling = (id) => {
-    if (selectedPhase === id) {
-      return {
-        ...styles.workflowPhases,
-        ...styles.selected,
-      };
-    } else {
-      return { ...styles.workflowPhases };
-    }
-  };
+  const selectedStyling = (id) => styles.workflowPhases;
+
+  const [{ isActive }, drop] = useDrop(() => ({
+    accept: dragTypes.phase,
+    drop: () => {
+      invokePhaseModal();
+    },
+    collect: (monitor) => ({
+      isActive: monitor.canDrop() && monitor.isOver(),
+    }),
+  }));
 
   return (
-    <Box sx={{ ...styles.box }}>
+    <Box
+      sx={{
+        ...styles.box,
+        ...(isActive ? animatedDropZoneStyles.dropzoneBorder : null),
+      }}
+      ref={drop}
+    >
       {data
         ? data.phases?.map((phase) => (
             <Box sx={selectedStyling(phase.id)} key={phase.code}>
@@ -99,22 +111,21 @@ export const WorkflowBox = () => {
                   id={phase.id}
                   label={phase.label}
                   active_yn={phase.active_yn}
-                />
+                >
+                  <Box sx={{ ...styles.states }}>
+                    {data.states
+                      ?.filter((sta) => sta.pha_id === phase.id)
+                      .map((sta) => (
+                        <State
+                          key={sta.code}
+                          props={sta}
+                          permissionCount={statePermissionCount(sta)}
+                          actions={stateActions(sta)}
+                        />
+                      ))}
+                  </Box>
+                </Phase>
               </Box>
-              {!collapsedPhases.includes(phase.id) ? (
-                <Box sx={{ ...styles.states }}>
-                  {data.states
-                    ?.filter((sta) => sta.pha_id === phase.id)
-                    .map((sta) => (
-                      <State
-                        key={sta.code}
-                        props={sta}
-                        permissionCount={statePermissionCount(sta)}
-                        actions={stateActions(sta)}
-                      />
-                    ))}
-                </Box>
-              ) : null}
             </Box>
           ))
         : null}

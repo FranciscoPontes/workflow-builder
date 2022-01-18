@@ -4,6 +4,8 @@ import useBECommunication from "../../services/useBECommunication";
 import { actionTypes } from "../../store/actionTypes";
 import { ISnackbarData } from "../SnackBar/SnackBar";
 import { IConfirmationData } from "../UIConfirmation/UIConfirmation";
+import { EActionTypes } from "../workflowItems/Action/Action";
+import { EModalTypes, IModal } from "./Modal";
 
 interface IUploadFormDataProps {
   dataToPost: object;
@@ -87,4 +89,58 @@ const useCalculateNewSortOrder = (objArray: object[]) => {
   return computeNewSortOrder;
 };
 
-export { useUploadFormData, useDeleteElement, useCalculateNewSortOrder };
+const useInvokeModal = () => {
+  const dispatch = useDispatch();
+
+  const phaseModalData = {
+    title: "New phase",
+    description: null,
+    type: EModalTypes.phase,
+  };
+
+  const StateModalData: IModal = {
+    type: EModalTypes.state,
+    title: "New State",
+    description: "",
+  };
+
+  const ActionModalData: IModal = {
+    title: "New action",
+    description: "",
+    type: EModalTypes.action,
+  };
+
+  const invokePhaseModal = () =>
+    dispatch({
+      type: actionTypes.showModal,
+      data: phaseModalData,
+    });
+
+  const invokeStateModal = () =>
+    dispatch({
+      type: actionTypes.showModal,
+      data: StateModalData,
+    });
+
+  const invokeActionModal = (actionType: EActionTypes) =>
+    dispatch({
+      type: actionTypes.showModal,
+      data: {
+        ...ActionModalData,
+        metadata: {
+          actionMetadata: {
+            action_type: actionType,
+          },
+        },
+      },
+    });
+
+  return { invokePhaseModal, invokeStateModal, invokeActionModal };
+};
+
+export {
+  useUploadFormData,
+  useDeleteElement,
+  useCalculateNewSortOrder,
+  useInvokeModal,
+};

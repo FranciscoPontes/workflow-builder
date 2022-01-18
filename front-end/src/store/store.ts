@@ -1,7 +1,7 @@
-import { createStore } from 'redux'
-import { EseverityTypes } from '../components/SnackBar/SnackBar'
-import { TStore } from '../types/types'
-import { actionTypes } from './actionTypes'
+import { createStore } from "redux";
+import { EseverityTypes } from "../components/SnackBar/SnackBar";
+import { TStore } from "../types/types";
+import { actionTypes } from "./actionTypes";
 
 const initialState: TStore = {
   triggerRefresh: false,
@@ -15,7 +15,7 @@ const initialState: TStore = {
   },
   snackbarData: {
     show: false,
-    content: '',
+    content: "",
     severity: EseverityTypes.success,
   },
   confirmationData: {
@@ -31,54 +31,48 @@ const initialState: TStore = {
   },
   selectedPhase: null,
   selectedState: null,
-  collapsedPhases: [],
-}
+};
 
 const storeSettings = function (state = initialState, action): TStore {
   switch (action.type) {
     case actionTypes.setAppData:
-      return { ...state, appData: action.data }
+      return { ...state, appData: action.data };
     case actionTypes.showConfirmation:
-      return { ...state, confirmationData: { open: true, ...action.data } }
+      return { ...state, confirmationData: { open: true, ...action.data } };
     case actionTypes.hideConfirmation:
       return {
         ...state,
         confirmationData: { ...state.confirmationData, open: false },
-      }
+      };
     case actionTypes.updateSnackbar:
-      return { ...state, snackbarData: { ...action.data, show: true } }
+      return { ...state, snackbarData: { ...action.data, show: true } };
     case actionTypes.closeSnackbar:
-      return { ...state, snackbarData: { ...state.snackbarData, show: false } }
+      return { ...state, snackbarData: { ...state.snackbarData, show: false } };
     case actionTypes.showModal:
-      return { ...state, modalData: { ...action.data, isOpen: true } }
+      return { ...state, modalData: { ...action.data, isOpen: true } };
     case actionTypes.hideModal:
-      return { ...state, modalData: { ...state.modalData, isOpen: false } }
+      return { ...state, modalData: { ...state.modalData, isOpen: false } };
     case actionTypes.updateData:
-      return { ...state, workflowData: action.data }
+      return { ...state, workflowData: action.data };
     case actionTypes.refresh:
-      return { ...state, triggerRefresh: true }
+      return { ...state, triggerRefresh: true };
     case actionTypes.stopRefresh:
-      return { ...state, triggerRefresh: false }
+      return { ...state, triggerRefresh: false };
     /**
      * selectable elements
      */
     case actionTypes.setSelectedPhase:
-      return { ...state, selectedPhase: action.data }
+      return { ...state, selectedPhase: action.data };
     case actionTypes.setSelectedState:
-      return { ...state, selectedState: action.data }
-    /**
-     * collapsed phases
-     */
-    case actionTypes.setCollapsedPhases:
-      return { ...state, collapsedPhases: action.data }
+      return { ...state, selectedState: action.data };
     default:
-      return state
+      return state;
   }
-}
+};
 
 const store = createStore(
   storeSettings,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-)
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
-export default store
+export default store;

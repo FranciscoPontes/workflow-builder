@@ -1,17 +1,16 @@
 import React from "react";
-import { createStyles, Theme, makeStyles } from "@mui/material/styles";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { EModalTypes, IModal } from "../../Modal/Modal";
-import { actionTypes } from "../../../store/actionTypes";
-import { useDispatch } from "react-redux";
 import MailIcon from "@mui/icons-material/Mail";
 import TrendingFlatIcon from "@mui/icons-material/TrendingFlat";
 import NewReleasesIcon from "@mui/icons-material/NewReleases";
 import { EActionTypes } from "../../workflowItems/Action/Action";
 import { Box } from "@mui/material";
+import { useDrag } from "react-dnd";
+import { dragTypes } from "../../DragAndDrop/dragTypes";
+import { useInvokeModal } from "../../Modal/formHooks";
+import ActionElement, { TActionElement } from "./ActionElement";
 
 const useStyles = {
   root: {
@@ -50,58 +49,17 @@ const useStyles = {
 
 export default function ElementList() {
   const classes = useStyles;
-  const dispatch = useDispatch();
+  const { invokePhaseModal, invokeStateModal } = useInvokeModal();
 
-  const phaseModalData = {
-    title: "New phase",
-    description: null,
-    type: EModalTypes.phase,
+  const handleClickPhase = () => {
+    invokePhaseModal();
   };
 
-  const StateModalData: IModal = {
-    type: EModalTypes.state,
-    title: "New State",
-    description: "",
+  const handleClickState = () => {
+    invokeStateModal();
   };
 
-  const ActionModalData: IModal = {
-    title: "New action",
-    description: "",
-    type: EModalTypes.action,
-  };
-
-  const handleClickPhase = () =>
-    dispatch({
-      type: actionTypes.showModal,
-      data: phaseModalData,
-    });
-
-  const handleClickState = () =>
-    dispatch({
-      type: actionTypes.showModal,
-      data: StateModalData,
-    });
-
-  const handleClickAction = (actionType: EActionTypes) =>
-    dispatch({
-      type: actionTypes.showModal,
-      data: {
-        ...ActionModalData,
-        metadata: {
-          actionMetadata: {
-            action_type: actionType,
-          },
-        },
-      },
-    });
-
-  type actionElement = {
-    label: string;
-    actionType: EActionTypes;
-    icon: any;
-  };
-
-  const actionElements: Array<actionElement> = [
+  const actionElements: Array<TActionElement> = [
     {
       label: "Mail",
       actionType: EActionTypes.mail,
@@ -119,15 +77,31 @@ export default function ElementList() {
     },
   ];
 
+  const [phaseDragObject, phaseDrag] = useDrag(() => ({
+    type: dragTypes.phase,
+  }));
+
+  const [stateDragObject, stateDrag] = useDrag(() => ({
+    type: dragTypes.state,
+  }));
+
   return (
     <Box sx={{ ...classes.root }}>
       <List component="nav">
-        <Box onClick={handleClickPhase} sx={{ ...classes.element }}>
+        <Box
+          onClick={handleClickPhase}
+          sx={{ ...classes.element }}
+          ref={phaseDrag}
+        >
           <ListItem button>
             <ListItemText primary="Phase" sx={{ ...classes.elementFontSize }} />
           </ListItem>
         </Box>
-        <Box onClick={handleClickState} sx={{ ...classes.element }}>
+        <Box
+          onClick={handleClickState}
+          sx={{ ...classes.element }}
+          ref={stateDrag}
+        >
           <ListItem button>
             <ListItemText primary="State" sx={{ ...classes.elementFontSize }} />
           </ListItem>
@@ -143,18 +117,12 @@ export default function ElementList() {
             flexWrap: "wrap",
           }}
         >
-          {actionElements.map((el: actionElement) => (
-            <Box
-              onClick={() => handleClickAction(el.actionType)}
-              sx={{ ...classes.element, ...classes.actionElement }}
-              key={el.label}
-            >
-              <ListItem button>
-                <ListItemIcon sx={{ minWidth: "fit-content" }}>
-                  {el.icon}
-                </ListItemIcon>
-              </ListItem>
-            </Box>
+          {actionElements.map((el: TActionElement, idx: number) => (
+            <ActionElement
+              key={idx}
+              styles={{ ...classes.element, ...classes.actionElement }}
+              actionElement={el}
+            />
           ))}
         </List>
       </List>
