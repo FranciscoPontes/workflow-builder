@@ -82,7 +82,7 @@ const useCalculateNewSortOrder = (objArray: object[]) => {
     const sortOrderArray: Array<number> = objArray?.map(
       (obj) => obj.sort_order
     );
-    if (sortOrderArray.length === 0) return 1;
+    if (!sortOrderArray || sortOrderArray.length === 0) return 1;
     return Math.max(...sortOrderArray) + 1;
   };
 

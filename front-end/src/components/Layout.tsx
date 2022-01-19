@@ -120,7 +120,7 @@ const Layout = ({ props }: ILayout) => {
         reqt_id: act.reqt_id,
         active_yn: act.active_yn,
       };
-      return treatedAct;
+      return treatedAct || [];
     });
   };
 
@@ -137,16 +137,19 @@ const Layout = ({ props }: ILayout) => {
   };
 
   const arrangedTemplateData = (data: workflowData): workflowData => ({
-    phases: preparePhases(data)?.sort((x, y) => x.sort_order - y.sort_order),
-    states: prepareStates(data)
-      ?.sort((x, y) => x.sort_order - y.sort_order)
-      .sort((x, y) => x.pha_id - y.pha_id),
-    permissions: preparePermissions(data),
-    actions: prepareActions(data)
-      ?.sort((x, y) => x.sort_order - y.sort_order)
-      .sort((x, y) => x.sta_id - y.sta_id),
-    mail_templates: prepareMailTemplates(data),
-    request_types: prepareRequestTypes(data),
+    phases:
+      preparePhases(data)?.sort((x, y) => x.sort_order - y.sort_order) || [],
+    states:
+      prepareStates(data)
+        ?.sort((x, y) => x.sort_order - y.sort_order)
+        .sort((x, y) => x.pha_id - y.pha_id) || [],
+    permissions: preparePermissions(data) || [],
+    actions:
+      prepareActions(data)
+        ?.sort((x, y) => x.sort_order - y.sort_order)
+        .sort((x, y) => x.sta_id - y.sta_id) || [],
+    mail_templates: prepareMailTemplates(data) || [],
+    request_types: prepareRequestTypes(data) || [],
   });
 
   const [getApplicationData] = useBECommunication();
