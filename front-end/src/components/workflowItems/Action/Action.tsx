@@ -12,6 +12,7 @@ import useBECommunication from "../../../services/useBECommunication";
 import { ESwitch } from "../../../types/types";
 import { Box, Typography } from "@mui/material";
 import OrderingBox from "../../OrderingBox";
+import { TStore } from "../../../types/types";
 
 export interface IActionSetting {
   id: number;
@@ -85,7 +86,7 @@ const Action = ({ props }: IActionProps) => {
     },
   };
 
-  const actions = useSelector((state) =>
+  const actions = useSelector((state: TStore) =>
     state.workflowData.actions
       .filter((act) => act.sta_id === props.sta_id)
       .map((act) => ({ ...act, app_id: appID }))
@@ -127,6 +128,11 @@ const Action = ({ props }: IActionProps) => {
       (acts) => acts.name === actionTypeActionSettingMapping[props?.action_type]
     );
 
+  const stateCode = useSelector(
+    (state: TStore) =>
+      state.workflowData.states.find((sta) => sta.id === props.sta_id).code
+  );
+
   const actionSettingInfo = (
     <Box
       style={{
@@ -140,7 +146,7 @@ const Action = ({ props }: IActionProps) => {
           : props.action_type === EActionTypes.plsql
           ? `PL/SQL Function: ${getCorrectActionSetting[0].string_value || ""}`
           : props.action_type === EActionTypes.stateChange
-          ? `From ${props.code} to ${
+          ? `From ${stateCode} to ${
               getCorrectActionSetting[0].string_value || ""
             }`
           : ""}
