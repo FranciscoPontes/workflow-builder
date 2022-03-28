@@ -1,31 +1,24 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import {
   TMailTemplates,
   TRequestTypes,
   WorkflowBox,
   workflowData,
 } from "./WorkflowBox/WorkflowBox";
-import { EModalTypes, IModal, SimpleModal } from "./Modal/Modal";
+import { SimpleModal } from "./Modal/Modal";
 import { useEffect } from "react";
-import { DBService } from "../services/db_communication";
 import { useDispatch, useSelector } from "react-redux";
-import CustomSnackbar, { EseverityTypes } from "./SnackBar/SnackBar";
+import CustomSnackbar from "./SnackBar/SnackBar";
 import { actionTypes } from "../store/actionTypes";
 import UIConfirmation from "./UIConfirmation/UIConfirmation";
 import { IPermission } from "./workflowItems/Permission/Permission";
 import { IAction, IActionSetting } from "./workflowItems/Action/Action";
 import LeftPanel from "./LeftPanel/LeftPanel";
-import { TStore } from "../types/types";
+import { EDBTiers, TStore } from "../types/types";
 import { phaseDefinition } from "./workflowItems/Phase/Phase";
 import { stateDefinition } from "./workflowItems/State/State";
 import { Box } from "@mui/material";
 import useBECommunication from "../services/useBECommunication";
-
-enum EDBTiers {
-  DEV = "DEV",
-  Q = "Q",
-  PROD = "PROD",
-}
 
 type TLayout = {
   appCode: string;
