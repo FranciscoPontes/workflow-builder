@@ -28,5 +28,5 @@ Browse to *localhost:8080* and play around!
 Feel free to play around and raise new issues and proposals.
 
 ## Status
-Project is still under development
+No longer maintained.
 
